@@ -1,13 +1,17 @@
 package com.bmt.java_bmt.implementations.authentication;
 
-import com.bmt.java_bmt.dto.APIResponse;
-import com.bmt.java_bmt.dto.requests.authentication.registration.RegistrationRequest;
+import com.bmt.java_bmt.dto.requests.authentication.registration.CompleteRegistrationRequest;
 import com.bmt.java_bmt.dto.requests.authentication.registration.SendOTPRequest;
 import com.bmt.java_bmt.dto.requests.authentication.registration.VerifyOTPRequest;
 import com.bmt.java_bmt.dto.responses.authentication.registration.RegistrationResponse;
+import com.bmt.java_bmt.entities.enums.Role;
+import com.bmt.java_bmt.entities.enums.Source;
 import com.bmt.java_bmt.exceptions.AppException;
 import com.bmt.java_bmt.exceptions.ErrorCode;
 import com.bmt.java_bmt.helpers.constants.RedisKey;
+import com.bmt.java_bmt.mappers.IRegistrationMapper;
+import com.bmt.java_bmt.mappers.IUserMapper;
+import com.bmt.java_bmt.repositories.IPersonalInformationRepository;
 import com.bmt.java_bmt.repositories.IUserRepository;
 import com.bmt.java_bmt.services.IRedis;
 import com.bmt.java_bmt.services.authentication.IRegistrationService;
@@ -16,7 +20,6 @@ import com.bmt.java_bmt.utils.senders.OTPEmailSender;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
@@ -34,7 +37,10 @@ public class RegistrationImpl implements IRegistrationService {
 
     IRedis<String, Object> redisService;
     IUserRepository userRepository;
+    IPersonalInformationRepository personalInformationRepository;
     OTPEmailSender otpEmailSender;
+    IRegistrationMapper registrationMapper;
+    IUserMapper userMapper;
 
     @Override
     public String sendOTP(SendOTPRequest request) {
@@ -72,20 +78,57 @@ public class RegistrationImpl implements IRegistrationService {
 
         String registrationOTPKey = RedisKey.REGISTRATION_OTP + request.getEmail();
 
-        redisService.save(registrationOTPKey, otp, OTP_EXPIRE_MINUTES, TimeUnit.MINUTES);
         redisService.save(registrationKey, true, OTP_EXPIRE_MINUTES, TimeUnit.MINUTES);
+        redisService.save(registrationOTPKey, otp, OTP_EXPIRE_MINUTES, TimeUnit.MINUTES);
 
         return "Gửi mã OTP thành công";
     }
 
     @Override
     public String verifyOTP(VerifyOTPRequest request) {
-        return null;
+        /*
+            Kiểm tra xem có key trong redis hay không
+            Nếu không tồn tại tức là email này chưa trải qua api sendOTP
+         */
+        String registrationOTPKey = RedisKey.REGISTRATION_OTP + request.getEmail();
+
+        if (!redisService.existsKey(registrationOTPKey)) {
+            throw new AppException(ErrorCode.EMAIL_IS_NOT_REGISTRATION_PROCESS);
+        }
+
+        String otp = (String) redisService.get(registrationOTPKey);
+
+        if (!request.getOtp().equals(otp)) {
+            throw new AppException(ErrorCode.OTP_DONT_MATCH);
+        }
+
+        String registrationCompleteKey = RedisKey.REGISTRATION_COMPLETE + request.getEmail();
+
+        redisService.save(registrationCompleteKey, true, OTP_EXPIRE_MINUTES, TimeUnit.MINUTES);
+        redisService.delete(registrationOTPKey);
+
+        return "Xác thực mã OTP thành công";
     }
 
     @Override
-    public RegistrationResponse registration(RegistrationRequest request) {
-        return null;
+    public RegistrationResponse completeRegistration(CompleteRegistrationRequest request) {
+        String registrationCompleteKey = RedisKey.REGISTRATION_COMPLETE + request.getEmail();
+
+        if (!redisService.existsKey(registrationCompleteKey)) {
+            throw new AppException(ErrorCode.EMAIL_IS_NOT_IN_COMPLETION_REGISTRATION);
+        }
+
+        var personalInformation = personalInformationRepository
+                .save(userMapper.toPersonalInformation(request.getPersonalInformation()));
+        var user = userMapper.toUser(request);
+
+        user.setPersonalInformation(personalInformation);
+        user.setRole(Role.CUSTOMER);
+        user.setSource(Source.APP);
+
+        userRepository.save(user);
+
+        return registrationMapper.toRegistrationResponse(request);
     }
 }
 

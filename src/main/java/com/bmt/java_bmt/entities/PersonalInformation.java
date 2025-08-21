@@ -32,6 +32,6 @@ public class PersonalInformation {
     @Column(name = "pi_sex", nullable = false)
     private Sex sex;
 
-    @Column(name = "pi_avatar_url", columnDefinition = "TEXT", nullable = false)
+    @Column(name = "pi_avatar_url", columnDefinition = "TEXT", nullable = true)
     private String avatarUrl;
 }
