@@ -72,23 +72,23 @@ public class RedisConfiguration {
     /**
      * Alternative configuration - Sử dụng GenericJackson2JsonRedisSerializer đơn giản
      */
-    @Bean("simpleRedisTemplate")
-    public RedisTemplate<String, Object> simpleRedisTemplate(RedisConnectionFactory connectionFactory) {
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
-
-        template.setConnectionFactory(connectionFactory);
-
-        // Sử dụng GenericJackson2JsonRedisSerializer mặc định (không deprecated)
-        GenericJackson2JsonRedisSerializer jsonSerializer = new GenericJackson2JsonRedisSerializer();
-        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
-
-        // Set serializers
-        template.setKeySerializer(stringRedisSerializer);
-        template.setHashKeySerializer(stringRedisSerializer);
-        template.setValueSerializer(jsonSerializer);
-        template.setHashValueSerializer(jsonSerializer);
-
-        template.afterPropertiesSet();
-        return template;
-    }
+//    @Bean("simpleRedisTemplate")
+//    public RedisTemplate<String, Object> simpleRedisTemplate(RedisConnectionFactory connectionFactory) {
+//        RedisTemplate<String, Object> template = new RedisTemplate<>();
+//
+//        template.setConnectionFactory(connectionFactory);
+//
+//        // Sử dụng GenericJackson2JsonRedisSerializer mặc định (không deprecated)
+//        GenericJackson2JsonRedisSerializer jsonSerializer = new GenericJackson2JsonRedisSerializer();
+//        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
+//
+//        // Set serializers
+//        template.setKeySerializer(stringRedisSerializer);
+//        template.setHashKeySerializer(stringRedisSerializer);
+//        template.setValueSerializer(jsonSerializer);
+//        template.setHashValueSerializer(jsonSerializer);
+//
+//        template.afterPropertiesSet();
+//        return template;
+//    }
 }

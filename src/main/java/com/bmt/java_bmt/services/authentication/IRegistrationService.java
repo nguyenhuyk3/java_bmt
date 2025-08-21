@@ -7,7 +7,7 @@ import com.bmt.java_bmt.dto.requests.authentication.registration.VerifyOTPReques
 import com.bmt.java_bmt.dto.responses.authentication.registration.RegistrationResponse;
 
 public interface IRegistrationService {
-    APIResponse sendOTP(SendOTPRequest request);
-    APIResponse<RegistrationResponse> registration(RegistrationRequest request);
-    APIResponse verifyOTP(VerifyOTPRequest request);
+    String sendOTP(SendOTPRequest request);
+    String verifyOTP(VerifyOTPRequest request);
+    RegistrationResponse registration(RegistrationRequest request);
 }
