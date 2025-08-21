@@ -29,6 +29,6 @@ public class APIResponse<T> {
             int code = 1000;
 
     String message;
-    String error;
+    Map<String, String> error;
     Map<String, String> errors;
 }

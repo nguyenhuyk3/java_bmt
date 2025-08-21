@@ -64,9 +64,7 @@ public class GlobalExceptionHandler {
                 .message(errorCode.getMessage());
 
         if (errors.size() == 1) {
-            String singleErrorMessage = errors.values().iterator().next();
-
-            responseBuilder.error(singleErrorMessage);
+            responseBuilder.error(errors);
         } else if (errors.size() > 1) {
             responseBuilder.errors(errors);
         }
