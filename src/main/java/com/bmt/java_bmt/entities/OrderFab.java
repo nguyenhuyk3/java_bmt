@@ -1,0 +1,30 @@
+package com.bmt.java_bmt.entities;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.UUID;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity
+@Table(name = "order_fabs")
+public class OrderFab {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "of_id", length = 36, nullable = false)
+    private UUID id;
+
+    @Column(name = "of_quantity", nullable = false)
+    private Integer quantity;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fab_id", nullable = false)
+    private FoodAndBeverage foodAndBeverage;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "o_id", nullable = false)
+    private Order order;
+}
