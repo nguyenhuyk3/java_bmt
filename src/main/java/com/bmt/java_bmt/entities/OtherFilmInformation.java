@@ -23,6 +23,13 @@ public class OtherFilmInformation {
     private String trailerUrl;
 
     @OneToOne(fetch = FetchType.LAZY)
+     /*
+        @MapsId làm gì?
+        - @MapsId nói với JPA rằng:
+            + Khóa chính của entity con (ContactInformation)
+            sẽ được ánh xạ (map) từ khóa chính của entity cha (User).
+            + Bạn không cần sinh ra một ID riêng cho ContactInformation, mà ID chính là ID của User.
+    */
     @MapsId
     @JoinColumn(name = "f_id")
     private Film film;

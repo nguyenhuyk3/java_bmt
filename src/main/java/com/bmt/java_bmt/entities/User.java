@@ -23,8 +23,8 @@ public class User {
     @Column(name = "u_id", length = 36, nullable = false)
     private UUID id;
 
-    @Column(name = "u_account_name", length = 64, nullable = false)
-    private String accountName;
+    @Column(name = "u_email", length = 64, nullable = false)
+    private String email;
 
     @Column(name = "u_password", length = 128, nullable = false)
     private String password;
@@ -49,10 +49,6 @@ public class User {
     @JoinColumn(name = "pi_id", referencedColumnName = "pi_id", nullable = false)
     private PersonalInformation personalInformation;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private ContactInformation contactInformation;
-
-    @OneToMany(mappedBy = "orderedBy")
-    private Set<Order> orders;
-
+//    @OneToMany(mappedBy = "orderedBy")
+//    private Set<Order> orders;
 }
