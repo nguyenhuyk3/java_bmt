@@ -25,7 +25,7 @@ public class APIResponse<T> {
     	    @Builder.Default là một annotation của thư viện Lombok trong Java.
     		Nó được sử dụng khi bạn dùng @Builder để tạo pattern Builder cho class,
     	và muốn gán giá trị mặc định cho một field nếu nó không được set khi build object.
-    */
+     */
             int code = 1000;
 
     String message;

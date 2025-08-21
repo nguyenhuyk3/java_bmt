@@ -48,7 +48,7 @@ public class Cinema {
         từ phía Auditorium, chứ không tạo cột khóa ngoại ở bảng Cinema.
         - Tức là:
             + Trong bảng auditoriums sẽ có cột c_id (FK) trỏ đến cinemas.c_id.
-    */
+     */
     @OneToMany(mappedBy = "cinema")
     private Set<Auditorium> auditoriums;
 }

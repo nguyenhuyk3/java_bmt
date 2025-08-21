@@ -16,7 +16,7 @@ import java.util.Objects;
 /*
 	Đánh dấu class này là "bộ xử lý ngoại lệ toàn cục" (global exception handler) cho tất cả các controller trong app.
 	Spring sẽ tự động bắt các lỗi được ném ra trong controller và chuyển vào đây xử lý.
-*/
+ */
 public class GlobalExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     ResponseEntity<APIResponse> handleRuntimeException(RuntimeException ex) {

@@ -19,7 +19,7 @@ public class Auditorium {
     /*
             - @GeneratedValue(strategy = GenerationType.UUID) trong JPA/Hibernate
         được dùng để tự động sinh giá trị cho khóa chính (@Id) theo cơ chế UUID
-    */
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "a_id", length = 36, nullable = false)
@@ -48,7 +48,7 @@ public class Auditorium {
          + Chỉ khi bạn truy cập getter (Auditorium thì Hibernate mới truy vấn DB để lấy dữ liệu Seat
          (kỹ thuật này gọi là lazy loading hoặc proxy).
          + Dễ bị lỗi LazyInitializationException sau khi session/transaction đã đóng.
-    */
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "c_id", nullable = false)
     private Cinema cinema;
