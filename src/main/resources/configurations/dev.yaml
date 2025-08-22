@@ -1,0 +1,6 @@
+email:
+  smtp-host: "email-smtp.ap-southeast-1.amazonaws.com"
+  smtp-port: 2587
+  username: "AKIA52GSWC5JL54QJ76Q"
+  password: "BMYBb5qkHXzeRg9aKBp8yWFHcPYkqBmqJ3hjqH0j/GVX"
+  from-email: "cafevietnam2018@gmail.com"
