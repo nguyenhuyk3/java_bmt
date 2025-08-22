@@ -17,9 +17,14 @@ public enum ErrorCode {
     EMAIL_SENDING_ERROR(20004, "Lỗi khi gửi email", HttpStatus.INTERNAL_SERVER_ERROR),
     EMAIL_IS_NOT_REGISTRATION_PROCESS(20005, "Email không trong quá trình đăng kí", HttpStatus.BAD_REQUEST),
     OTP_DONT_MATCH(20006, "Mã OTP của bạn không khớp", HttpStatus.BAD_REQUEST),
-    EMAIL_IS_NOT_IN_COMPLETION_REGISTRATION(20007, "Email không trong trạng thái hoàn thành đăng kí", HttpStatus.BAD_REQUEST),
-    EMAIL_IS_IN_COMPLETION_REGISTRATION(20008, "Email đang trong trạng thái hoàn thành đăng kí", HttpStatus.CONFLICT),
+    EMAIL_IS_NOT_IN_REGISTRATION_COMPLETION(20007, "Email không trong trạng thái hoàn thành đăng kí", HttpStatus.BAD_REQUEST),
+    EMAIL_IS_IN_REGISTRATION_COMPLETION(20008, "Email đang trong trạng thái hoàn thành đăng kí", HttpStatus.CONFLICT),
     EMAIL_NOT_FOUND(20013, "Email không tồn tại", HttpStatus.NOT_FOUND),
+    EMAIL_IS_IN_FORGOT_PASSWORD_PROCESS(20009, "Email đang trong quá trình đổi mật khẩu", HttpStatus.CONFLICT),
+    EMAIL_IS_IN_FORGOT_PASSWORD_COMPLETION(20010, "Email đang trong trạng thái hoàn thành quá trình quên mật khẩu", HttpStatus.CONFLICT),
+    EMAIL_IS_NOT_IN_FORGOT_PASSWORD_COMPLETION(20011, "Email không trong trạng thái hoàn quá trình quên mật khẩu", HttpStatus.BAD_REQUEST),
+    PASSWORD_DONT_MATCH(20006, "Mật khẩu không khớp", HttpStatus.BAD_REQUEST),
+    UPDATE_PASSWORD_FAILED(20006, "Cập nhập mật khẩu thất bại", HttpStatus.INTERNAL_SERVER_ERROR),
 
     // Token
     FAILED_TO_CREATE_ACCESS_TOKEN(21009, "Lỗi tạo access token", HttpStatus.INTERNAL_SERVER_ERROR),
