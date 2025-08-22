@@ -44,6 +44,13 @@ public class RegistrationImpl implements IRegistrationService {
 
     @Override
     public String sendOTP(SendOTPRequest request) {
+         /*
+            Check if this email exists in the database
+          */
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new AppException(ErrorCode.EMAIL_EXISTED);
+        }
+
         /*
             Check if there is a key in redis
             If it exists, then the email is in the process of being registered.
@@ -52,13 +59,6 @@ public class RegistrationImpl implements IRegistrationService {
 
         if (redisService.existsKey(registrationKey)) {
             throw new AppException(ErrorCode.EMAIL_IS_IN_REGISTRATION_PROCESS);
-        }
-
-        /*
-            Check if this email exists in the database
-         */
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new AppException(ErrorCode.EMAIL_EXISTED);
         }
 
         String otp = Generator.generateOTP(LENGTH_OF_OTP);
@@ -87,12 +87,17 @@ public class RegistrationImpl implements IRegistrationService {
     @Override
     public String verifyOTP(VerifyOTPRequest request) {
         /*
-            Kiểm tra xem có key trong redis hay không
-            Nếu không tồn tại tức là email này chưa trải qua api sendOTP
+            Check if this key is in redis
+            If it does not exist, it means this email has not gone through the sendOTP api.
          */
         String registrationOTPKey = RedisKey.REGISTRATION_OTP + request.getEmail();
+        String registrationCompleteKey = RedisKey.REGISTRATION_COMPLETE + request.getEmail();
 
         if (!redisService.existsKey(registrationOTPKey)) {
+            if (redisService.existsKey(registrationCompleteKey)) {
+                throw new AppException(ErrorCode.EMAIL_IS_IN_COMPLETION_REGISTRATION);
+            }
+
             throw new AppException(ErrorCode.EMAIL_IS_NOT_REGISTRATION_PROCESS);
         }
 
@@ -101,8 +106,6 @@ public class RegistrationImpl implements IRegistrationService {
         if (!request.getOtp().equals(otp)) {
             throw new AppException(ErrorCode.OTP_DONT_MATCH);
         }
-
-        String registrationCompleteKey = RedisKey.REGISTRATION_COMPLETE + request.getEmail();
 
         redisService.save(registrationCompleteKey, true, OTP_EXPIRE_MINUTES, TimeUnit.MINUTES);
         redisService.delete(registrationOTPKey);
@@ -127,6 +130,11 @@ public class RegistrationImpl implements IRegistrationService {
         user.setSource(Source.APP);
 
         userRepository.save(user);
+
+        String registrationKey = RedisKey.IS_IN_REGISTRATION + request.getEmail();
+
+        redisService.delete(registrationKey);
+        redisService.delete(registrationCompleteKey);
 
         return registrationMapper.toRegistrationResponse(request);
     }

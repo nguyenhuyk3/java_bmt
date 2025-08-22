@@ -17,7 +17,7 @@ public enum ErrorCode {
     EMAIL_IS_NOT_REGISTRATION_PROCESS(20005, "Email không trong quá trình đăng kí", HttpStatus.BAD_REQUEST),
     OTP_DONT_MATCH(20006, "Mã OTP của bạn không khớp", HttpStatus.BAD_REQUEST),
     EMAIL_IS_NOT_IN_COMPLETION_REGISTRATION(20007, "Email không trong trạng thái hoàn thành đăng kí", HttpStatus.BAD_REQUEST),
-
+    EMAIL_IS_IN_COMPLETION_REGISTRATION(20008, "Email đang trong trạng thái hoàn thành đăng kí", HttpStatus.CONFLICT),
     UNCATEGORIZED_EXCEPTION(9999, "Lỗi không xác định", HttpStatus.INTERNAL_SERVER_ERROR),
     INVALID_KEY(1001, "Lỗi không xác định", HttpStatus.BAD_REQUEST),
     UNAUTHORIZED(1007, "Bạn không có quyền truy cập vào tài nguyên", HttpStatus.FORBIDDEN),

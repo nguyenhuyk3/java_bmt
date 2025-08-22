@@ -23,9 +23,6 @@ public class CompleteRegistrationRequest {
     @Size(min = 6, max = 128, message = "Mật khẩu phải có từ {min} đến {max} ký tự")
     String password;
 
-    Role role;
-    Source source;
-
     @NotNull(message = "Thông tin cá nhân bắt buộc phải có")
     PersonalInformation personalInformation;
 }
