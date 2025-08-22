@@ -1,5 +1,14 @@
 package com.bmt.java_bmt.implementations.authentication;
 
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+import javax.mail.MessagingException;
+
+import jakarta.transaction.Transactional;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import com.bmt.java_bmt.dto.requests.authentication.forgotPassword.CompleteForgotPasswordRequest;
 import com.bmt.java_bmt.dto.requests.authentication.forgotPassword.SendForgotPasswordOTPRequest;
 import com.bmt.java_bmt.dto.requests.authentication.forgotPassword.VerifyForgotPasswordOTPRequest;
@@ -12,16 +21,10 @@ import com.bmt.java_bmt.services.IRedis;
 import com.bmt.java_bmt.services.authentication.IForgotPasswordService;
 import com.bmt.java_bmt.utils.Generator;
 import com.bmt.java_bmt.utils.senders.OTPEmailSender;
-import jakarta.transaction.Transactional;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
-import javax.mail.MessagingException;
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
@@ -53,11 +56,7 @@ public class ForgotPasswordImpl implements IForgotPasswordService {
 
         try {
             otpEmailSender.sendOtpEmail(
-                    request.getEmail(),
-                    SUBJECT,
-                    HTML_FILE_PATH,
-                    otp,
-                    String.valueOf(OTP_EXPIRE_MINUTES));
+                    request.getEmail(), SUBJECT, HTML_FILE_PATH, otp, String.valueOf(OTP_EXPIRE_MINUTES));
         } catch (IOException e) {
             throw new AppException(ErrorCode.EMAIL_TEMPLATE_ERROR);
         } catch (MessagingException e) {
@@ -111,8 +110,7 @@ public class ForgotPasswordImpl implements IForgotPasswordService {
         }
 
         String newPassword = passwordEncoder.encode(request.getPassword());
-        var updatedRecords = userRepository
-                .updatePasswordByEmail(request.getEmail(), newPassword);
+        var updatedRecords = userRepository.updatePasswordByEmail(request.getEmail(), newPassword);
 
         if (updatedRecords == 0) {
             throw new AppException(ErrorCode.UPDATE_PASSWORD_FAILED);

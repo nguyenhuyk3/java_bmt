@@ -1,17 +1,20 @@
 package com.bmt.java_bmt.entities;
 
-import com.bmt.java_bmt.entities.enums.Genre;
-import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+
+import jakarta.persistence.*;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import com.bmt.java_bmt.entities.enums.Genre;
+
+import lombok.*;
 
 @Data
 @NoArgsConstructor

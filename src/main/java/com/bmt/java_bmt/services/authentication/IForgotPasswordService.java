@@ -7,6 +7,8 @@ import com.bmt.java_bmt.dto.responses.authentication.forgotPassword.CompleteForg
 
 public interface IForgotPasswordService {
     String sendForgotPasswordOTP(SendForgotPasswordOTPRequest request);
+
     String verifyForgotPasswordOTP(VerifyForgotPasswordOTPRequest request);
+
     CompleteForgotPasswordResponse completeFortgotPassword(CompleteForgotPasswordRequest request);
 }

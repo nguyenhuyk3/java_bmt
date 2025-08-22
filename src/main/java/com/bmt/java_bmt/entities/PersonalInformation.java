@@ -1,11 +1,13 @@
 package com.bmt.java_bmt.entities;
 
-import com.bmt.java_bmt.entities.enums.Sex;
-import jakarta.persistence.*;
-import lombok.*;
-
 import java.time.LocalDate;
 import java.util.UUID;
+
+import jakarta.persistence.*;
+
+import com.bmt.java_bmt.entities.enums.Sex;
+
+import lombok.*;
 
 @Data
 @NoArgsConstructor

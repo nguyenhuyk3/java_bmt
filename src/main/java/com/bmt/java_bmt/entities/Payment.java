@@ -1,13 +1,16 @@
 package com.bmt.java_bmt.entities;
 
-import com.bmt.java_bmt.entities.enums.PaymentMethod;
-import com.bmt.java_bmt.entities.enums.PaymentStatus;
-import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
+
+import jakarta.persistence.*;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import com.bmt.java_bmt.entities.enums.PaymentMethod;
+import com.bmt.java_bmt.entities.enums.PaymentStatus;
+
+import lombok.*;
 
 @Data
 @NoArgsConstructor

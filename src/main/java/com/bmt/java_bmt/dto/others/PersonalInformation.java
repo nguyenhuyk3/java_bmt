@@ -1,15 +1,17 @@
 package com.bmt.java_bmt.dto.others;
 
-import com.bmt.java_bmt.entities.enums.Sex;
+import java.time.LocalDate;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
+
+import com.bmt.java_bmt.entities.enums.Sex;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDate;
 
 @Builder
 @Data

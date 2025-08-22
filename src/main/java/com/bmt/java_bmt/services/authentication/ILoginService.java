@@ -6,5 +6,6 @@ import com.bmt.java_bmt.dto.requests.authentication.login.RefreshAccessTokenRequ
 
 public interface ILoginService {
     TokenPair login(LoginRequest request);
+
     String refreshAccessToken(RefreshAccessTokenRequest request);
 }

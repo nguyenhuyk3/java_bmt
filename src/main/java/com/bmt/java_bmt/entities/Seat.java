@@ -1,13 +1,16 @@
 package com.bmt.java_bmt.entities;
 
-import com.bmt.java_bmt.entities.enums.SeatType;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 import jakarta.persistence.*;
-import lombok.*;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
+import com.bmt.java_bmt.entities.enums.SeatType;
+
+import lombok.*;
 
 @Data
 @NoArgsConstructor

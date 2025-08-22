@@ -1,14 +1,17 @@
 package com.bmt.java_bmt.entities;
 
-import com.bmt.java_bmt.entities.enums.Role;
-import com.bmt.java_bmt.entities.enums.Source;
+import java.time.Instant;
+import java.util.UUID;
+
 import jakarta.persistence.*;
-import lombok.*;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.Instant;
-import java.util.UUID;
+import com.bmt.java_bmt.entities.enums.Role;
+import com.bmt.java_bmt.entities.enums.Source;
+
+import lombok.*;
 
 @Data
 @NoArgsConstructor
@@ -48,6 +51,6 @@ public class User {
     @JoinColumn(name = "pi_id", referencedColumnName = "pi_id", nullable = false)
     private PersonalInformation personalInformation;
 
-//    @OneToMany(mappedBy = "orderedBy")
-//    private Set<Order> orders;
+    //    @OneToMany(mappedBy = "orderedBy")
+    //    private Set<Order> orders;
 }

@@ -1,11 +1,11 @@
 package com.bmt.java_bmt.repositories;
 
-import com.bmt.java_bmt.entities.PersonalInformation;
+import java.util.UUID;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.UUID;
+import com.bmt.java_bmt.entities.PersonalInformation;
 
 @Repository
-public interface IPersonalInformationRepository extends JpaRepository<PersonalInformation, UUID> {
-}
+public interface IPersonalInformationRepository extends JpaRepository<PersonalInformation, UUID> {}

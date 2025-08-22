@@ -1,19 +1,19 @@
 package com.bmt.java_bmt.utils.senders;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import lombok.experimental.NonFinal;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Properties;
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -49,9 +49,7 @@ public class OTPEmailSender {
      * @throws IOException        If there's an issue reading the HTML file
      * @throws MessagingException If there's an issue sending the email
      */
-    public void sendOtpEmail(
-            String toEmail, String subject,
-            String htmlFilePath, String otp, String expirationTime)
+    public void sendOtpEmail(String toEmail, String subject, String htmlFilePath, String otp, String expirationTime)
             throws IOException, MessagingException {
         // Read the HTML file content
         String htmlContent = new String(Files.readAllBytes(Paths.get(htmlFilePath)));

@@ -1,12 +1,13 @@
 package com.bmt.java_bmt.services.authentication;
 
+import java.util.UUID;
+
 import com.bmt.java_bmt.dto.others.TokenPair;
 import com.bmt.java_bmt.dto.responses.authentication.jwt.TokenRefreshResponse;
 import com.bmt.java_bmt.entities.User;
 import com.bmt.java_bmt.repositories.IUserRepository;
-import io.jsonwebtoken.Claims;
 
-import java.util.UUID;
+import io.jsonwebtoken.Claims;
 
 public interface IJwtTokenService {
     /**

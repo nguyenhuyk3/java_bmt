@@ -1,5 +1,14 @@
 package com.bmt.java_bmt.implementations.authentication;
 
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+import javax.mail.MessagingException;
+
+import jakarta.transaction.Transactional;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import com.bmt.java_bmt.dto.requests.authentication.registration.CompleteRegistrationRequest;
 import com.bmt.java_bmt.dto.requests.authentication.registration.SendRegistrationOTPRequest;
 import com.bmt.java_bmt.dto.requests.authentication.registration.VerifyRegistrationOTPRequest;
@@ -17,16 +26,10 @@ import com.bmt.java_bmt.services.IRedis;
 import com.bmt.java_bmt.services.authentication.IRegistrationService;
 import com.bmt.java_bmt.utils.Generator;
 import com.bmt.java_bmt.utils.senders.OTPEmailSender;
-import jakarta.transaction.Transactional;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
-import javax.mail.MessagingException;
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
@@ -47,17 +50,17 @@ public class RegistrationImpl implements IRegistrationService {
 
     @Override
     public String sendOTP(SendRegistrationOTPRequest request) {
-         /*
-            Check if this email exists in the database
-          */
+        /*
+        	Check if this email exists in the database
+        */
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new AppException(ErrorCode.EMAIL_EXISTED);
         }
 
         /*
-            Check if there is a key in redis
-            If it exists, then the email is in the process of being registered.
-         */
+        Check if there is a key in redis
+        If it exists, then the email is in the process of being registered.
+        */
         String registrationKey = RedisKey.IS_IN_REGISTRATION_PROCESS + request.getEmail();
 
         if (redisService.existsKey(registrationKey)) {
@@ -68,11 +71,7 @@ public class RegistrationImpl implements IRegistrationService {
 
         try {
             otpEmailSender.sendOtpEmail(
-                    request.getEmail(),
-                    SUBJECT,
-                    HTML_FILE_PATH,
-                    otp,
-                    String.valueOf(OTP_EXPIRE_MINUTES));
+                    request.getEmail(), SUBJECT, HTML_FILE_PATH, otp, String.valueOf(OTP_EXPIRE_MINUTES));
         } catch (IOException e) {
             throw new AppException(ErrorCode.EMAIL_TEMPLATE_ERROR);
         } catch (MessagingException e) {
@@ -90,9 +89,9 @@ public class RegistrationImpl implements IRegistrationService {
     @Override
     public String verifyOTP(VerifyRegistrationOTPRequest request) {
         /*
-            Check if this key is in redis
-            If it does not exist, it means this email has not gone through the sendOTP api.
-         */
+        Check if this key is in redis
+        If it does not exist, it means this email has not gone through the sendOTP api.
+        */
         String registrationOTPKey = RedisKey.REGISTRATION_OTP + request.getEmail();
         String registrationCompletionKey = RedisKey.REGISTRATION_COMPLETION + request.getEmail();
 
@@ -125,8 +124,8 @@ public class RegistrationImpl implements IRegistrationService {
             throw new AppException(ErrorCode.EMAIL_IS_NOT_IN_REGISTRATION_COMPLETION);
         }
 
-        var personalInformation = personalInformationRepository
-                .save(userMapper.toPersonalInformation(request.getPersonalInformation()));
+        var personalInformation =
+                personalInformationRepository.save(userMapper.toPersonalInformation(request.getPersonalInformation()));
         var user = userMapper.toUser(request);
 
         user.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -146,4 +145,3 @@ public class RegistrationImpl implements IRegistrationService {
         return registrationMapper.toRegistrationResponse(request);
     }
 }
-

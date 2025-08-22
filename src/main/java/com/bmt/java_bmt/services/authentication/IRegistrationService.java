@@ -7,6 +7,8 @@ import com.bmt.java_bmt.dto.responses.authentication.registration.RegistrationRe
 
 public interface IRegistrationService {
     String sendOTP(SendRegistrationOTPRequest request);
+
     String verifyOTP(VerifyRegistrationOTPRequest request);
+
     RegistrationResponse completeRegistration(CompleteRegistrationRequest request);
 }
