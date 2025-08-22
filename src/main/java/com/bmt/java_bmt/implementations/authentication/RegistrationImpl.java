@@ -17,6 +17,7 @@ import com.bmt.java_bmt.services.IRedis;
 import com.bmt.java_bmt.services.authentication.IRegistrationService;
 import com.bmt.java_bmt.utils.Generator;
 import com.bmt.java_bmt.utils.senders.OTPEmailSender;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -116,6 +117,7 @@ public class RegistrationImpl implements IRegistrationService {
     }
 
     @Override
+    @Transactional
     public RegistrationResponse completeRegistration(CompleteRegistrationRequest request) {
         String registrationCompleteKey = RedisKey.REGISTRATION_COMPLETE + request.getEmail();
 
