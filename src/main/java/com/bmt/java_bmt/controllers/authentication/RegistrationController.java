@@ -2,8 +2,8 @@ package com.bmt.java_bmt.controllers.authentication;
 
 import com.bmt.java_bmt.dto.APIResponse;
 import com.bmt.java_bmt.dto.requests.authentication.registration.CompleteRegistrationRequest;
-import com.bmt.java_bmt.dto.requests.authentication.registration.SendOTPRequest;
-import com.bmt.java_bmt.dto.requests.authentication.registration.VerifyOTPRequest;
+import com.bmt.java_bmt.dto.requests.authentication.registration.SendRegistrationOTPRequest;
+import com.bmt.java_bmt.dto.requests.authentication.registration.VerifyRegistrationOTPRequest;
 import com.bmt.java_bmt.dto.responses.authentication.registration.RegistrationResponse;
 import com.bmt.java_bmt.services.authentication.IRegistrationService;
 import jakarta.validation.Valid;
@@ -23,7 +23,7 @@ public class RegistrationController {
     IRegistrationService registrationService;
 
     @PostMapping("/send-otp")
-    APIResponse<String> sendOTP(@RequestBody @Valid SendOTPRequest request) {
+    APIResponse<String> sendOTP(@RequestBody @Valid SendRegistrationOTPRequest request) {
         String message = registrationService.sendOTP(request);
 
         return APIResponse
@@ -33,7 +33,7 @@ public class RegistrationController {
     }
 
     @PostMapping("/verify-registration-otp")
-    APIResponse<String> verifyOTP(@RequestBody @Valid VerifyOTPRequest request) {
+    APIResponse<String> verifyOTP(@RequestBody @Valid VerifyRegistrationOTPRequest request) {
         String message = registrationService.verifyOTP(request);
 
         return APIResponse

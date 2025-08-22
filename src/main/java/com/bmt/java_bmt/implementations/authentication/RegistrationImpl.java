@@ -1,8 +1,8 @@
 package com.bmt.java_bmt.implementations.authentication;
 
 import com.bmt.java_bmt.dto.requests.authentication.registration.CompleteRegistrationRequest;
-import com.bmt.java_bmt.dto.requests.authentication.registration.SendOTPRequest;
-import com.bmt.java_bmt.dto.requests.authentication.registration.VerifyOTPRequest;
+import com.bmt.java_bmt.dto.requests.authentication.registration.SendRegistrationOTPRequest;
+import com.bmt.java_bmt.dto.requests.authentication.registration.VerifyRegistrationOTPRequest;
 import com.bmt.java_bmt.dto.responses.authentication.registration.RegistrationResponse;
 import com.bmt.java_bmt.entities.enums.Role;
 import com.bmt.java_bmt.entities.enums.Source;
@@ -46,7 +46,7 @@ public class RegistrationImpl implements IRegistrationService {
     PasswordEncoder passwordEncoder;
 
     @Override
-    public String sendOTP(SendOTPRequest request) {
+    public String sendOTP(SendRegistrationOTPRequest request) {
          /*
             Check if this email exists in the database
           */
@@ -88,7 +88,7 @@ public class RegistrationImpl implements IRegistrationService {
     }
 
     @Override
-    public String verifyOTP(VerifyOTPRequest request) {
+    public String verifyOTP(VerifyRegistrationOTPRequest request) {
         /*
             Check if this key is in redis
             If it does not exist, it means this email has not gone through the sendOTP api.

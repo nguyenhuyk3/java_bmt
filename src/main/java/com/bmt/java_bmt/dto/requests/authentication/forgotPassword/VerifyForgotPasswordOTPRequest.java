@@ -1,4 +1,4 @@
-package com.bmt.java_bmt.dto.requests.authentication.registration;
+package com.bmt.java_bmt.dto.requests.authentication.forgotPassword;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -11,13 +11,12 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class VerifyOTPRequest {
+public class VerifyForgotPasswordOTPRequest {
     @Email(message = "Email không hợp lệ")
     @NotBlank(message = "Email không được để trống")
-    private String email;
+    String email;
 
     @NotBlank(message = "OTP không được để trống")
     @Pattern(regexp = "^[0-9]{6}$", message = "OTP phải gồm đúng 6 chữ số")
-    private String otp;
+    String otp;
 }
-
