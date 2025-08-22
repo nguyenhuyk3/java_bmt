@@ -19,7 +19,7 @@ import java.util.UUID;
 public class MoviePerson {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "mp_id", length = 36, nullable = false)
+    @Column(name = "mp_id", columnDefinition = "BINARY(16)", nullable = false, updatable = false)
     private UUID id;
 
     @Column(name = "mp_nationality", length = 64, nullable = false)

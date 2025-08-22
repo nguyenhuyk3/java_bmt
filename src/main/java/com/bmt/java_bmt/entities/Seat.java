@@ -18,7 +18,7 @@ import java.util.UUID;
 public class Seat {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "se_id", length = 36, nullable = false)
+    @Column(name = "se_id", columnDefinition = "BINARY(16)", nullable = false, updatable = false)
     private UUID id;
 
     @Column(name = "se_seat_number", length = 16, nullable = false)

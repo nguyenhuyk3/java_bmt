@@ -18,7 +18,7 @@ import java.util.UUID;
 public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "p_id", length = 36, nullable = false)
+    @Column(name = "p_id", columnDefinition = "BINARY(16)", nullable = false, updatable = false)
     private UUID id;
 
     // Chú ý: Lưu trữ tiền dưới dạng String không phải là cách tốt nhất.

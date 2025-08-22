@@ -22,7 +22,7 @@ public class Auditorium {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "a_id", length = 36, nullable = false)
+    @Column(name = "a_id", columnDefinition = "BINARY(16)", nullable = false, updatable = false)
     private UUID id;
 
     @Column(name = "a_name", columnDefinition = "TEXT", nullable = false)

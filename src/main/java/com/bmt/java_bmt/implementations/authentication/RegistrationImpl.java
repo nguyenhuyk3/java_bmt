@@ -139,6 +139,8 @@ public class RegistrationImpl implements IRegistrationService {
         redisService.delete(registrationKey);
         redisService.delete(registrationCompleteKey);
 
+        request.setPassword(user.getPassword());
+
         return registrationMapper.toRegistrationResponse(request);
     }
 }

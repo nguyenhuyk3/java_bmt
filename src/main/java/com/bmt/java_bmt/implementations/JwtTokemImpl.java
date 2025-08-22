@@ -48,7 +48,7 @@ public class JwtTokemImpl implements IJwtTokenService {
             Instant expiration = now.plus(accessTokenExpirationSeconds, ChronoUnit.SECONDS);
             Map<String, Object> claims = new HashMap<>();
 
-            claims.put("userId", userId);
+//            claims.put("userId", userId);
             claims.put("role", role);
             claims.put("type", ACCESS_TOKEN_TYPE);
 
@@ -72,7 +72,7 @@ public class JwtTokemImpl implements IJwtTokenService {
             Instant expiration = now.plus(refreshTokenExpirationSeconds, ChronoUnit.SECONDS);
             Map<String, Object> claims = new HashMap<>();
 
-            claims.put("userId", userId);
+//            claims.put("userId", userId);
             claims.put("type", REFRESH_TOKEN_TYPE);
 //            claims.put("random", UUID.randomUUID().toString());
 

@@ -2,6 +2,7 @@ package com.bmt.java_bmt.implementations.authentication;
 
 import com.bmt.java_bmt.dto.others.TokenPair;
 import com.bmt.java_bmt.dto.requests.authentication.login.LoginRequest;
+import com.bmt.java_bmt.dto.requests.authentication.login.RefreshAccessTokenRequest;
 import com.bmt.java_bmt.entities.User;
 import com.bmt.java_bmt.exceptions.AppException;
 import com.bmt.java_bmt.exceptions.ErrorCode;
@@ -32,5 +33,12 @@ public class LoginImpl implements ILoginService {
         }
 
         return jwtTokenService.generateTokenPair(user);
+    }
+
+    @Override
+    public String refreshAccessToken(RefreshAccessTokenRequest request) {
+        return jwtTokenService
+                .refreshAccessToken(request.getToken(), userRepository)
+                .getAccessToken();
     }
 }
