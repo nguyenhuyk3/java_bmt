@@ -1,6 +1,6 @@
 package com.bmt.java_bmt.dto.responses.authentication.registration;
 
-import com.bmt.java_bmt.dto.requests.authentication.registration.PersonalInformation;
+import com.bmt.java_bmt.dto.others.PersonalInformation;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

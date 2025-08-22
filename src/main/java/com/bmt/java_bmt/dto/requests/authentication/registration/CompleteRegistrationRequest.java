@@ -1,7 +1,6 @@
 package com.bmt.java_bmt.dto.requests.authentication.registration;
 
-import com.bmt.java_bmt.entities.enums.Role;
-import com.bmt.java_bmt.entities.enums.Source;
+import com.bmt.java_bmt.dto.others.PersonalInformation;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
