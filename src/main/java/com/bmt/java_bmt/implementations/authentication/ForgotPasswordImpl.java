@@ -118,7 +118,10 @@ public class ForgotPasswordImpl implements IForgotPasswordService {
             throw new AppException(ErrorCode.UPDATE_PASSWORD_FAILED);
         }
 
+        String forgotPasswordKey = RedisKey.IS_IN_FORGOT_PASSWORD_PROCESS + request.getEmail();
+
         redisService.delete(forgotPasswordCompletionKey);
+        redisService.delete(forgotPasswordKey);
 
         return CompleteForgotPasswordResponse.builder()
                 .email(request.getEmail())
