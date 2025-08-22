@@ -4,3 +4,10 @@ email:
   username: "AKIA52GSWC5JL54QJ76Q"
   password: "BMYBb5qkHXzeRg9aKBp8yWFHcPYkqBmqJ3hjqH0j/GVX"
   from-email: "cafevietnam2018@gmail.com"
+jwt:
+  access:
+    secret: "143cf976-5f19-4403-8df4-94d863e050eb"
+    expiration: 900 # 7 minutes
+  refresh:
+    secret: "30d4a667-4d44-439e-9fd1-db45a01606c3"
+    expiration: 604800 # 7 days

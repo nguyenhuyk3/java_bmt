@@ -1,4 +1,4 @@
-package com.bmt.java_bmt.dto.requests.authentication.registration;
+package com.bmt.java_bmt.dto.others;
 
 import com.bmt.java_bmt.entities.enums.Sex;
 import jakarta.validation.constraints.NotBlank;

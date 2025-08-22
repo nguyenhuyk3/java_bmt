@@ -17,7 +17,7 @@ import java.util.UUID;
 public class ShowtimeSeat {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "ss_id", length = 36, nullable = false)
+    @Column(name = "ss_id", columnDefinition = "BINARY(16)", nullable = false, updatable = false)
     private UUID id;
 
     @Enumerated(EnumType.STRING)

@@ -16,7 +16,7 @@ import java.util.UUID;
 public class PersonalInformation {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "pi_id", length = 36, nullable = false)
+    @Column(name = "pi_id", columnDefinition = "BINARY(16)", nullable = false, updatable = false)
     private UUID id;
 
     @Column(name = "pi_first_name", length = 64, nullable = false)

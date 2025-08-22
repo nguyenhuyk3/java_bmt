@@ -22,7 +22,7 @@ import java.util.UUID;
 public class Film {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "f_id", length = 36, nullable = false)
+    @Column(name = "f_id", columnDefinition = "BINARY(16)", nullable = false, updatable = false)
     private UUID id;
 
     @Column(name = "f_title", columnDefinition = "TEXT", nullable = false)

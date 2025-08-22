@@ -18,7 +18,7 @@ import java.util.UUID;
 public class FoodAndBeverage {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "fab_id", length = 36, nullable = false)
+    @Column(name = "fab_id", columnDefinition = "BINARY(16)", nullable = false, updatable = false)
     private UUID id;
 
     @Column(name = "fab_name", columnDefinition = "TEXT", nullable = false)

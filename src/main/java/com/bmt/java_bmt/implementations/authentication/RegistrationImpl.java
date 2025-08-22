@@ -17,9 +17,11 @@ import com.bmt.java_bmt.services.IRedis;
 import com.bmt.java_bmt.services.authentication.IRegistrationService;
 import com.bmt.java_bmt.utils.Generator;
 import com.bmt.java_bmt.utils.senders.OTPEmailSender;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
@@ -41,6 +43,7 @@ public class RegistrationImpl implements IRegistrationService {
     OTPEmailSender otpEmailSender;
     IRegistrationMapper registrationMapper;
     IUserMapper userMapper;
+    PasswordEncoder passwordEncoder;
 
     @Override
     public String sendOTP(SendOTPRequest request) {
@@ -114,6 +117,7 @@ public class RegistrationImpl implements IRegistrationService {
     }
 
     @Override
+    @Transactional
     public RegistrationResponse completeRegistration(CompleteRegistrationRequest request) {
         String registrationCompleteKey = RedisKey.REGISTRATION_COMPLETE + request.getEmail();
 
@@ -125,6 +129,7 @@ public class RegistrationImpl implements IRegistrationService {
                 .save(userMapper.toPersonalInformation(request.getPersonalInformation()));
         var user = userMapper.toUser(request);
 
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setPersonalInformation(personalInformation);
         user.setRole(Role.CUSTOMER);
         user.setSource(Source.APP);
@@ -135,6 +140,8 @@ public class RegistrationImpl implements IRegistrationService {
 
         redisService.delete(registrationKey);
         redisService.delete(registrationCompleteKey);
+
+        request.setPassword(user.getPassword());
 
         return registrationMapper.toRegistrationResponse(request);
     }
