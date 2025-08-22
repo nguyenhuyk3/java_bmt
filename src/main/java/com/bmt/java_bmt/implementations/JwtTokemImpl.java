@@ -1,7 +1,7 @@
 package com.bmt.java_bmt.implementations;
 
 import com.bmt.java_bmt.dto.others.TokenPair;
-import com.bmt.java_bmt.dto.responses.authentication.login.TokenRefreshResponse;
+import com.bmt.java_bmt.dto.responses.authentication.jwt.TokenRefreshResponse;
 import com.bmt.java_bmt.entities.User;
 import com.bmt.java_bmt.exceptions.AppException;
 import com.bmt.java_bmt.exceptions.ErrorCode;

@@ -1,4 +1,4 @@
-package com.bmt.java_bmt.dto.responses.authentication.login;
+package com.bmt.java_bmt.dto.responses.authentication.jwt;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

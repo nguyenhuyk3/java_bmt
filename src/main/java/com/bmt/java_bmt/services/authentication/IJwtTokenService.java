@@ -1,7 +1,7 @@
 package com.bmt.java_bmt.services.authentication;
 
 import com.bmt.java_bmt.dto.others.TokenPair;
-import com.bmt.java_bmt.dto.responses.authentication.login.TokenRefreshResponse;
+import com.bmt.java_bmt.dto.responses.authentication.jwt.TokenRefreshResponse;
 import com.bmt.java_bmt.entities.User;
 import com.bmt.java_bmt.repositories.IUserRepository;
 import io.jsonwebtoken.Claims;
@@ -48,7 +48,7 @@ public interface IJwtTokenService {
      * @param token Refresh token cần verify
      * @return Claims nếu token hợp lệ
      */
-    Claims verifyRefreshToken(String token)
+    Claims verifyRefreshToken(String token);
 
     /**
      * Làm mới access token bằng refresh token
@@ -73,5 +73,5 @@ public interface IJwtTokenService {
      * @param token JWT token
      * @return true nếu hết hạn
      */
-    boolean isTokenExpired(String token)
+    boolean isTokenExpired(String token);
 }
