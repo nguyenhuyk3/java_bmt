@@ -20,6 +20,7 @@ import com.bmt.java_bmt.utils.senders.OTPEmailSender;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
@@ -41,6 +42,7 @@ public class RegistrationImpl implements IRegistrationService {
     OTPEmailSender otpEmailSender;
     IRegistrationMapper registrationMapper;
     IUserMapper userMapper;
+    PasswordEncoder passwordEncoder;
 
     @Override
     public String sendOTP(SendOTPRequest request) {
@@ -125,6 +127,7 @@ public class RegistrationImpl implements IRegistrationService {
                 .save(userMapper.toPersonalInformation(request.getPersonalInformation()));
         var user = userMapper.toUser(request);
 
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setPersonalInformation(personalInformation);
         user.setRole(Role.CUSTOMER);
         user.setSource(Source.APP);
