@@ -58,7 +58,7 @@ public class RegistrationImpl implements IRegistrationService {
             Check if there is a key in redis
             If it exists, then the email is in the process of being registered.
          */
-        String registrationKey = RedisKey.IS_IN_REGISTRATION + request.getEmail();
+        String registrationKey = RedisKey.IS_IN_REGISTRATION_PROCESS + request.getEmail();
 
         if (redisService.existsKey(registrationKey)) {
             throw new AppException(ErrorCode.EMAIL_IS_IN_REGISTRATION_PROCESS);
@@ -94,11 +94,11 @@ public class RegistrationImpl implements IRegistrationService {
             If it does not exist, it means this email has not gone through the sendOTP api.
          */
         String registrationOTPKey = RedisKey.REGISTRATION_OTP + request.getEmail();
-        String registrationCompleteKey = RedisKey.REGISTRATION_COMPLETE + request.getEmail();
+        String registrationCompletionKey = RedisKey.REGISTRATION_COMPLETION + request.getEmail();
 
         if (!redisService.existsKey(registrationOTPKey)) {
-            if (redisService.existsKey(registrationCompleteKey)) {
-                throw new AppException(ErrorCode.EMAIL_IS_IN_COMPLETION_REGISTRATION);
+            if (redisService.existsKey(registrationCompletionKey)) {
+                throw new AppException(ErrorCode.EMAIL_IS_IN_REGISTRATION_COMPLETION);
             }
 
             throw new AppException(ErrorCode.EMAIL_IS_NOT_REGISTRATION_PROCESS);
@@ -110,7 +110,7 @@ public class RegistrationImpl implements IRegistrationService {
             throw new AppException(ErrorCode.OTP_DONT_MATCH);
         }
 
-        redisService.save(registrationCompleteKey, true, OTP_EXPIRE_MINUTES, TimeUnit.MINUTES);
+        redisService.save(registrationCompletionKey, true, OTP_EXPIRE_MINUTES, TimeUnit.MINUTES);
         redisService.delete(registrationOTPKey);
 
         return "Xác thực mã OTP thành công";
@@ -119,10 +119,10 @@ public class RegistrationImpl implements IRegistrationService {
     @Override
     @Transactional
     public RegistrationResponse completeRegistration(CompleteRegistrationRequest request) {
-        String registrationCompleteKey = RedisKey.REGISTRATION_COMPLETE + request.getEmail();
+        String registrationCompletionKey = RedisKey.REGISTRATION_COMPLETION + request.getEmail();
 
-        if (!redisService.existsKey(registrationCompleteKey)) {
-            throw new AppException(ErrorCode.EMAIL_IS_NOT_IN_COMPLETION_REGISTRATION);
+        if (!redisService.existsKey(registrationCompletionKey)) {
+            throw new AppException(ErrorCode.EMAIL_IS_NOT_IN_REGISTRATION_COMPLETION);
         }
 
         var personalInformation = personalInformationRepository
@@ -136,10 +136,10 @@ public class RegistrationImpl implements IRegistrationService {
 
         userRepository.save(user);
 
-        String registrationKey = RedisKey.IS_IN_REGISTRATION + request.getEmail();
+        String registrationKey = RedisKey.IS_IN_REGISTRATION_PROCESS + request.getEmail();
 
         redisService.delete(registrationKey);
-        redisService.delete(registrationCompleteKey);
+        redisService.delete(registrationCompletionKey);
 
         request.setPassword(user.getPassword());
 

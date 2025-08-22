@@ -52,11 +52,14 @@ import org.springframework.web.filter.CorsFilter;
  */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class SecurityConfiguration {
-    String[] PUBLIC_ENDPOINTS = {
-            "/auth/register/send-otp",
-            "/auth/register/verify-registration-otp",
-            "/auth/register/complete-registration",
-            "/auth/login/**"
+    String[] POST_PUBLIC_ENDPOINTS = {
+            "/auth/register/**",
+            "/auth/login/**",
+            "/auth/forgot-password/**"
+    };
+
+    String[] PUT_PUBLIC_ENDPOINTS = {
+            "/auth/forgot-password/**"
     };
 
     @Bean
@@ -67,8 +70,10 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests(
-                req -> req.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS)
-                        .permitAll()
+                req
+                        -> req
+                        .requestMatchers(HttpMethod.POST, POST_PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers(HttpMethod.PUT, PUT_PUBLIC_ENDPOINTS).permitAll()
                         .anyRequest().authenticated());
 //        httpSecurity.oauth2ResourceServer(
 //                oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer
