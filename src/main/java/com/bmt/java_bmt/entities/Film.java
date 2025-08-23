@@ -63,12 +63,13 @@ public class Film {
     @OneToOne(mappedBy = "film", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private OtherFilmInformation otherFilmInformation;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @ManyToMany(
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "film_people",
             joinColumns = @JoinColumn(name = "f_id"),
-            inverseJoinColumns = @JoinColumn(name = "fpf_id")
-    )
+            inverseJoinColumns = @JoinColumn(name = "fpf_id"))
     private Set<FilmProfessional> filmProfessionals = new HashSet<>();
 
     @OneToMany(mappedBy = "film")

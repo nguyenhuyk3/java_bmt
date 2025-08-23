@@ -1,6 +1,6 @@
 package com.bmt.java_bmt.entities;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -34,12 +34,12 @@ public class FilmProfessional {
     private Job job;
 
     @CreationTimestamp
-    @Column(name = "fpf_created_at")
-    private LocalDateTime createdAt;
+    @Column(name = "fpf_created_at", nullable = false, updatable = false)
+    private Instant createdAt;
 
     @UpdateTimestamp
-    @Column(name = "fpf_updated_at")
-    private LocalDateTime updatedAt;
+    @Column(name = "fpf_updated_at", nullable = false)
+    private Instant updatedAt;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pi_id", referencedColumnName = "pi_id", nullable = false)
