@@ -15,7 +15,7 @@ public class TokenPair {
     private String accessToken;
     private String refreshToken;
     private String tokenType;
-//    private Long expiresIn;
+    //    private Long expiresIn;
     private Date accessTokenExpiresAt;
     private Date refreshTokenExpiresAt;
 }

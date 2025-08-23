@@ -30,7 +30,8 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         	- Chi tiết:
         		+ MediaType.APPLICATION_JSON_VALUE tương đương với chuỗi "application/json".
         */
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8");
+        response.setCharacterEncoding("UTF-8");
 
         APIResponse<?> apiResponse = APIResponse.builder()
                 .code(errorCode.getCode())

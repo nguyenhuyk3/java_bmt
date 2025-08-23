@@ -18,7 +18,9 @@ import com.bmt.java_bmt.services.authentication.IJwtTokenService;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CustomJwtDecoder implements JwtDecoder {
@@ -39,10 +41,10 @@ public class CustomJwtDecoder implements JwtDecoder {
         }
 
         if (Objects.isNull(nimbusJwtDecoder)) {
-            SecretKeySpec secretKeySpec = new SecretKeySpec(ACCESS_SECRET.getBytes(), "HS512");
+            SecretKeySpec secretKeySpec = new SecretKeySpec(ACCESS_SECRET.getBytes(), "HS256");
 
             nimbusJwtDecoder = NimbusJwtDecoder.withSecretKey(secretKeySpec)
-                    .macAlgorithm(MacAlgorithm.HS512)
+                    .macAlgorithm(MacAlgorithm.HS256)
                     .build();
         }
 
