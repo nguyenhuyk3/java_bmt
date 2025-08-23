@@ -1,13 +1,15 @@
 package com.bmt.java_bmt.entities;
 
-import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
+
+import jakarta.persistence.*;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import lombok.*;
 
 @Data
 @NoArgsConstructor
@@ -17,12 +19,12 @@ import java.util.UUID;
 @Table(name = "auditoriums")
 public class Auditorium {
     /*
-            - @GeneratedValue(strategy = GenerationType.UUID) trong JPA/Hibernate
-        được dùng để tự động sinh giá trị cho khóa chính (@Id) theo cơ chế UUID
+    	- @GeneratedValue(strategy = GenerationType.UUID) trong JPA/Hibernate
+    được dùng để tự động sinh giá trị cho khóa chính (@Id) theo cơ chế UUID
     */
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "a_id", length = 36, nullable = false)
+    @Column(name = "a_id", columnDefinition = "BINARY(16)", nullable = false, updatable = false)
     private UUID id;
 
     @Column(name = "a_name", columnDefinition = "TEXT", nullable = false)
@@ -43,12 +45,12 @@ public class Auditorium {
     private LocalDateTime updatedAt;
 
     /*
-     - LAZY
-         + Khi load entity cha (Auditorium), JPA không load Seat ngay lập tức.
-         + Chỉ khi bạn truy cập getter (Auditorium thì Hibernate mới truy vấn DB để lấy dữ liệu Seat
-         (kỹ thuật này gọi là lazy loading hoặc proxy).
-         + Dễ bị lỗi LazyInitializationException sau khi session/transaction đã đóng.
-    */
+    - LAZY
+    	+ Khi load entity cha (Auditorium), JPA không load Seat ngay lập tức.
+    	+ Chỉ khi bạn truy cập getter (Auditorium thì Hibernate mới truy vấn DB để lấy dữ liệu Seat
+    	(kỹ thuật này gọi là lazy loading hoặc proxy).
+    	+ Dễ bị lỗi LazyInitializationException sau khi session/transaction đã đóng.
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "c_id", nullable = false)
     private Cinema cinema;

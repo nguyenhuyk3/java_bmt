@@ -1,14 +1,17 @@
 package com.bmt.java_bmt.entities;
 
-import com.bmt.java_bmt.entities.enums.City;
-import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
+
+import jakarta.persistence.*;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import com.bmt.java_bmt.entities.enums.City;
+
+import lombok.*;
 
 @Data
 @NoArgsConstructor
@@ -19,7 +22,7 @@ import java.util.UUID;
 public class Cinema {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "c_id", length = 36, nullable = false)
+    @Column(name = "c_id", columnDefinition = "BINARY(16)", nullable = false, updatable = false)
     private UUID id;
 
     @Column(name = "c_name", columnDefinition = "TEXT", nullable = false, unique = true)
@@ -44,10 +47,10 @@ public class Cinema {
     private LocalDateTime updatedAt;
 
     /*
-        - mappedBy = "cinema" → quan hệ này được ánh xạ (mapping)
-        từ phía Auditorium, chứ không tạo cột khóa ngoại ở bảng Cinema.
-        - Tức là:
-            + Trong bảng auditoriums sẽ có cột c_id (FK) trỏ đến cinemas.c_id.
+    - mappedBy = "cinema" → quan hệ này được ánh xạ (mapping)
+    từ phía Auditorium, chứ không tạo cột khóa ngoại ở bảng Cinema.
+    - Tức là:
+    	+ Trong bảng auditoriums sẽ có cột c_id (FK) trỏ đến cinemas.c_id.
     */
     @OneToMany(mappedBy = "cinema")
     private Set<Auditorium> auditoriums;

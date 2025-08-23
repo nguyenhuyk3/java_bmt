@@ -1,9 +1,10 @@
 package com.bmt.java_bmt.entities;
 
-import jakarta.persistence.*;
-import lombok.*;
-
 import java.util.UUID;
+
+import jakarta.persistence.*;
+
+import lombok.*;
 
 @Data
 @NoArgsConstructor
@@ -14,7 +15,7 @@ import java.util.UUID;
 public class OrderFab {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "of_id", length = 36, nullable = false)
+    @Column(name = "of_id", columnDefinition = "BINARY(16)", nullable = false, updatable = false)
     private UUID id;
 
     @Column(name = "of_quantity", nullable = false)

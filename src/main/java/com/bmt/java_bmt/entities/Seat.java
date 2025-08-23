@@ -1,13 +1,16 @@
 package com.bmt.java_bmt.entities;
 
-import com.bmt.java_bmt.entities.enums.SeatType;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 import jakarta.persistence.*;
-import lombok.*;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
+import com.bmt.java_bmt.entities.enums.SeatType;
+
+import lombok.*;
 
 @Data
 @NoArgsConstructor
@@ -18,7 +21,7 @@ import java.util.UUID;
 public class Seat {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "se_id", length = 36, nullable = false)
+    @Column(name = "se_id", columnDefinition = "BINARY(16)", nullable = false, updatable = false)
     private UUID id;
 
     @Column(name = "se_seat_number", length = 16, nullable = false)

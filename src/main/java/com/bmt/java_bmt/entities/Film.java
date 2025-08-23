@@ -1,17 +1,20 @@
 package com.bmt.java_bmt.entities;
 
-import com.bmt.java_bmt.entities.enums.Genre;
-import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+
+import jakarta.persistence.*;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import com.bmt.java_bmt.entities.enums.Genre;
+
+import lombok.*;
 
 @Data
 @NoArgsConstructor
@@ -22,7 +25,7 @@ import java.util.UUID;
 public class Film {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "f_id", length = 36, nullable = false)
+    @Column(name = "f_id", columnDefinition = "BINARY(16)", nullable = false, updatable = false)
     private UUID id;
 
     @Column(name = "f_title", columnDefinition = "TEXT", nullable = false)

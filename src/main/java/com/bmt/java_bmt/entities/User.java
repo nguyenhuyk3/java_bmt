@@ -1,15 +1,17 @@
 package com.bmt.java_bmt.entities;
 
-import com.bmt.java_bmt.entities.enums.Role;
-import com.bmt.java_bmt.entities.enums.Source;
+import java.time.Instant;
+import java.util.UUID;
+
 import jakarta.persistence.*;
-import lombok.*;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.Instant;
-import java.util.Set;
-import java.util.UUID;
+import com.bmt.java_bmt.entities.enums.Role;
+import com.bmt.java_bmt.entities.enums.Source;
+
+import lombok.*;
 
 @Data
 @NoArgsConstructor
@@ -20,11 +22,11 @@ import java.util.UUID;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "u_id", length = 36, nullable = false)
+    @Column(name = "u_id", columnDefinition = "BINARY(16)", nullable = false, updatable = false)
     private UUID id;
 
-    @Column(name = "u_account_name", length = 64, nullable = false)
-    private String accountName;
+    @Column(name = "u_email", length = 64, nullable = false)
+    private String email;
 
     @Column(name = "u_password", length = 128, nullable = false)
     private String password;
@@ -49,10 +51,6 @@ public class User {
     @JoinColumn(name = "pi_id", referencedColumnName = "pi_id", nullable = false)
     private PersonalInformation personalInformation;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private ContactInformation contactInformation;
-
-    @OneToMany(mappedBy = "orderedBy")
-    private Set<Order> orders;
-
+    //    @OneToMany(mappedBy = "orderedBy")
+    //    private Set<Order> orders;
 }

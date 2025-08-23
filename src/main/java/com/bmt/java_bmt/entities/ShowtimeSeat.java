@@ -1,12 +1,15 @@
 package com.bmt.java_bmt.entities;
 
-import com.bmt.java_bmt.entities.enums.SeatStatus;
-import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
+
+import jakarta.persistence.*;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import com.bmt.java_bmt.entities.enums.SeatStatus;
+
+import lombok.*;
 
 @Data
 @NoArgsConstructor
@@ -17,7 +20,7 @@ import java.util.UUID;
 public class ShowtimeSeat {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "ss_id", length = 36, nullable = false)
+    @Column(name = "ss_id", columnDefinition = "BINARY(16)", nullable = false, updatable = false)
     private UUID id;
 
     @Enumerated(EnumType.STRING)

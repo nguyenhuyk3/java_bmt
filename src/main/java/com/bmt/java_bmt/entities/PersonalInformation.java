@@ -1,11 +1,13 @@
 package com.bmt.java_bmt.entities;
 
-import com.bmt.java_bmt.entities.enums.Sex;
-import jakarta.persistence.*;
-import lombok.*;
-
 import java.time.LocalDate;
 import java.util.UUID;
+
+import jakarta.persistence.*;
+
+import com.bmt.java_bmt.entities.enums.Sex;
+
+import lombok.*;
 
 @Data
 @NoArgsConstructor
@@ -16,7 +18,7 @@ import java.util.UUID;
 public class PersonalInformation {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "pi_id", length = 36, nullable = false)
+    @Column(name = "pi_id", columnDefinition = "BINARY(16)", nullable = false, updatable = false)
     private UUID id;
 
     @Column(name = "pi_first_name", length = 64, nullable = false)
@@ -32,6 +34,6 @@ public class PersonalInformation {
     @Column(name = "pi_sex", nullable = false)
     private Sex sex;
 
-    @Column(name = "pi_avatar_url", columnDefinition = "TEXT", nullable = false)
+    @Column(name = "pi_avatar_url", columnDefinition = "TEXT", nullable = true)
     private String avatarUrl;
 }

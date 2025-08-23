@@ -1,14 +1,17 @@
 package com.bmt.java_bmt.entities;
 
-import com.bmt.java_bmt.entities.enums.OrderStatus;
-import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
+
+import jakarta.persistence.*;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import com.bmt.java_bmt.entities.enums.OrderStatus;
+
+import lombok.*;
 
 @Data
 @NoArgsConstructor
@@ -19,7 +22,7 @@ import java.util.UUID;
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "o_id", length = 36, nullable = false)
+    @Column(name = "o_id", columnDefinition = "BINARY(16)", nullable = false, updatable = false)
     private UUID id;
 
     @Enumerated(EnumType.STRING)
