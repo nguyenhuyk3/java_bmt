@@ -46,11 +46,14 @@ public enum ErrorCode {
 
     // User
     USER_ID_DOESNT_EXIST(22001, "User không tồn tại", HttpStatus.NOT_FOUND),
-    PASSWORD_INCORRECT(20014, "Mật khẩu không đúng", HttpStatus.UNAUTHORIZED),
+    PASSWORD_INCORRECT(22002, "Mật khẩu không đúng", HttpStatus.UNAUTHORIZED),
+
+    UNAUTHENTICATED(23001, "Bạn chưa được xác thực. Vui lòng đăng nhập.", HttpStatus.UNAUTHORIZED),
+    UNAUTHORIZED(23002, "Bạn không có quyền thực hiện hành động này.", HttpStatus.FORBIDDEN),
+
 
     UNCATEGORIZED_EXCEPTION(9999, "Lỗi không xác định", HttpStatus.INTERNAL_SERVER_ERROR),
     INVALID_KEY(1001, "Lỗi không xác định", HttpStatus.BAD_REQUEST),
-    UNAUTHORIZED(1007, "Bạn không có quyền truy cập vào tài nguyên", HttpStatus.FORBIDDEN),
     ;
 
     private int code;

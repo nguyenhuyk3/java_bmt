@@ -104,7 +104,7 @@ public class JwtTokemImpl implements IJwtTokenService {
                     .accessToken(accessToken)
                     .refreshToken(refreshToken)
                     .tokenType("Bearer")
-                    .expiresIn(accessTokenExpirationSeconds)
+//                    .expiresIn(accessTokenExpirationSeconds)
                     .accessTokenExpiresAt(Date.from(accessTokenExpires))
                     .refreshTokenExpiresAt(Date.from(refreshTokenExpires))
                     .build();
