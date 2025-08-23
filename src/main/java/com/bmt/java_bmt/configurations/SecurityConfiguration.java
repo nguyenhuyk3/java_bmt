@@ -64,7 +64,6 @@ public class SecurityConfiguration {
     String[] GET_PUBLIC_ENDPOINTS = {"/user/**"};
     String[] GET_ADMIN_PRIVATE_ENDPOINTS = {"/any/**"};
 
-
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(10);

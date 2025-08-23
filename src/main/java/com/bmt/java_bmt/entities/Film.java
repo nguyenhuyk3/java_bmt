@@ -63,8 +63,13 @@ public class Film {
     @OneToOne(mappedBy = "film", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private OtherFilmInformation otherFilmInformation;
 
-    @OneToMany(mappedBy = "film")
-    private Set<FilmPerson> filmPeople;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @JoinTable(
+            name = "film_people",
+            joinColumns = @JoinColumn(name = "f_id"),
+            inverseJoinColumns = @JoinColumn(name = "fpf_id")
+    )
+    private Set<FilmProfessional> filmProfessionals = new HashSet<>();
 
     @OneToMany(mappedBy = "film")
     private Set<Showtime> showtimes;
