@@ -4,7 +4,9 @@ import java.nio.file.AccessDeniedException;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,9 +18,12 @@ import com.bmt.java_bmt.dto.APIResponse;
 Đánh dấu class này là "bộ xử lý ngoại lệ toàn cục" (global exception handler) cho tất cả các controller trong app.
 Spring sẽ tự động bắt các lỗi được ném ra trong controller và chuyển vào đây xử lý.
 */
+@Slf4j
 public class GlobalExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     ResponseEntity<APIResponse> handleRuntimeException(RuntimeException ex) {
+        SecurityContextHolder.getContext().getAuthentication().getAuthorities().forEach(a -> log.info("Authority: {}", a.getAuthority()));
+
         return ResponseEntity.badRequest()
                 .body(APIResponse.builder()
                         .code(ErrorCode.UNCATEGORIZED_EXCEPTION.getCode())

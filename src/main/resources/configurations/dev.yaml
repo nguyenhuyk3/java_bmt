@@ -11,3 +11,6 @@ jwt:
   refresh:
     secret: "30d4a667-4d44-439e-9fd1-db45a01606c3"
     expiration: 604800 # 7 days
+manager:
+  email: "huykimcuong4@gmail.com"
+  password: "anhiuemlove33"

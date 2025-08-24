@@ -27,11 +27,13 @@ public class OtherFilmInformation {
     /*
     @MapsId làm gì?
     - @MapsId nói với JPA rằng:
-    	+ Khóa chính của entity con (ContactInformation)
-    	sẽ được ánh xạ (map) từ khóa chính của entity cha (User).
-    	+ Bạn không cần sinh ra một ID riêng cho ContactInformation, mà ID chính là ID của User.
+    	+ Khóa chính của entity con (OtherFilmInformation)
+    	sẽ được ánh xạ (map) từ khóa chính của entity cha (Film).
+    	+ Bạn không cần sinh ra một ID riêng cho OtherFilmInformation, mà ID chính là ID của Film.
     */
     @MapsId
     @JoinColumn(name = "f_id")
+    @ToString.Exclude // QUAN TRỌNG: Loại trừ khỏi toString()
+    @EqualsAndHashCode.Exclude // QUAN TRỌNG: Loại trừ khỏi equals() và hashCode()
     private Film film;
 }

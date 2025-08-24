@@ -4,5 +4,6 @@ public final class Others {
     private Others() {}
 
     // Role
-    public static final String ADMIN = "ADMIN";
+    public static final String MANAGER = "MANAGER";
+    public static final String CUSTOMER = "CUSTOMER";
 }

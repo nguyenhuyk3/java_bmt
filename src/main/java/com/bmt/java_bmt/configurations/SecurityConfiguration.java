@@ -59,10 +59,10 @@ nhưng bạn không thể cấu hình chi tiết được.
 */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class SecurityConfiguration {
-    String[] POST_PUBLIC_ENDPOINTS = {"/auth/register/**", "/auth/login/**", "/auth/forgot-password/**"};
+    String[] POST_PUBLIC_ENDPOINTS = {"/auth/register/**", "/auth/login/**", "/auth/forgot-password/**", "/film/**"};
     String[] PUT_PUBLIC_ENDPOINTS = {"/auth/forgot-password/**"};
     String[] GET_PUBLIC_ENDPOINTS = {"/user/**"};
-    String[] GET_ADMIN_PRIVATE_ENDPOINTS = {"/any/**"};
+    String[] POST_MANAGER_PRIVATE_ENDPOINTS = {"/film/**"};
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -75,14 +75,14 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeHttpRequests(req -> req.requestMatchers(HttpMethod.POST, POST_PUBLIC_ENDPOINTS)
+        httpSecurity.authorizeHttpRequests(req -> req.requestMatchers(HttpMethod.POST, POST_MANAGER_PRIVATE_ENDPOINTS)
+                .hasRole(Others.MANAGER)
+                .requestMatchers(HttpMethod.GET, GET_PUBLIC_ENDPOINTS)
+                .hasAnyRole(Others.CUSTOMER, Others.MANAGER)
+                .requestMatchers(HttpMethod.POST, POST_PUBLIC_ENDPOINTS)
                 .permitAll()
                 .requestMatchers(HttpMethod.PUT, PUT_PUBLIC_ENDPOINTS)
                 .permitAll()
-                .requestMatchers(HttpMethod.GET, GET_PUBLIC_ENDPOINTS)
-                .permitAll()
-                .requestMatchers(HttpMethod.GET, GET_ADMIN_PRIVATE_ENDPOINTS)
-                .hasRole(Others.ADMIN)
                 .anyRequest()
                 .authenticated());
         httpSecurity.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer
@@ -91,7 +91,7 @@ public class SecurityConfiguration {
                 .authenticationEntryPoint(new JwtAuthenticationEntryPoint()));
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
-                .exceptionHandling(ex -> ex.authenticationEntryPoint(new JwtAuthenticationEntryPoint()) // chưa login
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(new JwtAuthenticationEntryPoint())
                         .accessDeniedHandler(new CustomAccessDeniedHandler()));
 
         return httpSecurity.build();

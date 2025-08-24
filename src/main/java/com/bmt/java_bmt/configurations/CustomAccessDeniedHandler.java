@@ -28,7 +28,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
         APIResponse<?> apiResponse = APIResponse.builder()
                 .code(errorCode.getCode())
-                .message("Bạn không có quyền quản lí để truy cập tài nguyên này")
+                .message(errorCode.getMessage())
                 .build();
         ObjectMapper mapper = new ObjectMapper();
 
