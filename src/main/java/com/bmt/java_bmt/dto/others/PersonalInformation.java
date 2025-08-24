@@ -17,11 +17,8 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PersonalInformation {
-    @NotBlank(message = "Họ không được để trống")
-    String firstName;
-
     @NotBlank(message = "Tên không được để trống")
-    String lastName;
+    String fullName;
 
     @Past(message = "Ngày sinh phải nhỏ hơn ngày hiện tại")
     LocalDate dateOfBirth;

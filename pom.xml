@@ -138,6 +138,24 @@
             <artifactId>cloudinary-http44</artifactId>
             <version>1.32.0</version>
         </dependency>
+
+        <!-- Elasticsearch Java Client -->
+        <dependency>
+            <groupId>co.elastic.clients</groupId>
+            <artifactId>elasticsearch-java</artifactId>
+            <version>8.10.4</version>
+        </dependency>
+        <!-- JSON-B or Jackson for serializing/deserializing -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.15.2</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.json</groupId>
+            <artifactId>jakarta.json-api</artifactId>
+            <version>2.1.1</version>
+        </dependency>
     </dependencies>
 
     <build>

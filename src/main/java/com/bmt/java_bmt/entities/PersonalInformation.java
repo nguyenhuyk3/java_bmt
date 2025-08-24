@@ -21,12 +21,9 @@ public class PersonalInformation {
     @Column(name = "pi_id", columnDefinition = "BINARY(16)", nullable = false, updatable = false)
     private UUID id;
 
-    @Column(name = "pi_first_name", length = 64, nullable = false)
-    private String firstName;
-
-    @Column(name = "pi_last_name", length = 64, nullable = false)
-    private String lastName;
-
+    @Column(name = "pi_full_name", length = 64, nullable = false)
+    private String fullName;
+    
     @Column(name = "pi_date_of_birth", nullable = false)
     private LocalDate dateOfBirth;
 
