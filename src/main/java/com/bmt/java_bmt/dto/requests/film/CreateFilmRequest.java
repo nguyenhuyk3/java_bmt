@@ -7,14 +7,14 @@ import java.util.UUID;
 
 import jakarta.validation.constraints.*;
 
-import com.bmt.java_bmt.dto.others.OtherFilmInformation;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.bmt.java_bmt.entities.enums.Genre;
 
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.multipart.MultipartFile;
 
 @Builder
 @Data

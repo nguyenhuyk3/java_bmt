@@ -49,7 +49,6 @@ public enum ErrorCode {
     PASSWORD_INCORRECT(22002, "Mật khẩu không đúng", HttpStatus.UNAUTHORIZED),
     PROFESSIONAL_ID_DOESNT_EXIST(22003, "Người làm phim không tồn tại", HttpStatus.NOT_FOUND),
 
-
     UNAUTHENTICATED(23001, "Bạn chưa được xác thực. Vui lòng đăng nhập", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(23002, "Bạn không có quyền thực hiện hành động này", HttpStatus.FORBIDDEN),
 

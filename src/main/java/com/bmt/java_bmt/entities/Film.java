@@ -63,18 +63,18 @@ public class Film {
 
     // Quan hệ 1-1 với OtherFilmInformation
     /*
-        Cascade là gì?
-            - Khi bạn thao tác với entity parent,
-        cascade quyết định Hibernate có tự động thao tác entity con liên quan hay không.
-            - Ví dụ bạn có:
-                + Film là parent, OtherFilmInformation là child.
-                + Cascade sẽ tự động áp dụng các hành động trên Film cho OtherFilmInformation.
-        mappedBy là gì?
-            - mappedBy là thuộc tính dùng trong JPA để chỉ ra “phía nào là owner” của quan hệ.
-            - Nó chỉ định tên trường trong entity kia mà nắm giữ khóa ngoại (foreign key).
-            - Entity có mappedBy không phải owner, Hibernate sẽ không tạo cột/khóa ngoại mới ở bảng đó,
-        mà dựa vào bảng bên kia để quản lý.
-     */
+    Cascade là gì?
+    	- Khi bạn thao tác với entity parent,
+    cascade quyết định Hibernate có tự động thao tác entity con liên quan hay không.
+    	- Ví dụ bạn có:
+    		+ Film là parent, OtherFilmInformation là child.
+    		+ Cascade sẽ tự động áp dụng các hành động trên Film cho OtherFilmInformation.
+    mappedBy là gì?
+    	- mappedBy là thuộc tính dùng trong JPA để chỉ ra “phía nào là owner” của quan hệ.
+    	- Nó chỉ định tên trường trong entity kia mà nắm giữ khóa ngoại (foreign key).
+    	- Entity có mappedBy không phải owner, Hibernate sẽ không tạo cột/khóa ngoại mới ở bảng đó,
+    mà dựa vào bảng bên kia để quản lý.
+    */
     @OneToOne(mappedBy = "film", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude // QUAN TRỌNG: Loại trừ khỏi toString()
     @EqualsAndHashCode.Exclude // QUAN TRỌNG: Loại trừ khỏi equals() và hashCode()

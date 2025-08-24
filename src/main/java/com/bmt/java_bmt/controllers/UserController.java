@@ -1,6 +1,5 @@
 package com.bmt.java_bmt.controllers;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.bmt.java_bmt.dto.APIResponse;
