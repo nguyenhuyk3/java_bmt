@@ -30,8 +30,7 @@ public class UserImpl implements IUserService {
         var personalInformation = user.getPersonalInformation();
 
         return GetPersonalInformationResponse.builder()
-                .firstName(personalInformation.getFirstName())
-                .lastName(personalInformation.getLastName())
+                .fullName(personalInformation.getFullName())
                 .dateOfBirth(personalInformation.getDateOfBirth())
                 .sex(personalInformation.getSex())
                 .avatarUrl(personalInformation.getAvatarUrl())

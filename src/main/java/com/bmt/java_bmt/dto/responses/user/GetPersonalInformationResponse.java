@@ -19,11 +19,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class GetPersonalInformationResponse {
-    @NotBlank(message = "Họ không được để trống")
-    String firstName;
-
     @NotBlank(message = "Tên không được để trống")
-    String lastName;
+    String fullName;
 
     @Past(message = "Ngày sinh phải nhỏ hơn ngày hiện tại")
     LocalDate dateOfBirth;

@@ -57,8 +57,7 @@ public class ApplicationInitConfiguration {
                         .role(Role.MANAGER)
                         .source(Source.APP)
                         .personalInformation(PersonalInformation.builder()
-                                .firstName("First")
-                                .lastName("Manager")
+                                .fullName("Manager")
                                 .dateOfBirth(LocalDate.parse("1999-08-21"))
                                 .sex(Sex.MALE)
                                 .avatarUrl("NONE")
@@ -72,8 +71,7 @@ public class ApplicationInitConfiguration {
                 for (int i = 1; i <= 10; i++) {
                     PersonalInformation personalInformation =
                             personalInformationRepository.save(PersonalInformation.builder()
-                                    .firstName("DirectorFirst " + i)
-                                    .lastName("DirectorLast " + i)
+                                    .fullName("Director " + i)
                                     .dateOfBirth(LocalDate.of(1980, 1, i))
                                     .sex(Sex.MALE)
                                     .avatarUrl("NONE")
@@ -90,8 +88,7 @@ public class ApplicationInitConfiguration {
                 for (int i = 1; i <= 20; i++) {
                     PersonalInformation personalInformation =
                             personalInformationRepository.save(PersonalInformation.builder()
-                                    .firstName("ActorFirst " + i)
-                                    .lastName("ActorLast " + i)
+                                    .fullName("Actor " + i)
                                     .dateOfBirth(LocalDate.of(1990, 2, (i % 28) + 1))
                                     .sex(Sex.FEMALE)
                                     .avatarUrl("NONE")

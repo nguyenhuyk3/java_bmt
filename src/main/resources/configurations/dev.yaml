@@ -18,3 +18,6 @@ cloudinary:
   cloud-name: "danvvtgtl"
   api-key: "274831794215725"
   api-secret: "7Mts03GCsNkW4N9jN1XOLq6Cnxs"
+elastic-search:
+  indexes:
+    index-of-films: "index-of-films"

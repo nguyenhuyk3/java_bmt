@@ -7,12 +7,96 @@ services:
     ports:
       - "6379:6379"
     restart: unless-stopped
+
   mysql:
-      image: mysql:8.0.40-debian
-      container_name: mysql
-      hostname: mysql
-      restart: always
-      ports:
-        - '3306:3306'
-      environment:
-        MYSQL_ROOT_PASSWORD: anhiuemlove33
+    image: mysql:8.0.40-debian
+    container_name: mysql
+    hostname: mysql
+    restart: always
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: anhiuemlove33
+      MYSQL_DATABASE: bmt_database
+    command:
+      --server-id=1
+      --log-bin=mysql-bin
+      --binlog_format=ROW
+      --binlog_row_image=FULL
+      --gtid-mode=ON
+      --enforce-gtid-consistency=ON
+    networks:
+      - java_booking_ticket_net
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper
+    networks:
+      - java_booking_ticket_net
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 2181:2181
+    restart: "on-failure"
+
+  kafka:
+    image: confluentinc/cp-kafka
+    networks:
+      - java_booking_ticket_net
+    depends_on:
+      - zookeeper
+    ports:
+      - 9092:9092   # Port for external application (host)
+      - 29092:29092 # Internal port in Docker (optional)
+    restart: "on-failure"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      # KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+
+      # Configure listeners for both Docker network and host
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:29092,EXTERNAL://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  debezium:
+    image: debezium/connect:2.6
+    container_name: debezium
+    networks:
+      - java_booking_ticket_net
+    depends_on:
+      - kafka
+      - mysql
+    ports:
+      - "8083:8083"
+    environment:
+      # Specify the Kafka broker address for Debezium to send change events to the Kafka topic
+      BOOTSTRAP_SERVERS: kafka:29092
+      GROUP_ID: "1"
+      # Consumer ID group for Debezium to use when reading/writing from Kafka
+      CONFIG_STORAGE_TOPIC: connect-configs   # connect-configs: Save the configuration of the connectors
+      OFFSET_STORAGE_TOPIC: connect-offsets   # connect-offsets: Save the offset position that the connector has read to in the DB
+      STATUS_STORAGE_TOPIC: connect-statuses  # connect-statuses: Save the current state of the connector (running, failed, ...)
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    networks:
+      - java_booking_ticket_net
+    ports:
+      - "9000:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: bmt-kafka-cluster
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092 # Connect via Docker network
+      # KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka-1:9092
+      # KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka-1:9092,kafka-2:9093,kafka-3:9094
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+    depends_on:
+      - kafka
+    restart: unless-stopped
+
+networks:
+  java_booking_ticket_net:
+    driver: bridge
