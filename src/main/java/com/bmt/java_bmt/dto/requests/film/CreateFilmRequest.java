@@ -14,6 +14,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
+import org.springframework.web.multipart.MultipartFile;
 
 @Builder
 @Data
@@ -37,8 +38,11 @@ public class CreateFilmRequest {
     @NotEmpty(message = "Phim phải có ít nhất 1 thể loại")
     Set<Genre> genres;
 
-    @NotNull(message = "Thông tin khác của phim không được để trống")
-    OtherFilmInformation otherFilmInformation;
+    @NotNull(message = "Ảnh phim không được để trống")
+    MultipartFile image;
+
+    @NotNull(message = "Trailer phim không được để trống")
+    MultipartFile video;
 
     @NotEmpty(message = "Phim phải có ít nhất 1 người tham gia sản xuất")
     Set<UUID> filmProfessionalIds;

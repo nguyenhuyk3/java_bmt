@@ -1,9 +1,13 @@
 package com.bmt.java_bmt.implementations;
 
+import java.io.IOException;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.bmt.java_bmt.helpers.constants.Others;
+import com.bmt.java_bmt.services.ICloudinaryService;
 import jakarta.transaction.Transactional;
 
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,6 +30,7 @@ import com.bmt.java_bmt.services.IFilmService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.web.multipart.MultipartFile;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
@@ -35,29 +40,44 @@ public class FilmImpl implements IFilmService {
     IUserRepository userRepository;
     IFilmRepository filmRepository;
     IFilmProfessionalRepository filmProfessionalRepository;
+    ICloudinaryService cloudinaryService;
+
+    private String uploadIfPresent(MultipartFile file, UUID filmId, String type) throws IOException {
+        return (file != null && !file.isEmpty())
+                ? cloudinaryService.uploadFile(file, filmId.toString(), Others.FILM, type)
+                : null;
+    }
 
     @Override
     @Transactional
     public CreateFilmResponse createFilm(CreateFilmRequest request) {
-        User user = userRepository
-                .findById(UUID.fromString(
-                        SecurityContextHolder.getContext().getAuthentication().getName()))
+        UUID userId = UUID.fromString(SecurityContextHolder.getContext().getAuthentication().getName());
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_ID_DOESNT_EXIST));
-        Set<FilmProfessional> filmProfessionals = request.getFilmProfessionalIds() != null
-                ? request.getFilmProfessionalIds().stream()
-                .map(id -> filmProfessionalRepository
-                        .findById(id)
+        Set<FilmProfessional> filmProfessionals = Optional.ofNullable(request.getFilmProfessionalIds())
+                .orElse(Set.<UUID>of())
+                .stream()
+                .map(id -> filmProfessionalRepository.findById(id)
                         .orElseThrow(() -> new AppException(ErrorCode.PROFESSIONAL_ID_DOESNT_EXIST)))
-                .collect(Collectors.toSet())
-                : Set.of();
+                .collect(Collectors.toSet());
         Film film = filmMapper.toFilm(request);
-        OtherFilmInformation otherFilmInformation =
-                filmMapper.toOtherFilmInformation(request.getOtherFilmInformation());
-
-        otherFilmInformation.setFilm(film);
 
         film.setChangedBy(user);
-        film.setOtherFilmInformation(otherFilmInformation);
+
+        filmRepository.saveAndFlush(film);
+
+        OtherFilmInformation otherInfo = new OtherFilmInformation();
+
+        otherInfo.setFilm(film);
+
+        try {
+            otherInfo.setPosterUrl(uploadIfPresent(request.getImage(), film.getId(), Others.IMAGE));
+            otherInfo.setTrailerUrl(uploadIfPresent(request.getVideo(), film.getId(), Others.VIDEO));
+        } catch (IOException e) {
+            throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
+        }
+
+        film.setOtherFilmInformation(otherInfo);
         film.setFilmProfessionals(filmProfessionals);
 
         filmRepository.save(film);

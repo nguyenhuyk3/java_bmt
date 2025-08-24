@@ -14,3 +14,7 @@ jwt:
 manager:
   email: "huykimcuong4@gmail.com"
   password: "anhiuemlove33"
+cloudinary:
+  cloud-name: "danvvtgtl"
+  api-key: "274831794215725"
+  api-secret: "7Mts03GCsNkW4N9jN1XOLq6Cnxs"

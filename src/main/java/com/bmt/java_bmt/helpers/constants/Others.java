@@ -6,4 +6,12 @@ public final class Others {
     // Role
     public static final String MANAGER = "MANAGER";
     public static final String CUSTOMER = "CUSTOMER";
+
+    // Media type
+    public static final String VIDEO = "VIDEO";
+    public static final String IMAGE = "IMAGE";
+
+    // Product type
+    public static final String FILM = "FILM";
+    public static final String FAB = "FAB";
 }
