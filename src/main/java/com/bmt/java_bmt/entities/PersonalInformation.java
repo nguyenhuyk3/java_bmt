@@ -23,7 +23,7 @@ public class PersonalInformation {
 
     @Column(name = "pi_full_name", length = 64, nullable = false)
     private String fullName;
-    
+
     @Column(name = "pi_date_of_birth", nullable = false)
     private LocalDate dateOfBirth;
 

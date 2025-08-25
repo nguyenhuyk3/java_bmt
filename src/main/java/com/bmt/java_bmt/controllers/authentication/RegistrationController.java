@@ -1,6 +1,5 @@
 package com.bmt.java_bmt.controllers.authentication;
 
-import com.bmt.java_bmt.repositories.IOutboxRepository;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.PostMapping;

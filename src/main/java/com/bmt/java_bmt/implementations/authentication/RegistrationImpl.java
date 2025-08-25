@@ -1,15 +1,9 @@
 package com.bmt.java_bmt.implementations.authentication;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import javax.mail.MessagingException;
 
-import com.bmt.java_bmt.entities.Outbox;
-import com.bmt.java_bmt.helpers.constants.Others;
-import com.bmt.java_bmt.repositories.IOutboxRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,12 +20,14 @@ import com.bmt.java_bmt.exceptions.ErrorCode;
 import com.bmt.java_bmt.helpers.constants.RedisKey;
 import com.bmt.java_bmt.mappers.IRegistrationMapper;
 import com.bmt.java_bmt.mappers.IUserMapper;
+import com.bmt.java_bmt.repositories.IOutboxRepository;
 import com.bmt.java_bmt.repositories.IPersonalInformationRepository;
 import com.bmt.java_bmt.repositories.IUserRepository;
 import com.bmt.java_bmt.services.IRedis;
 import com.bmt.java_bmt.services.authentication.IRegistrationService;
 import com.bmt.java_bmt.utils.Generator;
 import com.bmt.java_bmt.utils.senders.OTPEmailSender;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -53,6 +49,8 @@ public class RegistrationImpl implements IRegistrationService {
     IRegistrationMapper registrationMapper;
     IUserMapper userMapper;
     PasswordEncoder passwordEncoder;
+    IOutboxRepository outboxRepository;
+    ObjectMapper objectMapper;
 
     @Override
     public String sendOTP(SendRegistrationOTPRequest request) {

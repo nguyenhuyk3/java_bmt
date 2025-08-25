@@ -1,12 +1,14 @@
 package com.bmt.java_bmt.entities;
 
-import jakarta.persistence.*;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-import org.hibernate.annotations.CreationTimestamp;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
+
+import jakarta.persistence.*;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Entity
 @Table(name = "outboxes")

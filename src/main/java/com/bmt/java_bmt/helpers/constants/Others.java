@@ -1,8 +1,7 @@
 package com.bmt.java_bmt.helpers.constants;
 
 public final class Others {
-    private Others() {
-    }
+    private Others() {}
 
     // Role
     public static final String MANAGER = "MANAGER";
@@ -18,6 +17,7 @@ public final class Others {
 
     // Outbox event type
     public static final String TEST = "TEST";
+    public static final String FILM_CREATED = "FILM_CREATED";
 
     // Kafka topic
     public static final String OUTBOX = "outbox_events.bmt_database.outboxes";

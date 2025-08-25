@@ -57,6 +57,7 @@ public enum ErrorCode {
 
     // Others
     FILE_UPLOAD_FAILED(39001, "Tải file thất bại", HttpStatus.INTERNAL_SERVER_ERROR),
+    JSON_PARSE_ERROR(1002, "Lỗi xử lý JSON", HttpStatus.INTERNAL_SERVER_ERROR),
 
     UNCATEGORIZED_EXCEPTION(99999, "Lỗi không xác định", HttpStatus.INTERNAL_SERVER_ERROR),
     INVALID_KEY(1001, "Lỗi không xác định", HttpStatus.BAD_REQUEST),
