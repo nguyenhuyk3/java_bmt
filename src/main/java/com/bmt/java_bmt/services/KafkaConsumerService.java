@@ -70,6 +70,38 @@ public class KafkaConsumerService {
                 .build();
     }
 
+    private void handleFilmCreated(JsonNode afterNode) {
+        JsonNode aggregatePayloadNode = afterNode.get("os_payload");
+
+        if (aggregatePayloadNode == null || aggregatePayloadNode.isNull()) {
+            log.error("❌ Trong trường 'after' không chứa 'os_payload', bỏ qua");
+            return;
+        }
+
+        try {
+            String aggregatePayloadString = aggregatePayloadNode.asText();
+            JsonNode finalPayload = objectMapper.readTree(aggregatePayloadString);
+            FilmId filmId = objectMapper.treeToValue(finalPayload, FilmId.class);
+            UUID filmUuid = UUID.fromString(filmId.getFilmId());
+            // Bước 1: Query CSDL để lấy dữ liệu tổng hợp
+            Optional<IFilmElasticsearchProjection> projectionOpt =
+                    filmRepository.findFilmDetailsForElasticsearch(filmUuid);
+
+            if (projectionOpt.isEmpty()) {
+                log.warn("⚠️ Không tìm thấy thông tin phim với ID {} trong CSDL. Có thể đã bị xóa.", filmId);
+                // Có thể gửi một lệnh xóa tới Elasticsearch ở đây nếu cần
+                return;
+            }
+
+            // Bước 2: Chuyển đổi projection thành FilmDocument
+            FilmDocument filmDocument = toFilmDocument(projectionOpt.get());
+            // Bước 3: Đẩy dữ liệu vào Elasticsearch
+            searchService.indexFilm(filmDocument);
+        } catch (JsonProcessingException e) {
+            log.error("❌ Lỗi khi parse 'os_payload' thành FilmId: {}", e.getMessage());
+        }
+    }
+
     @KafkaListener(topics = Others.OUTBOX, groupId = "java-bmt-group")
     public void listen(String message) {
         if (message == null) {
@@ -102,37 +134,7 @@ public class KafkaConsumerService {
 
             switch (eventTypeNode.asText()) {
                 case Others.FILM_CREATED:
-                    JsonNode aggregatePayloadNode = afterNode.get("os_payload");
-
-                    if (aggregatePayloadNode == null || aggregatePayloadNode.isNull()) {
-                        log.error("❌ Trong trường 'after' không chứa 'os_payload', bỏ qua");
-                        return;
-                    }
-
-                    try {
-                        String aggregatePayloadString = aggregatePayloadNode.asText();
-                        JsonNode finalPayload = objectMapper.readTree(aggregatePayloadString);
-                        FilmId filmId = objectMapper.treeToValue(finalPayload, FilmId.class);
-                        UUID filmUuid = UUID.fromString(filmId.getFilmId());
-                        // Bước 1: Query CSDL để lấy dữ liệu tổng hợp
-                        Optional<IFilmElasticsearchProjection> projectionOpt =
-                                filmRepository.findFilmDetailsForElasticsearch(filmUuid);
-
-                        if (projectionOpt.isEmpty()) {
-                            log.warn(
-                                    "⚠️ Không tìm thấy thông tin phim với ID {} trong CSDL. Có thể đã bị xóa.", filmId);
-                            // Có thể gửi một lệnh xóa tới Elasticsearch ở đây nếu cần
-                            return;
-                        }
-
-                        IFilmElasticsearchProjection projection = projectionOpt.get();
-                        // Bước 2: Chuyển đổi projection thành FilmDocument
-                        FilmDocument filmDocument = toFilmDocument(projection);
-                        // Bước 3: Đẩy dữ liệu vào Elasticsearch
-                        searchService.indexFilm(filmDocument);
-                    } catch (JsonProcessingException e) {
-                        log.error("❌ Lỗi khi parse 'os_payload' thành FilmId: {}", e.getMessage());
-                    }
+                    handleFilmCreated(afterNode);
 
                     return;
                 default:

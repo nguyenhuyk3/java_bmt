@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import co.elastic.clients.json.JsonData;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -111,10 +110,7 @@ public class SearchImpl implements ISearchService {
 
         try {
 
-
-
-
-             response = elasticsearchClient.search(
+            response = elasticsearchClient.search(
                     s -> s.index(INDEX_OF_FILMS)
                             .query(
                                     q -> q.bool(boolQueryBuilder.build()) // Đưa bool query đã xây dựng vào
