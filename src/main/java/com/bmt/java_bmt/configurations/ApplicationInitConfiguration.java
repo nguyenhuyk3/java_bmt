@@ -21,6 +21,7 @@ import com.bmt.java_bmt.entities.enums.Source;
 import com.bmt.java_bmt.repositories.IFilmProfessionalRepository;
 import com.bmt.java_bmt.repositories.IPersonalInformationRepository;
 import com.bmt.java_bmt.repositories.IUserRepository;
+import com.bmt.java_bmt.utils.Generator;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -71,7 +72,7 @@ public class ApplicationInitConfiguration {
                 for (int i = 1; i <= 10; i++) {
                     PersonalInformation personalInformation =
                             personalInformationRepository.save(PersonalInformation.builder()
-                                    .fullName("Director " + i)
+                                    .fullName(Generator.generateRandomString(8) + " Director " + i)
                                     .dateOfBirth(LocalDate.of(1980, 1, i))
                                     .sex(Sex.MALE)
                                     .avatarUrl("NONE")
@@ -88,7 +89,7 @@ public class ApplicationInitConfiguration {
                 for (int i = 1; i <= 20; i++) {
                     PersonalInformation personalInformation =
                             personalInformationRepository.save(PersonalInformation.builder()
-                                    .fullName("Actor " + i)
+                                    .fullName(Generator.generateRandomString(8) + "Actor " + i)
                                     .dateOfBirth(LocalDate.of(1990, 2, (i % 28) + 1))
                                     .sex(Sex.FEMALE)
                                     .avatarUrl("NONE")

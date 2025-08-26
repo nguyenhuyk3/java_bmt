@@ -1,11 +1,21 @@
 package com.bmt.java_bmt.services;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
+import com.bmt.java_bmt.dto.others.FilmDocument;
 import com.bmt.java_bmt.dto.others.FilmId;
+import com.bmt.java_bmt.dto.others.IFilmElasticsearchProjection;
+import com.bmt.java_bmt.dto.others.SimplePersonInformation;
 import com.bmt.java_bmt.helpers.constants.Others;
+import com.bmt.java_bmt.repositories.IFilmRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -20,6 +30,45 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class KafkaConsumerService {
     ObjectMapper objectMapper;
+    IFilmRepository filmRepository;
+    ISearchService searchService;
+
+    private FilmDocument toFilmDocument(IFilmElasticsearchProjection projection) throws JsonProcessingException {
+        List<String> genres =
+                (projection.getGenres() != null && !projection.getGenres().isBlank())
+                        ? objectMapper.readValue(projection.getGenres(), new TypeReference<List<String>>() {})
+                        : Collections.emptyList();
+        List<SimplePersonInformation> actors = (projection.getActors() != null
+                        && !projection.getActors().isBlank())
+                ? objectMapper.readValue(projection.getActors(), new TypeReference<List<SimplePersonInformation>>() {})
+                : Collections.emptyList();
+        List<SimplePersonInformation> directors =
+                (projection.getDirectors() != null && !projection.getDirectors().isBlank())
+                        ? objectMapper.readValue(
+                                projection.getDirectors(), new TypeReference<List<SimplePersonInformation>>() {})
+                        : Collections.emptyList();
+        //        LocalDate releaseDate = (projection.getReleaseDate() != null
+        //                && !projection.getReleaseDate().isBlank())
+        //                ? LocalDate.parse(projection.getReleaseDate())
+        //                : null;
+        //        LocalTime duration =
+        //                (projection.getDuration() != null && !projection.getDuration().isBlank())
+        //                        ? LocalTime.parse(projection.getDuration())
+        //                        : null;
+
+        return FilmDocument.builder()
+                .id(projection.getId())
+                .title(projection.getTitle())
+                .description(projection.getDescription())
+                .releaseDate(projection.getReleaseDate())
+                .duration(projection.getDuration())
+                .posterUrl(projection.getPosterUrl())
+                .trailerUrl(projection.getTrailerUrl())
+                .genres(genres)
+                .actors(actors)
+                .directors(directors)
+                .build();
+    }
 
     @KafkaListener(topics = Others.OUTBOX, groupId = "java-bmt-group")
     public void listen(String message) {
@@ -64,8 +113,23 @@ public class KafkaConsumerService {
                         String aggregatePayloadString = aggregatePayloadNode.asText();
                         JsonNode finalPayload = objectMapper.readTree(aggregatePayloadString);
                         FilmId filmId = objectMapper.treeToValue(finalPayload, FilmId.class);
+                        UUID filmUuid = UUID.fromString(filmId.getFilmId());
+                        // Bước 1: Query CSDL để lấy dữ liệu tổng hợp
+                        Optional<IFilmElasticsearchProjection> projectionOpt =
+                                filmRepository.findFilmDetailsForElasticsearch(filmUuid);
 
-                        log.info(filmId.toString());
+                        if (projectionOpt.isEmpty()) {
+                            log.warn(
+                                    "⚠️ Không tìm thấy thông tin phim với ID {} trong CSDL. Có thể đã bị xóa.", filmId);
+                            // Có thể gửi một lệnh xóa tới Elasticsearch ở đây nếu cần
+                            return;
+                        }
+
+                        IFilmElasticsearchProjection projection = projectionOpt.get();
+                        // Bước 2: Chuyển đổi projection thành FilmDocument
+                        FilmDocument filmDocument = toFilmDocument(projection);
+                        // Bước 3: Đẩy dữ liệu vào Elasticsearch
+                        searchService.indexFilm(filmDocument);
                     } catch (JsonProcessingException e) {
                         log.error("❌ Lỗi khi parse 'os_payload' thành FilmId: {}", e.getMessage());
                     }
@@ -73,15 +137,14 @@ public class KafkaConsumerService {
                     return;
                 default:
                     log.error("❌ Sự kiện không hợp lệ, bỏ qua");
-                    return;
             }
         } catch (JsonProcessingException e) {
             log.error("❌ Thất bại khi phân tích tin nhắn JSON: " + e.getMessage());
         } catch (Exception e) {
-            log.error("❌ Đã xảy ra lỗi không mong muốn trong khi xử lý tin nhắn: " + message);
+            log.error("❌ Đã xảy ra lỗi không mong muốn trong khi xử lý tin nhắn: " + e.getMessage());
 
             // Ném lại lỗi để Spring Kafka biết và xử lý (ví dụ: retry hoặc gửi tới DLQ)
-            throw new RuntimeException("Failed to process Kafka message", e);
+            //            throw new RuntimeException("Failed to process Kafka message", e);
         }
     }
 }

@@ -8,8 +8,6 @@ import lombok.*;
 @Getter
 @AllArgsConstructor
 public enum ErrorCode {
-    INVALID_REQUEST_BODY(10001, "Thân yêu cầu không hợp lệ", HttpStatus.BAD_REQUEST),
-
     // Email
     EMAIL_IS_IN_REGISTRATION_PROCESS(20001, "Email của bạn đang trong quá trình đăng kí", HttpStatus.CONFLICT),
     EMAIL_EXISTED(20002, "Email đã tồn tại", HttpStatus.BAD_REQUEST),
@@ -55,12 +53,16 @@ public enum ErrorCode {
     // Product
     INVALID_PRODUCT_TYPE(24001, "Loại sản phẩm không hợp lệ", HttpStatus.BAD_REQUEST),
 
+    // Elasticsearch
+    ELASTICSEARCH_INDEX_NOT_FOUND(25001, "Không tìm thấy index trong Elasticsearch", HttpStatus.NOT_FOUND),
+    ELASTICSEARCH_SEARCH_FAILED(25002, "Tìm kiếm phim thất bại", HttpStatus.INTERNAL_SERVER_ERROR),
+    ELASTICSEARCH_SEARCH_IO_EXCEPTION(25003, "Lỗi khi kết nối Elasticsearch", HttpStatus.INTERNAL_SERVER_ERROR),
+
     // Others
     FILE_UPLOAD_FAILED(39001, "Tải file thất bại", HttpStatus.INTERNAL_SERVER_ERROR),
-    JSON_PARSE_ERROR(1002, "Lỗi xử lý JSON", HttpStatus.INTERNAL_SERVER_ERROR),
-
-    UNCATEGORIZED_EXCEPTION(99999, "Lỗi không xác định", HttpStatus.INTERNAL_SERVER_ERROR),
-    INVALID_KEY(1001, "Lỗi không xác định", HttpStatus.BAD_REQUEST),
+    JSON_PARSE_ERROR(39002, "Lỗi xử lý JSON", HttpStatus.INTERNAL_SERVER_ERROR),
+    INVALID_REQUEST_BODY(39003, "Thân yêu cầu không hợp lệ", HttpStatus.BAD_REQUEST),
+    UNCATEGORIZED_EXCEPTION(39999, "Lỗi không xác định", HttpStatus.INTERNAL_SERVER_ERROR),
     ;
 
     private int code;

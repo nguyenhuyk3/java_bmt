@@ -12,21 +12,22 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.bmt.java_bmt.dto.others.FilmId;
 import com.bmt.java_bmt.dto.requests.film.CreateFilmRequest;
 import com.bmt.java_bmt.dto.responses.film.CreateFilmResponse;
-import com.bmt.java_bmt.entities.Film;
-import com.bmt.java_bmt.entities.FilmProfessional;
-import com.bmt.java_bmt.entities.OtherFilmInformation;
-import com.bmt.java_bmt.entities.User;
+import com.bmt.java_bmt.entities.*;
 import com.bmt.java_bmt.exceptions.AppException;
 import com.bmt.java_bmt.exceptions.ErrorCode;
 import com.bmt.java_bmt.helpers.constants.Others;
 import com.bmt.java_bmt.mappers.IFilmMapper;
 import com.bmt.java_bmt.repositories.IFilmProfessionalRepository;
 import com.bmt.java_bmt.repositories.IFilmRepository;
+import com.bmt.java_bmt.repositories.IOutboxRepository;
 import com.bmt.java_bmt.repositories.IUserRepository;
 import com.bmt.java_bmt.services.ICloudinaryService;
 import com.bmt.java_bmt.services.IFilmService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +42,8 @@ public class FilmImpl implements IFilmService {
     IFilmRepository filmRepository;
     IFilmProfessionalRepository filmProfessionalRepository;
     ICloudinaryService cloudinaryService;
+    IOutboxRepository outboxRepository;
+    ObjectMapper objectMapper;
 
     private String uploadIfPresent(MultipartFile file, UUID filmId, String type) throws IOException {
         return (file != null && !file.isEmpty())
@@ -80,7 +83,18 @@ public class FilmImpl implements IFilmService {
         film.setOtherFilmInformation(otherInfo);
         film.setFilmProfessionals(filmProfessionals);
 
-        filmRepository.save(film);
+        var savedFilm = filmRepository.save(film);
+
+        FilmId filmId = FilmId.builder().filmId(savedFilm.getId().toString()).build();
+
+        try {
+            outboxRepository.save(Outbox.builder()
+                    .eventType(Others.FILM_CREATED)
+                    .payload(objectMapper.writeValueAsString(filmId))
+                    .build());
+        } catch (JsonProcessingException e) {
+            throw new AppException(ErrorCode.JSON_PARSE_ERROR);
+        }
 
         return filmMapper.toCreateFilmResponse(film);
     }

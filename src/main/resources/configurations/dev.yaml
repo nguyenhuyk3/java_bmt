@@ -18,6 +18,8 @@ cloudinary:
   cloud-name: "danvvtgtl"
   api-key: "274831794215725"
   api-secret: "7Mts03GCsNkW4N9jN1XOLq6Cnxs"
-elastic-search:
+elasticsearch:
   indexes:
     index-of-films: "index-of-films"
+  host: localhost
+  port: 9200

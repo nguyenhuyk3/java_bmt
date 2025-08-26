@@ -97,6 +97,39 @@ services:
       - kafka
     restart: unless-stopped
 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4 # Use specific version
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node      # Runs as a single node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m  # RAM limit for dev environment
+      - xpack.security.enabled=false    # Turn off security for dev environment (easy to use)
+    ports:
+      - "9200:9200" # Port API
+      - "9300:9300" # Cluster internal communication port
+    networks:
+      - java_booking_ticket_net
+    restart: unless-stopped
+    healthcheck: # Check if Elasticsearch is ready
+      test: ["CMD", "curl", "-f", "http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=5s"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.13.4 # Kibana version MUST MATCH Elasticsearch
+    container_name: kibana
+    depends_on:
+      elasticsearch:
+        condition: service_healthy # Only start when Elasticsearch healthcheck is successful
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200 # Tell Kibana the Elasticsearch address
+    ports:
+      - "5601:5601"
+    networks:
+      - java_booking_ticket_net
+    restart: unless-stopped
+
 networks:
   java_booking_ticket_net:
     driver: bridge

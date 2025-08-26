@@ -1,14 +1,20 @@
 package com.bmt.java_bmt.dto.others;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Getter
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class SimplePersonInformation {
-    String id;
+    //    @JsonProperty("id")
+    //    String id;
+
+    @JsonProperty("fullName")
     String fullName;
 }
