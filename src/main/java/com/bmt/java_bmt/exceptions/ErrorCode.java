@@ -52,6 +52,8 @@ public enum ErrorCode {
 
     // Product
     INVALID_PRODUCT_TYPE(24001, "Loại sản phẩm không hợp lệ", HttpStatus.BAD_REQUEST),
+    FILM_NOT_FOUND(24002, "Phim không tồn tại", HttpStatus.NOT_FOUND),
+    CLOUDINARY_DELETE_FILE_FAILED(24003, "Xóa file ở Cloudinary thất bại", HttpStatus.INTERNAL_SERVER_ERROR),
 
     // Elasticsearch
     ELASTICSEARCH_INDEX_NOT_FOUND(25001, "Không tìm thấy index trong Elasticsearch", HttpStatus.NOT_FOUND),

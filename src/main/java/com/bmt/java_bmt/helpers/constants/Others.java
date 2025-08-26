@@ -16,8 +16,8 @@ public final class Others {
     public static final String FAB = "FAB";
 
     // Outbox event type
-    public static final String TEST = "TEST";
     public static final String FILM_CREATED = "FILM_CREATED";
+    public static final String FILM_UPDATED = "FILM_UPDATED";
 
     // Kafka topic
     public static final String OUTBOX = "outbox_events.bmt_database.outboxes";

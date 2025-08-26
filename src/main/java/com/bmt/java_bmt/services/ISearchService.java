@@ -10,4 +10,6 @@ public interface ISearchService {
     List<FilmDocument> searchFilms(SearchRequest request);
 
     void indexFilm(FilmDocument filmDocument);
+
+    void deleteFilm(String filmId, FilmDocument filmDocument);
 }

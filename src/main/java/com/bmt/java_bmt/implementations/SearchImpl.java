@@ -19,6 +19,7 @@ import co.elastic.clients.elasticsearch._types.FieldValue;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.NestedQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
+import co.elastic.clients.elasticsearch.core.DeleteResponse;
 import co.elastic.clients.elasticsearch.core.IndexResponse;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
@@ -109,7 +110,6 @@ public class SearchImpl implements ISearchService {
         SearchResponse<FilmDocument> response = null;
 
         try {
-
             response = elasticsearchClient.search(
                     s -> s.index(INDEX_OF_FILMS)
                             .query(
@@ -146,6 +146,18 @@ public class SearchImpl implements ISearchService {
 
             // Có thể ném một exception tùy chỉnh ở đây để Kafka consumer biết và retry
             //            throw new RuntimeException("Failed to index film", e);
+        }
+    }
+
+    @Override
+    public void deleteFilm(String filmId, FilmDocument filmDocument) {
+        try {
+            DeleteResponse response =
+                    elasticsearchClient.delete(d -> d.index(INDEX_OF_FILMS).id(filmId));
+
+            log.info("🗑️ Xóa phim thành công. ID: {}, Result: {}", response.id(), response.result());
+        } catch (Exception e) {
+            log.error("❌ Lỗi khi xóa phim ID {}: {}", filmId, e.getMessage());
         }
     }
 }
