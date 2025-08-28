@@ -55,6 +55,9 @@ public enum ErrorCode {
     FILM_NOT_FOUND(24002, "Phim không tồn tại", HttpStatus.NOT_FOUND),
     CLOUDINARY_DELETE_FILE_FAILED(24003, "Xóa file ở Cloudinary thất bại", HttpStatus.INTERNAL_SERVER_ERROR),
 
+    // Cinma
+    AUDITORIUM_NOT_FOUND(25001, "Phòng chiếu không tồn tại", HttpStatus.NOT_FOUND),
+
     // Elasticsearch
     ELASTICSEARCH_INDEX_NOT_FOUND(25001, "Không tìm thấy index trong Elasticsearch", HttpStatus.NOT_FOUND),
     ELASTICSEARCH_SEARCH_FAILED(25002, "Tìm kiếm phim thất bại", HttpStatus.INTERNAL_SERVER_ERROR),
@@ -64,6 +67,9 @@ public enum ErrorCode {
     FILE_UPLOAD_FAILED(39001, "Tải file thất bại", HttpStatus.INTERNAL_SERVER_ERROR),
     JSON_PARSE_ERROR(39002, "Lỗi xử lý JSON", HttpStatus.INTERNAL_SERVER_ERROR),
     INVALID_REQUEST_BODY(39003, "Thân yêu cầu không hợp lệ", HttpStatus.BAD_REQUEST),
+    CANNOT_ADD_SHOWTIME_FOR_TODAY(39004, "Không thể thêm phim cho ngày hôm này", HttpStatus.BAD_REQUEST),
+    SHOWTIME_OVERFLOW_TO_NEXT_DAY(39005, "Suất chiếu vượt quá 00:00, không thể thêm mới", HttpStatus.BAD_REQUEST),
+
     UNCATEGORIZED_EXCEPTION(39999, "Lỗi không xác định", HttpStatus.INTERNAL_SERVER_ERROR),
     ;
 

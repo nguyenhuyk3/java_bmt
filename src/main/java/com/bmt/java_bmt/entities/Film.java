@@ -51,8 +51,8 @@ public class Film {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "u_changed_by", nullable = false)
-    @ToString.Exclude // Loại trừ khỏi toString()
-    @EqualsAndHashCode.Exclude // Loại trừ khỏi equals() và hashCode()
+    //    @ToString.Exclude // Loại trừ khỏi toString()
+    //    @EqualsAndHashCode.Exclude // Loại trừ khỏi equals() và hashCode()
     private User changedBy;
 
     // Mapping cho bảng film_genres
@@ -77,8 +77,8 @@ public class Film {
     mà dựa vào bảng bên kia để quản lý.
     */
     @OneToOne(mappedBy = "film", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @ToString.Exclude // QUAN TRỌNG: Loại trừ khỏi toString()
-    @EqualsAndHashCode.Exclude // QUAN TRỌNG: Loại trừ khỏi equals() và hashCode()
+    //    @ToString.Exclude // QUAN TRỌNG: Loại trừ khỏi toString()
+    //    @EqualsAndHashCode.Exclude // QUAN TRỌNG: Loại trừ khỏi equals() và hashCode()
     private OtherFilmInformation otherFilmInformation;
 
     @ManyToMany(
@@ -88,13 +88,13 @@ public class Film {
             name = "film_people",
             joinColumns = @JoinColumn(name = "f_id"),
             inverseJoinColumns = @JoinColumn(name = "fpf_id"))
-    @ToString.Exclude // Loại trừ khỏi toString()
-    @EqualsAndHashCode.Exclude // Loại trừ khỏi equals() và hashCode()
+    //    @ToString.Exclude // Loại trừ khỏi toString()
+    //    @EqualsAndHashCode.Exclude // Loại trừ khỏi equals() và hashCode()
     private Set<FilmProfessional> filmProfessionals = new HashSet<>();
 
     @OneToMany(mappedBy = "film")
-    @ToString.Exclude // Loại trừ khỏi toString()
-    @EqualsAndHashCode.Exclude // Loại trừ khỏi equals() và hashCode()
+    //    @ToString.Exclude // Loại trừ khỏi toString()
+    //    @EqualsAndHashCode.Exclude // Loại trừ khỏi equals() và hashCode()
     private Set<Showtime> showtimes;
 
     public void setOtherFilmInformation(OtherFilmInformation otherFilmInformation) {

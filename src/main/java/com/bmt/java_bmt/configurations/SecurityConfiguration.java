@@ -62,7 +62,7 @@ public class SecurityConfiguration {
     String[] POST_PUBLIC_ENDPOINTS = {"/auth/register/**", "/auth/login/**", "/auth/forgot-password/**", "/search/**"};
     String[] PUT_PUBLIC_ENDPOINTS = {"/auth/forgot-password/**"};
     String[] GET_PUBLIC_ENDPOINTS = {"/user/**"};
-    String[] POST_MANAGER_PRIVATE_ENDPOINTS = {"/film/**"};
+    String[] POST_MANAGER_PRIVATE_ENDPOINTS = {"/film/**", "showtime/**"};
 
     @Bean
     PasswordEncoder passwordEncoder() {
