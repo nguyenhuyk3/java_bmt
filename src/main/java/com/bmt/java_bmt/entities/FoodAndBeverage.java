@@ -1,6 +1,6 @@
 package com.bmt.java_bmt.entities;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 import jakarta.persistence.*;
@@ -43,9 +43,9 @@ public class FoodAndBeverage {
 
     @CreationTimestamp
     @Column(name = "fab_created_at")
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @UpdateTimestamp
     @Column(name = "fab_updated_at")
-    private LocalDateTime updatedAt;
+    private Instant updatedAt;
 }

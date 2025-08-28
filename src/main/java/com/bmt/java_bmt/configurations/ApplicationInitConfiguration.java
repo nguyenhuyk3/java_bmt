@@ -5,9 +5,6 @@ import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import jakarta.transaction.Transactional;
-import jakarta.validation.constraints.*;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -22,7 +19,6 @@ import com.bmt.java_bmt.entities.enums.*;
 import com.bmt.java_bmt.exceptions.AppException;
 import com.bmt.java_bmt.exceptions.ErrorCode;
 import com.bmt.java_bmt.helpers.constants.Others;
-import com.bmt.java_bmt.mappers.IFilmMapper;
 import com.bmt.java_bmt.repositories.*;
 import com.bmt.java_bmt.utils.Generator;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -61,6 +57,19 @@ public class ApplicationInitConfiguration {
         Set<Genre> genres;
     }
 
+    @Builder
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @FieldDefaults(level = AccessLevel.PRIVATE)
+    public static class CreateFoodAndBeverageRequest {
+        String name;
+        FabType type;
+        String imageUrl;
+        int price;
+        boolean isDeleted;
+    }
+
     private List<CreateFilmRequest> createFilmRequests() {
         return List.of(
                 new CreateFilmRequest(
@@ -93,6 +102,90 @@ public class ApplicationInitConfiguration {
                         LocalDate.of(2023, 6, 15),
                         LocalTime.of(2, 0),
                         Set.of(Genre.DRAMA, Genre.SUPERHERO, Genre.SLASHER, Genre.FAMILY)));
+    }
+
+    public static List<CreateFoodAndBeverageRequest> createFoodAndBeverageRequests() {
+        return List.of(
+                CreateFoodAndBeverageRequest.builder()
+                        .name("Coca-Cola")
+                        .type(FabType.BEVERAGE)
+                        .imageUrl(
+                                "https://images.unsplash.com/photo-1567103472667-6898f3a79cf2?q=80&w=300&auto=format&fit=crop")
+                        .price(20000)
+                        .isDeleted(false)
+                        .build(),
+                CreateFoodAndBeverageRequest.builder()
+                        .name("Bắp rang bơ")
+                        .type(FabType.FOOD)
+                        .imageUrl(
+                                "https://images.unsplash.com/photo-1578849278619-e73505e9610f?q=80&w=300&auto=format&fit=crop")
+                        .price(30000)
+                        .isDeleted(false)
+                        .build(),
+                CreateFoodAndBeverageRequest.builder()
+                        .name("Nacho phô mai")
+                        .type(FabType.FOOD)
+                        .imageUrl(
+                                "https://images.unsplash.com/photo-1513456852971-30c0b8199d4d?q=80&w=300&auto=format&fit=crop")
+                        .price(40000)
+                        .isDeleted(false)
+                        .build(),
+                CreateFoodAndBeverageRequest.builder()
+                        .name("Snack")
+                        .type(FabType.FOOD)
+                        .imageUrl(
+                                "https://images.unsplash.com/photo-1741520149946-d2e652514b5a?q=80&w=300&auto=format&fit=crop")
+                        .price(25000)
+                        .isDeleted(false)
+                        .build(),
+                CreateFoodAndBeverageRequest.builder()
+                        .name("Trà sữa")
+                        .type(FabType.BEVERAGE)
+                        .imageUrl(
+                                "https://images.unsplash.com/photo-1572490122747-3968b75cc699?q=80&w=300&auto=format&fit=crop")
+                        .price(35000)
+                        .isDeleted(false)
+                        .build(),
+                CreateFoodAndBeverageRequest.builder()
+                        .name("Nước khoáng")
+                        .type(FabType.BEVERAGE)
+                        .imageUrl(
+                                "https://images.unsplash.com/photo-1638688569176-5b6db19f9d2a?q=80&w=300&auto=format&fit=crop")
+                        .price(15000)
+                        .isDeleted(false)
+                        .build(),
+                CreateFoodAndBeverageRequest.builder()
+                        .name("Cà phê")
+                        .type(FabType.BEVERAGE)
+                        .imageUrl(
+                                "https://images.unsplash.com/photo-1627261581533-f2357c73c4d0?q=80&w=300&auto=format&fit=crop")
+                        .price(30000)
+                        .isDeleted(false)
+                        .build(),
+                CreateFoodAndBeverageRequest.builder()
+                        .name("Kẹo dẻo")
+                        .type(FabType.FOOD)
+                        .imageUrl(
+                                "https://images.unsplash.com/photo-1582058091505-f87a2e55a40f?q=80&w=300&auto=format&fit=crop")
+                        .price(20000)
+                        .isDeleted(false)
+                        .build(),
+                CreateFoodAndBeverageRequest.builder()
+                        .name("Bánh quy")
+                        .type(FabType.FOOD)
+                        .imageUrl(
+                                "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?q=80&w=300&auto=format&fit=crop")
+                        .price(22000)
+                        .isDeleted(false)
+                        .build(),
+                CreateFoodAndBeverageRequest.builder()
+                        .name("Sô cô la")
+                        .type(FabType.FOOD)
+                        .imageUrl(
+                                "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?q=80&w=300&auto=format&fit=crop")
+                        .price(28000)
+                        .isDeleted(false)
+                        .build());
     }
 
     private UUID createManagerIfNotExists(IUserRepository userRepository, PasswordEncoder passwordEncoder) {
@@ -183,18 +276,14 @@ public class ApplicationInitConfiguration {
         // Random director + 5 random actors
         UUID randomDirector = directors.get(random.nextInt(directors.size()));
 
-        log.info("sldjflksjfk {}", randomDirector);
         Collections.shuffle(actors);
 
         List<UUID> randomActors = actors.stream().limit(5).toList();
-
-        log.info("1111111111111111111111111111 {}", randomActors);
         Set<FilmProfessional> filmProfessionals = new HashSet<>();
 
         filmProfessionals.add(professionalRepo
                 .findById(randomDirector)
                 .orElseThrow(() -> new AppException(ErrorCode.PROFESSIONAL_ID_DOESNT_EXIST)));
-        log.info("222222222222222222222222222222222222 {}", randomActors);
         filmProfessionals.addAll(randomActors.stream()
                 .map(id -> professionalRepo
                         .findById(id)
@@ -204,6 +293,41 @@ public class ApplicationInitConfiguration {
         film.setFilmProfessionals(filmProfessionals);
 
         return filmRepo.save(film);
+    }
+
+    private void createFilms(
+            UUID managerId,
+            IUserRepository userRepo,
+            IFilmRepository filmRepo,
+            IFilmProfessionalRepository filmProfessionalRepo,
+            IOutboxRepository outboxRepo,
+            ObjectMapper objectMapper) {
+        if (filmRepo.count() != 0) {
+            return;
+        }
+
+        List<IFilmProfessionalView> allIdsAndJobs = filmProfessionalRepo.findAllIdAndJobs();
+        List<UUID> directors = allIdsAndJobs.stream()
+                .filter(fp -> fp.getJob() == Job.DIRECTOR)
+                .map(IFilmProfessionalView::getId)
+                .toList();
+        List<UUID> actors = allIdsAndJobs.stream()
+                .filter(fp -> fp.getJob() == Job.ACTOR)
+                .map(IFilmProfessionalView::getId)
+                .collect(Collectors.toList());
+        List<CreateFilmRequest> createFilmRequests = createFilmRequests();
+
+        for (CreateFilmRequest req : createFilmRequests) {
+            Film savedFilm = createFilm(
+                    req,
+                    userRepo.findById(managerId).orElseThrow(() -> new AppException(ErrorCode.USER_ID_DOESNT_EXIST)),
+                    directors,
+                    actors,
+                    filmProfessionalRepo,
+                    filmRepo);
+
+            saveOutboxEvent(savedFilm, outboxRepo, objectMapper);
+        }
     }
 
     private void saveOutboxEvent(Film film, IOutboxRepository outboxRepo, ObjectMapper objectMapper) {
@@ -219,7 +343,26 @@ public class ApplicationInitConfiguration {
         }
     }
 
-    @Transactional
+    private void createFoodAndBeverage(CreateFoodAndBeverageRequest req, IFoodAndBeverageRepository fabRepo) {
+        fabRepo.save(FoodAndBeverage.builder()
+                .name(req.getName())
+                .type(req.type)
+                .imageUrl(req.getImageUrl())
+                .price(req.getPrice())
+                .isDeleted(false)
+                .build());
+    }
+
+    private void createFoodsAndBeverage(IFoodAndBeverageRepository fabRepo) {
+        if (fabRepo.count() == 0) {
+            List<CreateFoodAndBeverageRequest> createFoodAndBeverageRequests = createFoodAndBeverageRequests();
+
+            for (CreateFoodAndBeverageRequest req : createFoodAndBeverageRequests) {
+                createFoodAndBeverage(req, fabRepo);
+            }
+        }
+    }
+
     @Bean
     @ConditionalOnProperty(
             prefix = "spring",
@@ -231,38 +374,22 @@ public class ApplicationInitConfiguration {
             IFilmProfessionalRepository filmProfessionalRepository,
             IFilmRepository filmRepository,
             IOutboxRepository outboxRepository,
-            IFilmMapper filmMapper,
+            //            IFilmMapper filmMapper,
+            IFoodAndBeverageRepository foodAndBeverageRepository,
             ObjectMapper objectMapper,
             PasswordEncoder passwordEncoder) {
         return args -> {
             UUID managerId = createManagerIfNotExists(userRepository, passwordEncoder);
 
             createProfessionalsIfNeeded(personalInformationRepository, filmProfessionalRepository);
-
-            List<IFilmProfessionalView> allIdsAndJobs = filmProfessionalRepository.findAllIdAndJobs();
-            List<UUID> directors = allIdsAndJobs.stream()
-                    .filter(fp -> fp.getJob() == Job.DIRECTOR)
-                    .map(IFilmProfessionalView::getId)
-                    .toList();
-            List<UUID> actors = allIdsAndJobs.stream()
-                    .filter(fp -> fp.getJob() == Job.ACTOR)
-                    .map(IFilmProfessionalView::getId)
-                    .collect(Collectors.toList());
-            List<CreateFilmRequest> createFilmRequests = createFilmRequests();
-
-            for (CreateFilmRequest req : createFilmRequests) {
-                Film savedFilm = createFilm(
-                        req,
-                        userRepository
-                                .findById(managerId)
-                                .orElseThrow(() -> new AppException(ErrorCode.USER_ID_DOESNT_EXIST)),
-                        directors,
-                        actors,
-                        filmProfessionalRepository,
-                        filmRepository);
-
-                saveOutboxEvent(savedFilm, outboxRepository, objectMapper);
-            }
+            createFilms(
+                    managerId,
+                    userRepository,
+                    filmRepository,
+                    filmProfessionalRepository,
+                    outboxRepository,
+                    objectMapper);
+            createFoodsAndBeverage(foodAndBeverageRepository);
         };
     }
 }
