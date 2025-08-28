@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bmt.java_bmt.dto.APIResponse;
 import com.bmt.java_bmt.dto.requests.showtime.AddShowtimeRequest;
+import com.bmt.java_bmt.dto.requests.showtime.ReleaseShowtimeRequest;
 import com.bmt.java_bmt.dto.responses.showtime.AddShowtimeResponse;
 import com.bmt.java_bmt.services.IShowtimeService;
 
@@ -30,5 +31,13 @@ public class ShowtimeController {
         var result = showtimeService.addShowtime(request);
 
         return APIResponse.<AddShowtimeResponse>builder().result(result).build();
+    }
+
+    @PostMapping("/release")
+    @PreAuthorize("hasRole('MANAGER')")
+    public APIResponse<String> releaseShowtime(@RequestBody @Valid ReleaseShowtimeRequest request) {
+        var result = showtimeService.releaseShowtime(request);
+
+        return APIResponse.<String>builder().result(result).build();
     }
 }

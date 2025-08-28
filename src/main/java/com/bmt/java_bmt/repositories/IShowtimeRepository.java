@@ -32,4 +32,15 @@ public interface IShowtimeRepository extends JpaRepository<Showtime, UUID> {
     //                .findFirst()
     //                .orElse(null);
     //    }
+
+    @Query(
+            value =
+                    """
+			UPDATE showtimes
+			SET sh_is_released = NOT sh_is_released,
+				sh_updated_at = NOW()
+			WHERE sh_id = :id
+			""",
+            nativeQuery = true)
+    int releaseShowtime(@Param("id") UUID id);
 }

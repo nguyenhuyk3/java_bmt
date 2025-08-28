@@ -18,6 +18,7 @@ public final class Others {
     // Outbox event type
     public static final String FILM_CREATED = "FILM_CREATED";
     public static final String FILM_UPDATED = "FILM_UPDATED";
+    public static final String SHOWTIME_RELEASED = "SHOWTIME_RELEASED";
 
     // Kafka topic
     public static final String OUTBOX = "outbox_events.bmt_database.outboxes";

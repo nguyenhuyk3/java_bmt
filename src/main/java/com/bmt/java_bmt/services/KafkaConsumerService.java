@@ -9,8 +9,8 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import com.bmt.java_bmt.dto.others.FilmDocument;
-import com.bmt.java_bmt.dto.others.FilmId;
 import com.bmt.java_bmt.dto.others.IFilmElasticsearchProjection;
+import com.bmt.java_bmt.dto.others.Id;
 import com.bmt.java_bmt.dto.others.SimplePersonInformation;
 import com.bmt.java_bmt.helpers.constants.Others;
 import com.bmt.java_bmt.repositories.IFilmRepository;
@@ -81,8 +81,8 @@ public class KafkaConsumerService {
         try {
             String aggregatePayloadString = aggregatePayloadNode.asText();
             JsonNode finalPayload = objectMapper.readTree(aggregatePayloadString);
-            FilmId filmId = objectMapper.treeToValue(finalPayload, FilmId.class);
-            UUID filmUuid = UUID.fromString(filmId.getFilmId());
+            Id filmId = objectMapper.treeToValue(finalPayload, Id.class);
+            UUID filmUuid = UUID.fromString(filmId.getId());
             // Bước 1: Query CSDL để lấy dữ liệu tổng hợp
             Optional<IFilmElasticsearchProjection> projectionOpt =
                     filmRepository.findFilmDetailsForElasticsearch(filmUuid);
@@ -145,6 +145,8 @@ public class KafkaConsumerService {
                 case Others.FILM_UPDATED:
                     handleFilmCreatedAndUpdated(afterNode, true);
 
+                    return;
+                case Others.SHOWTIME_RELEASED:
                     return;
                 default:
                     log.error("❌ Sự kiện không hợp lệ, bỏ qua");

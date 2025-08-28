@@ -69,6 +69,9 @@ public enum ErrorCode {
     INVALID_REQUEST_BODY(39003, "Thân yêu cầu không hợp lệ", HttpStatus.BAD_REQUEST),
     CANNOT_ADD_SHOWTIME_FOR_TODAY(39004, "Không thể thêm phim cho ngày hôm này", HttpStatus.BAD_REQUEST),
     SHOWTIME_OVERFLOW_TO_NEXT_DAY(39005, "Suất chiếu vượt quá 00:00, không thể thêm mới", HttpStatus.BAD_REQUEST),
+    SHOWTIME_NOT_FOUND(39006, "Không tìm thấy xuất chiếu", HttpStatus.NOT_FOUND),
+    RELEASE_SHOWTIME_FAILED(
+            39007, "Không thể thay đổi trạng thái phát hành của suất chiếu", HttpStatus.INTERNAL_SERVER_ERROR),
 
     UNCATEGORIZED_EXCEPTION(39999, "Lỗi không xác định", HttpStatus.INTERNAL_SERVER_ERROR),
     ;

@@ -3,9 +3,7 @@ package com.bmt.java_bmt.dto.requests.showtime;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.*;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -26,6 +24,7 @@ public class AddShowtimeRequest {
     @Future(message = "Ngày chiếu phải ở trong tương lai")
     LocalDate showDate;
 
-    @Positive(message = "Hệ số giá phải lớn hơn 0")
+    @Min(value = 1, message = "Hệ số giá phải >= 1")
+    @Max(value = 3, message = "Hệ số giá phải <= 3")
     int coefficient;
 }

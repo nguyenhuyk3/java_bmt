@@ -12,7 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.bmt.java_bmt.dto.others.FilmId;
+import com.bmt.java_bmt.dto.others.Id;
 import com.bmt.java_bmt.dto.requests.film.CreateFilmRequest;
 import com.bmt.java_bmt.dto.requests.film.UpdateFilmRequest;
 import com.bmt.java_bmt.dto.responses.film.CreateFilmResponse;
@@ -95,8 +95,7 @@ public class FilmImpl implements IFilmService {
         var savedFilm = filmRepository.save(film);
 
         try {
-            FilmId filmId =
-                    FilmId.builder().filmId(savedFilm.getId().toString()).build();
+            Id filmId = Id.builder().id(savedFilm.getId().toString()).build();
 
             outboxRepository.save(Outbox.builder()
                     .eventType(Others.FILM_CREATED)
@@ -169,7 +168,7 @@ public class FilmImpl implements IFilmService {
         filmRepository.save(film);
 
         try {
-            FilmId filmId = FilmId.builder().filmId(request.getId().toString()).build();
+            Id filmId = Id.builder().id(request.getId().toString()).build();
 
             outboxRepository.save(Outbox.builder()
                     .eventType(Others.FILM_UPDATED)
