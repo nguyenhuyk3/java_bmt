@@ -150,7 +150,7 @@ public class SearchImpl implements ISearchService {
     }
 
     @Override
-    public void deleteFilm(String filmId, FilmDocument filmDocument) {
+    public void deleteFilm(String filmId) {
         try {
             DeleteResponse response =
                     elasticsearchClient.delete(d -> d.index(INDEX_OF_FILMS).id(filmId));

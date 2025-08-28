@@ -11,7 +11,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import lombok.*;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

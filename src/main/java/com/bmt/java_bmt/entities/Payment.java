@@ -12,7 +12,8 @@ import com.bmt.java_bmt.entities.enums.PaymentStatus;
 
 import lombok.*;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

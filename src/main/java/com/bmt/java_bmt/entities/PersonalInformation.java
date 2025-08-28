@@ -9,7 +9,8 @@ import com.bmt.java_bmt.entities.enums.Sex;
 
 import lombok.*;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

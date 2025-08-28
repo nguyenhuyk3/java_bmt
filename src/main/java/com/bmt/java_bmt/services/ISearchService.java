@@ -11,5 +11,5 @@ public interface ISearchService {
 
     void indexFilm(FilmDocument filmDocument);
 
-    void deleteFilm(String filmId, FilmDocument filmDocument);
+    void deleteFilm(String filmId);
 }

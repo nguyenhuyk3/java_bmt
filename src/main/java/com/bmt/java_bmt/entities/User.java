@@ -13,7 +13,8 @@ import com.bmt.java_bmt.entities.enums.Source;
 
 import lombok.*;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

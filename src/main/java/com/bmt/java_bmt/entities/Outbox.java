@@ -10,13 +10,14 @@ import org.hibernate.annotations.CreationTimestamp;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-@Entity
-@Table(name = "outboxes")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Table(name = "outboxes")
 public class Outbox {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

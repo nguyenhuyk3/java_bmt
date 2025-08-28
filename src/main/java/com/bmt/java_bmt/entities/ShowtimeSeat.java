@@ -11,7 +11,8 @@ import com.bmt.java_bmt.entities.enums.SeatStatus;
 
 import lombok.*;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

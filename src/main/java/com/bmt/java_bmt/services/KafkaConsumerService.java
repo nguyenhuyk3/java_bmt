@@ -70,7 +70,7 @@ public class KafkaConsumerService {
                 .build();
     }
 
-    private void handleFilmCreated(JsonNode afterNode) {
+    private void handleFilmCreatedAndUpdated(JsonNode afterNode, boolean isUpdated) {
         JsonNode aggregatePayloadNode = afterNode.get("os_payload");
 
         if (aggregatePayloadNode == null || aggregatePayloadNode.isNull()) {
@@ -96,6 +96,11 @@ public class KafkaConsumerService {
             // Bước 2: Chuyển đổi projection thành FilmDocument
             FilmDocument filmDocument = toFilmDocument(projectionOpt.get());
             // Bước 3: Đẩy dữ liệu vào Elasticsearch
+
+            if (isUpdated) {
+                searchService.deleteFilm(filmUuid.toString());
+            }
+
             searchService.indexFilm(filmDocument);
         } catch (JsonProcessingException e) {
             log.error("❌ Lỗi khi parse 'os_payload' thành FilmId: {}", e.getMessage());
@@ -134,7 +139,11 @@ public class KafkaConsumerService {
 
             switch (eventTypeNode.asText()) {
                 case Others.FILM_CREATED:
-                    handleFilmCreated(afterNode);
+                    handleFilmCreatedAndUpdated(afterNode, false);
+
+                    return;
+                case Others.FILM_UPDATED:
+                    handleFilmCreatedAndUpdated(afterNode, true);
 
                     return;
                 default:

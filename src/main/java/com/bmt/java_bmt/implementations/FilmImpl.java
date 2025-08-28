@@ -62,9 +62,10 @@ public class FilmImpl implements IFilmService {
     @Override
     @Transactional
     public CreateFilmResponse createFilm(CreateFilmRequest request) {
-        UUID userId = UUID.fromString(
-                SecurityContextHolder.getContext().getAuthentication().getName());
-        User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_ID_DOESNT_EXIST));
+        User user = userRepository
+                .findById(UUID.fromString(
+                        SecurityContextHolder.getContext().getAuthentication().getName()))
+                .orElseThrow(() -> new AppException(ErrorCode.USER_ID_DOESNT_EXIST));
         Set<FilmProfessional> filmProfessionals =
                 Optional.ofNullable(request.getFilmProfessionalIds()).orElse(Set.<UUID>of()).stream()
                         .map(id -> filmProfessionalRepository
@@ -113,10 +114,10 @@ public class FilmImpl implements IFilmService {
         Film film =
                 filmRepository.findById(request.getId()).orElseThrow(() -> new AppException(ErrorCode.FILM_NOT_FOUND));
 
-        if (request.getTitle() != null) {
+        if (request.getTitle() != null && !request.getTitle().isEmpty()) {
             film.setTitle(request.getTitle());
         }
-        if (request.getDescription() != null) {
+        if (request.getDescription() != null && !request.getDescription().isEmpty()) {
             film.setDescription(request.getDescription());
         }
         if (request.getReleaseDate() != null) {
