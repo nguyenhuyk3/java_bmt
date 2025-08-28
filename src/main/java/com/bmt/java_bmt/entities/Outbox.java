@@ -1,5 +1,6 @@
 package com.bmt.java_bmt.entities;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -32,5 +33,5 @@ public class Outbox {
 
     @CreationTimestamp
     @Column(name = "os_created_at", nullable = false, updatable = false)
-    LocalDateTime createdAt;
+    Instant createdAt;
 }

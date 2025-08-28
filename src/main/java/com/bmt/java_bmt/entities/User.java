@@ -42,7 +42,7 @@ public class User {
 
     @CreationTimestamp
     @Column(name = "u_created_at", nullable = false, updatable = false)
-    private Instant createdAt;
+        private Instant createdAt;
 
     @UpdateTimestamp
     @Column(name = "u_updated_at", nullable = false)

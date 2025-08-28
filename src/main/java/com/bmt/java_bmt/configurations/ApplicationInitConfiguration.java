@@ -49,7 +49,7 @@ public class ApplicationInitConfiguration {
     @NoArgsConstructor
     @AllArgsConstructor
     @FieldDefaults(level = AccessLevel.PRIVATE)
-    public static class CreateFilmRequest {
+    public class CreateFilmRequest {
         String title;
         String description;
         LocalDate releaseDate;
@@ -62,7 +62,7 @@ public class ApplicationInitConfiguration {
     @NoArgsConstructor
     @AllArgsConstructor
     @FieldDefaults(level = AccessLevel.PRIVATE)
-    public static class CreateFoodAndBeverageRequest {
+    public class CreateFoodAndBeverageRequest {
         String name;
         FabType type;
         String imageUrl;
@@ -104,7 +104,7 @@ public class ApplicationInitConfiguration {
                         Set.of(Genre.DRAMA, Genre.SUPERHERO, Genre.SLASHER, Genre.FAMILY)));
     }
 
-    public static List<CreateFoodAndBeverageRequest> createFoodAndBeverageRequests() {
+    public List<CreateFoodAndBeverageRequest> createFoodAndBeverageRequests() {
         return List.of(
                 CreateFoodAndBeverageRequest.builder()
                         .name("Coca-Cola")
@@ -295,6 +295,19 @@ public class ApplicationInitConfiguration {
         return filmRepo.save(film);
     }
 
+    private void saveOutboxEvent(Film film, IOutboxRepository outboxRepo, ObjectMapper objectMapper) {
+        try {
+            FilmId filmId = FilmId.builder().filmId(film.getId().toString()).build();
+
+            outboxRepo.save(Outbox.builder()
+                    .eventType(Others.FILM_CREATED)
+                    .payload(objectMapper.writeValueAsString(filmId))
+                    .build());
+        } catch (JsonProcessingException e) {
+            throw new AppException(ErrorCode.JSON_PARSE_ERROR);
+        }
+    }
+
     private void createFilms(
             UUID managerId,
             IUserRepository userRepo,
@@ -327,19 +340,6 @@ public class ApplicationInitConfiguration {
                     filmRepo);
 
             saveOutboxEvent(savedFilm, outboxRepo, objectMapper);
-        }
-    }
-
-    private void saveOutboxEvent(Film film, IOutboxRepository outboxRepo, ObjectMapper objectMapper) {
-        try {
-            FilmId filmId = FilmId.builder().filmId(film.getId().toString()).build();
-
-            outboxRepo.save(Outbox.builder()
-                    .eventType(Others.FILM_CREATED)
-                    .payload(objectMapper.writeValueAsString(filmId))
-                    .build());
-        } catch (JsonProcessingException e) {
-            throw new AppException(ErrorCode.JSON_PARSE_ERROR);
         }
     }
 

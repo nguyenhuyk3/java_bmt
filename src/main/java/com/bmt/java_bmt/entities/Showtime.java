@@ -1,5 +1,6 @@
 package com.bmt.java_bmt.entities;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -42,11 +43,11 @@ public class Showtime {
 
     @CreationTimestamp
     @Column(name = "sh_created_at")
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @UpdateTimestamp
     @Column(name = "sh_updated_at")
-    private LocalDateTime updatedAt;
+    private Instant updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "a_id", nullable = false)

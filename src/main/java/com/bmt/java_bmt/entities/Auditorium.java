@@ -1,5 +1,6 @@
 package com.bmt.java_bmt.entities;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
@@ -39,11 +40,11 @@ public class Auditorium {
 
     @CreationTimestamp
     @Column(name = "a_created_at")
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @UpdateTimestamp
     @Column(name = "a_updated_at")
-    private LocalDateTime updatedAt;
+    private Instant updatedAt;
 
     /*
     - LAZY

@@ -1,5 +1,6 @@
 package com.bmt.java_bmt.entities;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
@@ -32,11 +33,11 @@ public class Order {
 
     @CreationTimestamp
     @Column(name = "o_created_at")
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @UpdateTimestamp
     @Column(name = "o_updated_at")
-    private LocalDateTime updatedAt;
+    private Instant updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sh_id", nullable = false)

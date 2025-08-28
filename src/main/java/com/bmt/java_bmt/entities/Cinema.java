@@ -1,5 +1,6 @@
 package com.bmt.java_bmt.entities;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
@@ -41,11 +42,11 @@ public class Cinema {
 
     @CreationTimestamp
     @Column(name = "c_created_at")
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @UpdateTimestamp
     @Column(name = "c_updated_at")
-    private LocalDateTime updatedAt;
+    private Instant updatedAt;
 
     /*
     - mappedBy = "cinema" → quan hệ này được ánh xạ (mapping)

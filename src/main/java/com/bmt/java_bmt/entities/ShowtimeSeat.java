@@ -1,5 +1,6 @@
 package com.bmt.java_bmt.entities;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -33,7 +34,7 @@ public class ShowtimeSeat {
 
     @CreationTimestamp
     @Column(name = "ss_created_at")
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "u_booked_by", nullable = true)

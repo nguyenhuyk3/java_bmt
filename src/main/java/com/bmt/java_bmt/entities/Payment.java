@@ -1,5 +1,6 @@
 package com.bmt.java_bmt.entities;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -46,7 +47,7 @@ public class Payment {
 
     @CreationTimestamp
     @Column(name = "p_created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "o_id", nullable = false, unique = true)
