@@ -5,6 +5,8 @@ import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -49,7 +51,7 @@ public class ApplicationInitConfiguration {
     @NoArgsConstructor
     @AllArgsConstructor
     @FieldDefaults(level = AccessLevel.PRIVATE)
-    public class CreateFilmRequest {
+    public static class CreateFilmRequest {
         String title;
         String description;
         LocalDate releaseDate;
@@ -62,7 +64,7 @@ public class ApplicationInitConfiguration {
     @NoArgsConstructor
     @AllArgsConstructor
     @FieldDefaults(level = AccessLevel.PRIVATE)
-    public class CreateFoodAndBeverageRequest {
+    public static class CreateFoodAndBeverageRequest {
         String name;
         FabType type;
         String imageUrl;
@@ -363,6 +365,73 @@ public class ApplicationInitConfiguration {
         }
     }
 
+    private int getPriceBySeatType(SeatType type) {
+        return switch (type) {
+            case STANDARD -> 50000;
+            case COUPLED -> 80000;
+            case VIP -> 100000;
+        };
+    }
+
+    private void createSeats(
+            ICinemaRepository cinemaRepo, IAuditoriumRepository auditoriumRepo, ISeatRepository seatRepo) {
+        if (cinemaRepo.count() != 0) {
+            return;
+        }
+
+        for (City city : City.values()) {
+            for (int i = 1; i <= 3; i++) {
+                Cinema cinema = Cinema.builder()
+                        .name(city.name() + " Cinema " + i)
+                        .city(city)
+                        .location("Địa chỉ " + i + " tại " + city.name())
+                        .isReleased(true)
+                        .build();
+
+                cinemaRepo.save(cinema);
+
+                // Tạo 5 auditorium cho mỗi cinema
+                for (int j = 1; j <= 5; j++) {
+                    Auditorium auditorium = Auditorium.builder()
+                            .name("Auditorium " + j)
+                            .seatCapacity(80)
+                            .isReleased(true)
+                            .cinema(cinema)
+                            .build();
+
+                    auditoriumRepo.save(auditorium);
+
+                    // Tạo 80 ghế cho mỗi auditorium
+                    for (int k = 1; k <= 80; k++) {
+                        SeatType seatType;
+
+                        if (k <= 40) {
+                            seatType = SeatType.STANDARD;
+                        } else if (k <= 60) {
+                            seatType = SeatType.COUPLED;
+                        } else {
+                            seatType = SeatType.VIP;
+                        }
+
+                        int rowIndex = (k - 1) / 10; // 0 -> A, 1 -> B, ...
+                        char rowLetter = (char) ('A' + rowIndex);
+                        int seatNumberInRow = (k - 1) % 10 + 1;
+                        String seatNumber = rowLetter + String.valueOf(seatNumberInRow);
+                        Seat seat = Seat.builder()
+                                .seatNumber(seatNumber)
+                                .seatType(seatType)
+                                .price(getPriceBySeatType(seatType))
+                                .auditorium(auditorium)
+                                .build();
+
+                        seatRepo.save(seat);
+                    }
+                }
+            }
+        }
+    }
+
+    @Transactional
     @Bean
     @ConditionalOnProperty(
             prefix = "spring",
@@ -374,8 +443,10 @@ public class ApplicationInitConfiguration {
             IFilmProfessionalRepository filmProfessionalRepository,
             IFilmRepository filmRepository,
             IOutboxRepository outboxRepository,
-            //            IFilmMapper filmMapper,
             IFoodAndBeverageRepository foodAndBeverageRepository,
+            ICinemaRepository cinemaRepository,
+            IAuditoriumRepository auditoriumRepository,
+            ISeatRepository seatRepository,
             ObjectMapper objectMapper,
             PasswordEncoder passwordEncoder) {
         return args -> {
@@ -390,6 +461,7 @@ public class ApplicationInitConfiguration {
                     outboxRepository,
                     objectMapper);
             createFoodsAndBeverage(foodAndBeverageRepository);
+            createSeats(cinemaRepository, auditoriumRepository, seatRepository);
         };
     }
 }
