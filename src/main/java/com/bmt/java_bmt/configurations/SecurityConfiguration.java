@@ -1,6 +1,5 @@
 package com.bmt.java_bmt.configurations;
 
-import com.bmt.java_bmt.helpers.constants.Others;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +16,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+
+import com.bmt.java_bmt.helpers.constants.Others;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -75,17 +76,16 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeHttpRequests(req -> req
-                                .requestMatchers(HttpMethod.GET, GET_PUBLIC_ENDPOINTS)
-                                .permitAll()
-                                .requestMatchers(HttpMethod.POST, POST_PUBLIC_ENDPOINTS)
-                                .permitAll()
-                                .requestMatchers(HttpMethod.POST, POST_MANAGER_PRIVATE_ENDPOINTS)
-                                .hasRole(Others.MANAGER)
-                                .requestMatchers(HttpMethod.GET, GET_PRIVATE_ENDPOINTS)
-                                .hasAnyRole(Others.CUSTOMER, Others.MANAGER)
-                                .requestMatchers(HttpMethod.PUT, PUT_PUBLIC_ENDPOINTS)
-                                .permitAll()
+        httpSecurity.authorizeHttpRequests(req -> req.requestMatchers(HttpMethod.GET, GET_PUBLIC_ENDPOINTS)
+                .permitAll()
+                .requestMatchers(HttpMethod.POST, POST_PUBLIC_ENDPOINTS)
+                .permitAll()
+                .requestMatchers(HttpMethod.POST, POST_MANAGER_PRIVATE_ENDPOINTS)
+                .hasRole(Others.MANAGER)
+                .requestMatchers(HttpMethod.GET, GET_PRIVATE_ENDPOINTS)
+                .hasAnyRole(Others.CUSTOMER, Others.MANAGER)
+                .requestMatchers(HttpMethod.PUT, PUT_PUBLIC_ENDPOINTS)
+                .permitAll()
                 .anyRequest()
                 .authenticated());
         httpSecurity.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer
