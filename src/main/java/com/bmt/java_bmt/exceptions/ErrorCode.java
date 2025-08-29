@@ -63,6 +63,7 @@ public enum ErrorCode {
     RELEASE_SHOWTIME_FAILED(
             25005, "Không thể thay đổi trạng thái phát hành của suất chiếu", HttpStatus.INTERNAL_SERVER_ERROR),
     NOT_ENOUGH_SHOWTIME_SEATS(25006, "Tạo ghế cho suất chiếu không đủ", HttpStatus.INTERNAL_SERVER_ERROR),
+    SHOWTIME_IS_IN_PAST(25007, "Suất chiếu đã ở quá khứ", HttpStatus.BAD_REQUEST),
 
     // Elasticsearch
     ELASTICSEARCH_INDEX_NOT_FOUND(25001, "Không tìm thấy index trong Elasticsearch", HttpStatus.NOT_FOUND),

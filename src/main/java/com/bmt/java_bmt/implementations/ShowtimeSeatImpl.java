@@ -1,5 +1,6 @@
 package com.bmt.java_bmt.implementations;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,8 +26,11 @@ public class ShowtimeSeatImpl implements IShowtimeSeatService {
 
     @Override
     public List<GetShowtimeSeatResponse> getShowtimeSeatsByShowtimeId(UUID id) {
-        if (!showtimeRepository.existsById(id)) {
-            throw new AppException((ErrorCode.SHOWTIME_NOT_FOUND));
+        var showtime =
+                showtimeRepository.findById(id).orElseThrow(() -> new AppException((ErrorCode.SHOWTIME_NOT_FOUND)));
+
+        if (showtime.getShowDate().isBefore(LocalDate.now())) {
+            throw new AppException(ErrorCode.SHOWTIME_IS_IN_PAST);
         }
 
         return showtimeSeatRepository.getShowtimeSeatsByShowtimeId(id);

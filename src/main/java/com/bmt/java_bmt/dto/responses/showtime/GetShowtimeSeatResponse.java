@@ -4,8 +4,6 @@ import java.time.Instant;
 import java.util.UUID;
 
 public interface GetShowtimeSeatResponse {
-    UUID getShowtimeSeatId();
-
     UUID getSeatId();
 
     String getSeatType();

@@ -27,9 +27,8 @@ public interface IShowtimeSeatRepository extends JpaRepository<ShowtimeSeat, UUI
     @Query(
             value =
                     """
-			INSERT INTO showtime_seats (ss_id, sh_id, se_id, ss_status, ss_created_at)
+			INSERT INTO showtime_seats (sh_id, se_id, ss_status, ss_created_at)
 			SELECT
-				UUID_TO_BIN(UUID()) AS ss_id,
 				:showtimeId AS sh_id,
 				s.se_id AS se_id,
 				'AVAILABLE' AS ss_status,
@@ -45,7 +44,6 @@ public interface IShowtimeSeatRepository extends JpaRepository<ShowtimeSeat, UUI
             value =
                     """
 			SELECT
-				BIN_TO_UUID(ss.ss_id) AS showtimeSeatId,
 				BIN_TO_UUID(ss.se_id) AS seatId,
 				s.se_seat_type AS seatType,
 				s.se_seat_number AS seatNumber,

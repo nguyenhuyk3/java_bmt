@@ -1,8 +1,8 @@
 package com.bmt.java_bmt.entities;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import jakarta.persistence.*;
 
@@ -19,11 +19,9 @@ import lombok.*;
 @Builder
 @Entity
 @Table(name = "showtime_seats")
-public class ShowtimeSeat {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "ss_id", columnDefinition = "BINARY(16)", nullable = false, updatable = false)
-    private UUID id;
+public class ShowtimeSeat  implements Serializable {
+    @EmbeddedId
+    private ShowtimeSeatId id;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "ss_status", nullable = false)
@@ -41,10 +39,14 @@ public class ShowtimeSeat {
     private User bookedBy;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    // Dùng @MapsId để liên kết trường 'showtimeId' trong ShowtimeSeatId
+    @MapsId("showtimeId")
     @JoinColumn(name = "sh_id", nullable = false)
     private Showtime showtime;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    // Tương tự, dùng @MapsId để liên kết trường 'seatId' trong ShowtimeSeatId
+    @MapsId("seatId")
     @JoinColumn(name = "se_id", nullable = false)
     private Seat seat;
 }
