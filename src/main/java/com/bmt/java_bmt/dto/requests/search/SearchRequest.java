@@ -2,13 +2,13 @@ package com.bmt.java_bmt.dto.requests.search;
 
 import java.util.List;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Builder
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SearchRequest {
     String query;

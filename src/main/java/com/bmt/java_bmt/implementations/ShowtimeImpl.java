@@ -10,18 +10,14 @@ import jakarta.transaction.Transactional;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.bmt.java_bmt.dto.others.Id;
 import com.bmt.java_bmt.dto.requests.showtime.AddShowtimeRequest;
 import com.bmt.java_bmt.dto.requests.showtime.ReleaseShowtimeRequest;
 import com.bmt.java_bmt.dto.responses.showtime.AddShowtimeResponse;
-import com.bmt.java_bmt.entities.Outbox;
 import com.bmt.java_bmt.entities.Showtime;
 import com.bmt.java_bmt.exceptions.AppException;
 import com.bmt.java_bmt.exceptions.ErrorCode;
-import com.bmt.java_bmt.helpers.constants.Others;
 import com.bmt.java_bmt.repositories.*;
 import com.bmt.java_bmt.services.IShowtimeService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.AccessLevel;
@@ -36,8 +32,10 @@ public class ShowtimeImpl implements IShowtimeService {
     IShowtimeRepository showtimeRepository;
     IAuditoriumRepository auditoriumRepository;
     IUserRepository userRepository;
-    IOutboxRepository outboxRepository;
-    ObjectMapper objectMapper;
+    IShowtimeSeatRepository showtimeSeatRepository;
+
+    int NUMBER_OF_SEATS
+            = 80;
 
     @Transactional
     @Override
@@ -105,23 +103,16 @@ public class ShowtimeImpl implements IShowtimeService {
     @Transactional
     @Override
     public String releaseShowtime(ReleaseShowtimeRequest request) {
-        if (showtimeRepository.existsById(request.getShowtimeId())) {
+        if (!showtimeRepository.existsById(request.getId())) {
             throw new AppException(ErrorCode.SHOWTIME_NOT_FOUND);
         }
 
-        if (showtimeRepository.releaseShowtime(request.getShowtimeId()) < 80) {
+        if (showtimeRepository.releaseShowtime(request.getId()) == 0) {
             throw new AppException(ErrorCode.RELEASE_SHOWTIME_FAILED);
         }
 
-        try {
-            Id showtimeId = Id.builder().id(request.getShowtimeId().toString()).build();
-
-            outboxRepository.save(Outbox.builder()
-                    .eventType(Others.FILM_UPDATED)
-                    .payload(objectMapper.writeValueAsString(showtimeId))
-                    .build());
-        } catch (JsonProcessingException e) {
-            throw new AppException(ErrorCode.JSON_PARSE_ERROR);
+        if (showtimeSeatRepository.createShowtimeSeats(request.getId()) != NUMBER_OF_SEATS) {
+            throw new AppException(ErrorCode.NOT_ENOUGH_SHOWTIME_SEATS);
         }
 
         return "Công bố xuất chiếu thành công";

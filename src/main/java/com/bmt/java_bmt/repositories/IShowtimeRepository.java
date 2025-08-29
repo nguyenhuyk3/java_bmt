@@ -4,7 +4,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import jakarta.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import com.bmt.java_bmt.entities.Showtime;
@@ -32,7 +35,8 @@ public interface IShowtimeRepository extends JpaRepository<Showtime, UUID> {
     //                .findFirst()
     //                .orElse(null);
     //    }
-
+    @Modifying
+    @Transactional
     @Query(
             value =
                     """

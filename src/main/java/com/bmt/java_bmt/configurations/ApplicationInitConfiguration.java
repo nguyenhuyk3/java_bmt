@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.bmt.java_bmt.dto.others.FilmId;
+import com.bmt.java_bmt.dto.others.Id;
 import com.bmt.java_bmt.dto.responses.filmProfessional.IFilmProfessionalView;
 import com.bmt.java_bmt.entities.*;
 import com.bmt.java_bmt.entities.enums.*;
@@ -299,7 +299,7 @@ public class ApplicationInitConfiguration {
 
     private void saveOutboxEvent(Film film, IOutboxRepository outboxRepo, ObjectMapper objectMapper) {
         try {
-            FilmId filmId = FilmId.builder().filmId(film.getId().toString()).build();
+            Id filmId = Id.builder().id(film.getId().toString()).build();
 
             outboxRepo.save(Outbox.builder()
                     .eventType(Others.FILM_CREATED)
