@@ -1,11 +1,11 @@
 package com.bmt.java_bmt.dto.requests.showtime;
 
+import java.util.UUID;
+
 import jakarta.validation.constraints.NotNull;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.UUID;
 
 @Builder
 @Data

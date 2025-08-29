@@ -17,7 +17,7 @@ import com.bmt.java_bmt.exceptions.AppException;
 import com.bmt.java_bmt.exceptions.ErrorCode;
 import com.bmt.java_bmt.helpers.constants.RedisKey;
 import com.bmt.java_bmt.repositories.IUserRepository;
-import com.bmt.java_bmt.services.IRedis;
+import com.bmt.java_bmt.services.IRedisService;
 import com.bmt.java_bmt.services.authentication.IForgotPasswordService;
 import com.bmt.java_bmt.utils.Generator;
 import com.bmt.java_bmt.utils.senders.OTPEmailSender;
@@ -35,7 +35,7 @@ public class ForgotPasswordImpl implements IForgotPasswordService {
     String SUBJECT = "Quên mật khẩu";
     String HTML_FILE_PATH = "src/main/resources/templates/html/authentication/forgot_password_otp_email.html";
 
-    IRedis<String, Object> redisService;
+    IRedisService<String, Object> redisService;
     IUserRepository userRepository;
     OTPEmailSender otpEmailSender;
     PasswordEncoder passwordEncoder;

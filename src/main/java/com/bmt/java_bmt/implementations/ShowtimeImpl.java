@@ -18,7 +18,6 @@ import com.bmt.java_bmt.exceptions.AppException;
 import com.bmt.java_bmt.exceptions.ErrorCode;
 import com.bmt.java_bmt.repositories.*;
 import com.bmt.java_bmt.services.IShowtimeService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -34,8 +33,7 @@ public class ShowtimeImpl implements IShowtimeService {
     IUserRepository userRepository;
     IShowtimeSeatRepository showtimeSeatRepository;
 
-    int NUMBER_OF_SEATS
-            = 80;
+    int NUMBER_OF_SEATS = 80;
 
     @Transactional
     @Override

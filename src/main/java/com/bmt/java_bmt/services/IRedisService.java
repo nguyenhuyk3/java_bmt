@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
  * @param <K> Kiểu dữ liệu của key
  * @param <V> Kiểu dữ liệu của value
  */
-public interface IRedis<K, V> {
+public interface IRedisService<K, V> {
     /**
      * Kiểm tra xem key có tồn tại trong Redis hay không
      *

@@ -3,10 +3,7 @@ package com.bmt.java_bmt.controllers;
 import jakarta.validation.Valid;
 
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.bmt.java_bmt.dto.APIResponse;
 import com.bmt.java_bmt.dto.requests.showtime.AddShowtimeRequest;

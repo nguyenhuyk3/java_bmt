@@ -6,13 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import com.bmt.java_bmt.services.IRedis;
+import com.bmt.java_bmt.services.IRedisService;
 
 /**
  * Implementation của IRedis interface sử dụng RedisTemplate
  */
 @Service
-public class RedisImpl implements IRedis<String, Object> {
+public class RedisImpl implements IRedisService<String, Object> {
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 

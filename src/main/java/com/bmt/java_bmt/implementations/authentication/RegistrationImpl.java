@@ -23,7 +23,7 @@ import com.bmt.java_bmt.mappers.IUserMapper;
 import com.bmt.java_bmt.repositories.IOutboxRepository;
 import com.bmt.java_bmt.repositories.IPersonalInformationRepository;
 import com.bmt.java_bmt.repositories.IUserRepository;
-import com.bmt.java_bmt.services.IRedis;
+import com.bmt.java_bmt.services.IRedisService;
 import com.bmt.java_bmt.services.authentication.IRegistrationService;
 import com.bmt.java_bmt.utils.Generator;
 import com.bmt.java_bmt.utils.senders.OTPEmailSender;
@@ -42,7 +42,7 @@ public class RegistrationImpl implements IRegistrationService {
     String SUBJECT = "Xác thực mã OTP";
     String HTML_FILE_PATH = "src/main/resources/templates/html/authentication/registration_otp_email.html";
 
-    IRedis<String, Object> redisService;
+    IRedisService<String, Object> redisService;
     IUserRepository userRepository;
     IPersonalInformationRepository personalInformationRepository;
     OTPEmailSender otpEmailSender;

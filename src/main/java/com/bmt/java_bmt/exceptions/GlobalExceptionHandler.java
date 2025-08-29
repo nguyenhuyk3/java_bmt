@@ -5,10 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.bmt.java_bmt.dto.APIResponse;
 
@@ -23,10 +24,10 @@ Spring sẽ tự động bắt các lỗi được ném ra trong controller và 
 public class GlobalExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     ResponseEntity<APIResponse> handleRuntimeException(RuntimeException ex) {
-        SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getAuthorities()
-                .forEach(a -> log.info("Authority: {}", a.getAuthority()));
+        //        SecurityContextHolder.getContext()
+        //                .getAuthentication()
+        //                .getAuthorities()
+        //                .forEach(a -> log.info("Authority: {}", a.getAuthority()));
 
         return ResponseEntity.badRequest()
                 .body(APIResponse.builder()
@@ -77,5 +78,26 @@ public class GlobalExceptionHandler {
         }
 
         return ResponseEntity.badRequest().body(responseBuilder.build());
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<Map<String, Object>> handleMissingParams(MissingServletRequestParameterException ex) {
+        String name = ex.getParameterName();
+
+        Map<String, Object> body = new HashMap<>();
+
+        body.put("error", "Tham số '" + name + "' là bắt buộc!");
+
+        return ResponseEntity.badRequest().body(body);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<Map<String, Object>> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        String name = ex.getName();
+        Map<String, Object> body = new HashMap<>();
+
+        body.put("error", "Tham số '" + name + "' không hợp lệ: " + ex.getValue());
+
+        return ResponseEntity.badRequest().body(body);
     }
 }
