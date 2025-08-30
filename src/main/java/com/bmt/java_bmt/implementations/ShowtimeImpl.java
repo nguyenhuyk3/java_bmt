@@ -10,14 +10,19 @@ import jakarta.transaction.Transactional;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.bmt.java_bmt.dto.others.Id;
 import com.bmt.java_bmt.dto.requests.showtime.AddShowtimeRequest;
 import com.bmt.java_bmt.dto.requests.showtime.ReleaseShowtimeRequest;
 import com.bmt.java_bmt.dto.responses.showtime.AddShowtimeResponse;
+import com.bmt.java_bmt.entities.Outbox;
 import com.bmt.java_bmt.entities.Showtime;
 import com.bmt.java_bmt.exceptions.AppException;
 import com.bmt.java_bmt.exceptions.ErrorCode;
+import com.bmt.java_bmt.helpers.constants.Others;
 import com.bmt.java_bmt.repositories.*;
 import com.bmt.java_bmt.services.IShowtimeService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -32,8 +37,8 @@ public class ShowtimeImpl implements IShowtimeService {
     IAuditoriumRepository auditoriumRepository;
     IUserRepository userRepository;
     IShowtimeSeatRepository showtimeSeatRepository;
-
-    int NUMBER_OF_SEATS = 80;
+    IOutboxRepository outboxRepository;
+    ObjectMapper objectMapper;
 
     @Transactional
     @Override
@@ -109,9 +114,20 @@ public class ShowtimeImpl implements IShowtimeService {
             throw new AppException(ErrorCode.RELEASE_SHOWTIME_FAILED);
         }
 
-        if (showtimeSeatRepository.createShowtimeSeats(request.getId()) != NUMBER_OF_SEATS) {
-            throw new AppException(ErrorCode.NOT_ENOUGH_SHOWTIME_SEATS);
+        try {
+            Id showtimeId = Id.builder().id(request.getId().toString()).build();
+
+            outboxRepository.save(Outbox.builder()
+                    .eventType(Others.SHOWTIME_RELEASED)
+                    .payload(objectMapper.writeValueAsString(showtimeId))
+                    .build());
+        } catch (JsonProcessingException e) {
+            throw new AppException(ErrorCode.JSON_PARSE_ERROR);
         }
+
+        //        if (showtimeSeatRepository.createShowtimeSeats(request.getId()) != NUMBER_OF_SEATS) {
+        //            throw new AppException(ErrorCode.NOT_ENOUGH_SHOWTIME_SEATS);
+        //        }
 
         return "Công bố xuất chiếu thành công";
     }

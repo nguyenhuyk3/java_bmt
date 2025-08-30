@@ -44,6 +44,14 @@ public class ApplicationInitConfiguration {
     @NonFinal
     String SECRET_MANAGER_PASSWORD;
 
+    @Value("${customer.email}")
+    @NonFinal
+    String SECRET_CUSTOMER_EMAIL;
+
+    @Value("${customer.password}")
+    @NonFinal
+    String SECRET_CUSTOMER_PASSWORD;
+
     private final Random random = new Random();
 
     @Builder
@@ -206,6 +214,25 @@ public class ApplicationInitConfiguration {
                     .build();
 
             return userRepository.save(manager).getId();
+        });
+    }
+
+    private void createCustomerIfNotExists(IUserRepository userRepository, PasswordEncoder passwordEncoder) {
+        userRepository.findByEmail(SECRET_CUSTOMER_EMAIL).map(User::getId).orElseGet(() -> {
+            var customer = User.builder()
+                    .email(SECRET_CUSTOMER_EMAIL)
+                    .password(passwordEncoder.encode(SECRET_CUSTOMER_PASSWORD))
+                    .role(Role.CUSTOMER)
+                    .source(Source.APP)
+                    .personalInformation(PersonalInformation.builder()
+                            .fullName("Customer")
+                            .dateOfBirth(LocalDate.parse("1999-08-21"))
+                            .sex(Sex.MALE)
+                            .avatarUrl("NONE")
+                            .build())
+                    .build();
+
+            return userRepository.save(customer).getId();
         });
     }
 
@@ -452,6 +479,7 @@ public class ApplicationInitConfiguration {
         return args -> {
             UUID managerId = createManagerIfNotExists(userRepository, passwordEncoder);
 
+            createCustomerIfNotExists(userRepository, passwordEncoder);
             createProfessionalsIfNeeded(personalInformationRepository, filmProfessionalRepository);
             createFilms(
                     managerId,

@@ -1,9 +1,7 @@
 package com.bmt.java_bmt.services;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
@@ -12,8 +10,12 @@ import com.bmt.java_bmt.dto.others.FilmDocument;
 import com.bmt.java_bmt.dto.others.IFilmElasticsearchProjection;
 import com.bmt.java_bmt.dto.others.Id;
 import com.bmt.java_bmt.dto.others.SimplePersonInformation;
+import com.bmt.java_bmt.dto.responses.showtime.GetShowtimeSeatResponse;
+import com.bmt.java_bmt.exceptions.ErrorCode;
 import com.bmt.java_bmt.helpers.constants.Others;
+import com.bmt.java_bmt.helpers.constants.RedisKey;
 import com.bmt.java_bmt.repositories.IFilmRepository;
+import com.bmt.java_bmt.repositories.IShowtimeSeatRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -32,6 +34,11 @@ public class KafkaConsumerService {
     ObjectMapper objectMapper;
     IFilmRepository filmRepository;
     ISearchService searchService;
+    IShowtimeSeatRepository showtimeSeatRepository;
+    IRedisService redisService;
+
+    int NUMBER_OF_SEATS = 80;
+    long TWO_DAY = 60 * 24 * 2;
 
     private FilmDocument toFilmDocument(IFilmElasticsearchProjection projection) throws JsonProcessingException {
         List<String> genres =
@@ -103,7 +110,44 @@ public class KafkaConsumerService {
 
             searchService.indexFilm(filmDocument);
         } catch (JsonProcessingException e) {
-            log.error("❌ Lỗi khi parse 'os_payload' thành FilmId: {}", e.getMessage());
+            log.error("❌ Lỗi khi parse 'os_payload' thành filmId: {}", e.getMessage());
+        }
+    }
+
+    private void handleShowtimeReleased(JsonNode afterNode) {
+        JsonNode aggregatePayloadNode = afterNode.get("os_payload");
+
+        if (aggregatePayloadNode == null || aggregatePayloadNode.isNull()) {
+            log.error("❌ Trong trường 'after' không chứa 'os_payload', bỏ qua");
+            return;
+        }
+
+        try {
+            String aggregatePayloadString = aggregatePayloadNode.asText();
+            JsonNode finalPayload = objectMapper.readTree(aggregatePayloadString);
+            Id showtimeId = objectMapper.treeToValue(finalPayload, Id.class);
+            UUID showtimeUuid = UUID.fromString(showtimeId.getId());
+
+            if (showtimeSeatRepository.createShowtimeSeats(showtimeUuid) != NUMBER_OF_SEATS) {
+                ErrorCode errorCode = ErrorCode.NOT_ENOUGH_SHOWTIME_SEATS;
+
+                log.error("❌ Lỗi khi tạo showtime seats: {}", errorCode.getMessage());
+            }
+
+            List<GetShowtimeSeatResponse> showtimeSeats =
+                    showtimeSeatRepository.getShowtimeSeatsByShowtimeId(showtimeUuid);
+            List<Id> showtimeSeatIds = new ArrayList<>();
+            String showtimeSeatsKey = RedisKey.SHOWTIME_SEATS + showtimeId;
+
+            for (GetShowtimeSeatResponse showtimeSeat : showtimeSeats) {
+                Id seatId = Id.builder().id(showtimeSeat.getSeatId().toString()).build();
+
+                showtimeSeatIds.add(seatId);
+            }
+
+            redisService.save(showtimeSeatsKey, showtimeSeatIds, TWO_DAY, TimeUnit.MINUTES);
+        } catch (JsonProcessingException e) {
+            log.error("❌ Lỗi khi parse 'os_payload' thành showtimeId: {}", e.getMessage());
         }
     }
 
@@ -147,6 +191,8 @@ public class KafkaConsumerService {
 
                     return;
                 case Others.SHOWTIME_RELEASED:
+                    handleShowtimeReleased(afterNode);
+
                     return;
                 default:
                     log.error("❌ Sự kiện không hợp lệ, bỏ qua");

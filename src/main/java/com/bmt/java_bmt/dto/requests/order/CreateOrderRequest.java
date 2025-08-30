@@ -1,6 +1,6 @@
 package com.bmt.java_bmt.dto.requests.order;
 
-import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 import jakarta.validation.Valid;
@@ -21,12 +21,10 @@ public class CreateOrderRequest {
     @NotNull(message = "Mã xuất chiếu không được để trống")
     UUID showtimeId;
 
-    @NotNull(message = "Ngày công chiếu không được trống")
-    LocalDate showDate;
-
     @Valid
     @NotNull(message = "Ghế phải có thông tin")
-    SeatOrder seats;
+    List<SeatOrder> seats;
 
-    FABOrder fABs;
+    @Valid
+    List<FABOrder> fABs;
 }

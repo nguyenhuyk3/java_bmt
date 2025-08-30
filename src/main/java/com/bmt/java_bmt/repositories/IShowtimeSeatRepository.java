@@ -27,7 +27,7 @@ public interface IShowtimeSeatRepository extends JpaRepository<ShowtimeSeat, UUI
     @Query(
             value =
                     """
-			INSERT INTO showtime_seats (sh_id, se_id, ss_status, ss_created_at)
+			INSERT INTO showtime_seats ( sh_id, se_id, ss_status, ss_created_at)
 			SELECT
 				:showtimeId AS sh_id,
 				s.se_id AS se_id,

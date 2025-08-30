@@ -14,6 +14,9 @@ jwt:
 manager:
   email: "huykimcuong4@gmail.com"
   password: "anhiuemlove33"
+customer:
+  email: "huykimcuong5@gmail.com"
+  password: "anhiuemlove33"
 cloudinary:
   cloud-name: "danvvtgtl"
   api-key: "274831794215725"

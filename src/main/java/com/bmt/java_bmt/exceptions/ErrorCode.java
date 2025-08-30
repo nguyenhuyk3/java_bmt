@@ -54,8 +54,9 @@ public enum ErrorCode {
     INVALID_PRODUCT_TYPE(24001, "Loại sản phẩm không hợp lệ", HttpStatus.BAD_REQUEST),
     FILM_NOT_FOUND(24002, "Phim không tồn tại", HttpStatus.NOT_FOUND),
     CLOUDINARY_DELETE_FILE_FAILED(24003, "Xóa file ở Cloudinary thất bại", HttpStatus.INTERNAL_SERVER_ERROR),
+    FAB_NOT_FOUND(24004, "Thức ăn hay đồ uống không tồn tại", HttpStatus.NOT_FOUND),
 
-    // Cinma
+    // Cinema
     AUDITORIUM_NOT_FOUND(25001, "Phòng chiếu không tồn tại", HttpStatus.NOT_FOUND),
     CANNOT_ADD_SHOWTIME_FOR_TODAY(25002, "Không thể thêm phim cho ngày hôm này", HttpStatus.BAD_REQUEST),
     SHOWTIME_OVERFLOW_TO_NEXT_DAY(25003, "Suất chiếu vượt quá 00:00, không thể thêm mới", HttpStatus.BAD_REQUEST),
@@ -64,6 +65,10 @@ public enum ErrorCode {
             25005, "Không thể thay đổi trạng thái phát hành của suất chiếu", HttpStatus.INTERNAL_SERVER_ERROR),
     NOT_ENOUGH_SHOWTIME_SEATS(25006, "Tạo ghế cho suất chiếu không đủ", HttpStatus.INTERNAL_SERVER_ERROR),
     SHOWTIME_IS_IN_PAST(25007, "Suất chiếu đã ở quá khứ", HttpStatus.BAD_REQUEST),
+    SEAT_NOT_FOUND(25008, "Không tìm thấy ghế", HttpStatus.NOT_FOUND),
+    SHOWTIME_SEATS_NOT_FOUND_IN_CACHE(
+            25009, "Ghế cho suất chiếu không được tìm thấy trong bộ nhớ đệm", HttpStatus.NOT_FOUND),
+    SEAT_NOT_FOUND_IN_SHOWTIME(25010, "Ghế không được tìm thấy trong xuất chiếu", HttpStatus.NOT_FOUND),
 
     // Elasticsearch
     ELASTICSEARCH_INDEX_NOT_FOUND(25001, "Không tìm thấy index trong Elasticsearch", HttpStatus.NOT_FOUND),

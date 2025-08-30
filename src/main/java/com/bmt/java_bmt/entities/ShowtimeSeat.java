@@ -19,7 +19,7 @@ import lombok.*;
 @Builder
 @Entity
 @Table(name = "showtime_seats")
-public class ShowtimeSeat  implements Serializable {
+public class ShowtimeSeat implements Serializable {
     @EmbeddedId
     private ShowtimeSeatId id;
 
