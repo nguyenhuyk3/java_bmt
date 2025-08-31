@@ -27,7 +27,6 @@ import com.bmt.java_bmt.repositories.IOutboxRepository;
 import com.bmt.java_bmt.repositories.IUserRepository;
 import com.bmt.java_bmt.services.ICloudinaryService;
 import com.bmt.java_bmt.services.IFilmService;
-import com.bmt.java_bmt.services.ISearchService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -45,7 +44,6 @@ public class FilmImpl implements IFilmService {
     IFilmProfessionalRepository filmProfessionalRepository;
     ICloudinaryService cloudinaryService;
     IOutboxRepository outboxRepository;
-    ISearchService searchService;
     ObjectMapper objectMapper;
 
     private String uploadIfPresent(MultipartFile file, UUID filmId, String type, boolean isDeleted, String url)

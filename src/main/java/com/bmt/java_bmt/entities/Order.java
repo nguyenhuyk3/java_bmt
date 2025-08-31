@@ -50,7 +50,7 @@ public class Order {
     private Set<OrderSeat> orderSeats;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private Set<OrderFab> orderFabs;
+    private Set<OrderFAB> orderFabs;
 
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
     private Payment payment;

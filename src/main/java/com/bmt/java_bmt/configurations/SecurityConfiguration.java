@@ -59,7 +59,7 @@ nhưng bạn không thể cấu hình chi tiết được.
 */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class SecurityConfiguration {
-    String[] GET_PUBLIC_ENDPOINTS = {"/showtime-seat/**", "/food-and-beverage/**"};
+    String[] GET_PUBLIC_ENDPOINTS = {"/showtime-seat/**", "/food-and-beverage/**", "/payment/momo/**"};
     String[] POST_PUBLIC_ENDPOINTS = {
         "/auth/register/**", "/auth/login/**", "/auth/forgot-password/**", "/search/**", "/payment/momo/**"
     };

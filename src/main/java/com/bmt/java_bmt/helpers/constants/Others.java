@@ -19,6 +19,8 @@ public final class Others {
     public static final String FILM_CREATED = "FILM_CREATED";
     public static final String FILM_UPDATED = "FILM_UPDATED";
     public static final String SHOWTIME_RELEASED = "SHOWTIME_RELEASED";
+    public static final String PAYMENT_SUCCESS = "PAYMENT_SUCCESS";
+    public static final String PAYMENT_FAILED = "PAYMENT_FAILED";
 
     // Kafka topic
     public static final String OUTBOX = "outbox_events.bmt_database.outboxes";

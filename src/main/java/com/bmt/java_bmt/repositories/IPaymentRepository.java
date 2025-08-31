@@ -1,0 +1,9 @@
+package com.bmt.java_bmt.repositories;
+
+import java.util.UUID;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.bmt.java_bmt.entities.Payment;
+
+public interface IPaymentRepository extends JpaRepository<Payment, UUID> {}

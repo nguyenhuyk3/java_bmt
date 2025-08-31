@@ -58,4 +58,36 @@ public interface IShowtimeSeatRepository extends JpaRepository<ShowtimeSeat, UUI
 			""",
             nativeQuery = true)
     List<GetShowtimeSeatResponse> getShowtimeSeatsByShowtimeId(@Param("showtimeId") UUID showtimeId);
+
+    @Modifying
+    @Transactional
+    @Query(
+            value =
+                    """
+			UPDATE showtime_seats
+			SET ss_status = :status
+			WHERE sh_id = :showtimeId AND u_booked_by = :userId
+			""",
+            nativeQuery = true)
+    int updateStatusOfSeatsByUserIdAndShowtimeId(
+            @Param("status") String status, @Param("userId") UUID userId, @Param("showtimeId") UUID showtimeId);
+
+    @Modifying
+    @Transactional
+    @Query(
+            value =
+                    """
+			UPDATE showtime_seats
+			SET 
+                ss_status = :status, 
+                u_booked_by = :userId, 
+                ss_booked_at = NOW()
+			WHERE sh_id = :showtimeId AND se_id = :seatId
+			""",
+            nativeQuery = true)
+    int updateSeatsBySeatIdAndShowtimeId(
+            @Param("status") String status,
+            @Param("userId") UUID userId,
+            @Param("seatId") UUID seatId,
+            @Param("showtimeId") UUID showtimeId);
 }

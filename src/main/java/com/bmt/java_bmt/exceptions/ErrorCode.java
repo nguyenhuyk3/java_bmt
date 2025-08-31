@@ -70,19 +70,27 @@ public enum ErrorCode {
             25009, "Ghế cho suất chiếu không được tìm thấy trong bộ nhớ đệm", HttpStatus.NOT_FOUND),
     SEAT_NOT_FOUND_IN_SHOWTIME(25010, "Ghế không được tìm thấy trong xuất chiếu", HttpStatus.NOT_FOUND),
     SHOWTIME_IS_NOT_RELEASED(25011, "Suất chiếu chưa được công chiếu", HttpStatus.BAD_REQUEST),
+    UPDATE_SEAT_FOR_SHOWTIME_FAILED(
+            25012, "Cập nhập trạng thái ghế cho suất chiếu thất bại", HttpStatus.INTERNAL_SERVER_ERROR),
 
     // Elasticsearch
     ELASTICSEARCH_INDEX_NOT_FOUND(25001, "Không tìm thấy index trong Elasticsearch", HttpStatus.NOT_FOUND),
     ELASTICSEARCH_SEARCH_FAILED(25002, "Tìm kiếm phim thất bại", HttpStatus.INTERNAL_SERVER_ERROR),
     ELASTICSEARCH_SEARCH_IO_EXCEPTION(25003, "Lỗi khi kết nối Elasticsearch", HttpStatus.INTERNAL_SERVER_ERROR),
 
-    // MoMo Payment related
+    // Momo payment
     MOMO_SIGNATURE_FAILED(26001, "Không thể tạo chữ ký giao dịch MoMo", HttpStatus.INTERNAL_SERVER_ERROR),
     MOMO_INVALID_SIGNATURE(26002, "Chữ ký MoMo không hợp lệ", HttpStatus.BAD_REQUEST),
     MOMO_REQUEST_FAILED(26003, "Gọi API MoMo thất bại", HttpStatus.BAD_GATEWAY),
     MOMO_RESPONSE_ERROR(26004, "Giao dịch bị từ chối bởi MoMo", HttpStatus.BAD_REQUEST),
     MOMO_AMOUNT_INVALID(26005, "Số tiền thanh toán không hợp lệ", HttpStatus.BAD_REQUEST),
     MOMO_ORDER_INFO_INVALID(26006, "Thông tin đơn hàng không hợp lệ", HttpStatus.BAD_REQUEST),
+    MOMO_IPN_INVALID(26007, "Dữ liệu IPN từ MoMo không hợp lệ", HttpStatus.BAD_REQUEST),
+
+    // Order
+    ORDER_HAS_EXPIRED(27001, "Đơn đặt hàng đã hết hạn", HttpStatus.NOT_FOUND),
+    TOTAL_DO_NOT_MATCH(27002, "Tổng tiền thanh toán không khớp", HttpStatus.BAD_REQUEST),
+    ORDER_NOT_FOUND(27003, "Đơn đặt hàng không tìm thấy", HttpStatus.NOT_FOUND),
 
     // Others
     FILE_UPLOAD_FAILED(39001, "Tải file thất bại", HttpStatus.INTERNAL_SERVER_ERROR),

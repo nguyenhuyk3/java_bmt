@@ -8,7 +8,7 @@ email:
 jwt:
   access:
     secret: "143cf976-5f19-4403-8df4-94d863e050eb"
-    expiration: 900 # 7 minutes
+    expiration: 9000 # 7 minutes
   refresh:
     secret: "30d4a667-4d44-439e-9fd1-db45a01606c3"
     expiration: 604800 # 7 days
@@ -37,6 +37,6 @@ momo:
   partner-code: MOMO
   access-key: F8BBA842ECF85
   secret-key: K951B6PE1waDMi640xX08PD3vg6EkVlz
-  redirect-url: http://localhost:3000/
-  ipn-url: http://localhost:8080/api/momo/ipn-handler
+  redirect-url: http://localhost:5000/bmt/payment/momo/ipn-handler
+  ipn-url: http://localhost:5000/bmt/payment/momo/ipn-handler
   request-type: captureWallet

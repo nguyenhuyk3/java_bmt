@@ -14,9 +14,10 @@ import com.bmt.java_bmt.dto.others.Id;
 import com.bmt.java_bmt.dto.others.SeatOrder;
 import com.bmt.java_bmt.dto.requests.order.CreateOrderRequest;
 import com.bmt.java_bmt.entities.Order;
-import com.bmt.java_bmt.entities.OrderFab;
+import com.bmt.java_bmt.entities.OrderFAB;
 import com.bmt.java_bmt.entities.OrderSeat;
 import com.bmt.java_bmt.entities.enums.OrderStatus;
+import com.bmt.java_bmt.entities.enums.SeatStatus;
 import com.bmt.java_bmt.exceptions.AppException;
 import com.bmt.java_bmt.exceptions.ErrorCode;
 import com.bmt.java_bmt.helpers.constants.RedisKey;
@@ -38,6 +39,7 @@ public class OrderImpl implements IOrderService {
     ISeatRepository seatRepository;
     IRedisService redisService;
     IUserRepository userRepository;
+    IShowtimeSeatRepository showtimeSeatRepository;
 
     long FIFTEEN_MINUTES = 15;
 
@@ -55,14 +57,14 @@ public class OrderImpl implements IOrderService {
         // 3. Validate FABs
         int totalOfOrder = 0;
 
-        Set<OrderFab> orderedFABs = new HashSet<>();
+        Set<OrderFAB> orderedFABs = new HashSet<>();
 
         if (!request.getFABs().isEmpty()) {
             for (FABOrder fABOrder : request.getFABs()) {
                 var foodAndBeverage = foodAndBeverageRepository
                         .findById(fABOrder.getFABId())
                         .orElseThrow(() -> new AppException((ErrorCode.FAB_NOT_FOUND)));
-                var orderFAB = OrderFab.builder()
+                var orderFAB = OrderFAB.builder()
                         .order(null) // sẽ set sau khi có order
                         .quantity(fABOrder.getQuantity())
                         .foodAndBeverage(foodAndBeverage)
@@ -97,6 +99,12 @@ public class OrderImpl implements IOrderService {
             var seat = seatRepository
                     .findById(seatOrder.getSeatId())
                     .orElseThrow(() -> new AppException(ErrorCode.SEAT_NOT_FOUND));
+            // Cập nhập trạng thái ghế cho xuất chiếu
+            if (showtimeSeatRepository.updateSeatsBySeatIdAndShowtimeId(
+                            SeatStatus.RESERVED.name(), user.getId(), seatOrder.getSeatId(), request.getShowtimeId())
+                    == 0) {
+                throw new AppException(ErrorCode.UPDATE_SEAT_FOR_SHOWTIME_FAILED);
+            }
 
             orderedSeats.add(OrderSeat.builder()
                     .order(null) // sẽ set sau
@@ -125,7 +133,6 @@ public class OrderImpl implements IOrderService {
         orderedFABs.forEach(fab -> fab.setOrder(order));
         // 7. Save vào DB
         orderRepository.save(order);
-
         // 8. Lưu các thông tin cần thiết vào redis để phục vụ cho việc thanh toán
         String totalOfOrderKey = RedisKey.TOTAL_OF_ORDER + order.getId().toString();
 

@@ -13,7 +13,7 @@ import lombok.*;
 @Builder
 @Entity
 @Table(name = "order_fabs")
-public class OrderFab {
+public class OrderFAB {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "of_id", columnDefinition = "BINARY(16)", nullable = false, updatable = false)

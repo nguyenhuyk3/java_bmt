@@ -5,16 +5,33 @@ import java.util.UUID;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
+import jakarta.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import com.bmt.java_bmt.clients.IMomoClient;
+import com.bmt.java_bmt.dto.others.Id;
 import com.bmt.java_bmt.dto.others.MomoPayload;
 import com.bmt.java_bmt.dto.others.MomoProperties;
+import com.bmt.java_bmt.dto.requests.payment.CreatePaymentRequest;
 import com.bmt.java_bmt.dto.requests.payment.momo.CreateMomoPaymentRequest;
 import com.bmt.java_bmt.dto.responses.payment.momo.CreateMomoPaymentResponse;
+import com.bmt.java_bmt.entities.Outbox;
+import com.bmt.java_bmt.entities.Payment;
+import com.bmt.java_bmt.entities.enums.PaymentMethod;
+import com.bmt.java_bmt.entities.enums.PaymentStatus;
 import com.bmt.java_bmt.exceptions.AppException;
 import com.bmt.java_bmt.exceptions.ErrorCode;
+import com.bmt.java_bmt.helpers.constants.Others;
+import com.bmt.java_bmt.helpers.constants.RedisKey;
+import com.bmt.java_bmt.repositories.IOrderRepository;
+import com.bmt.java_bmt.repositories.IOutboxRepository;
+import com.bmt.java_bmt.repositories.IPaymentRepository;
 import com.bmt.java_bmt.services.IMomoPaymentService;
+import com.bmt.java_bmt.services.IPaymentService;
+import com.bmt.java_bmt.services.IRedisService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +42,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Service
 @Slf4j
-public class MomoPaymentImpl implements IMomoPaymentService {
+public class MomoPaymentImpl implements IMomoPaymentService, IPaymentService {
     //    @Value("${momo.partner-code}")
     //    @NonFinal
     //    String PARTNER_CODE;
@@ -51,6 +68,12 @@ public class MomoPaymentImpl implements IMomoPaymentService {
     //    String REQUEST_TYPE;
 
     IMomoClient momoClient;
+    IRedisService redisService;
+    IPaymentRepository paymentRepository;
+    IOrderRepository orderRepository;
+    IOutboxRepository outboxRepository;
+
+    ObjectMapper objectMapper;
     MomoProperties momoProperties;
 
     private String signHmacSHA256(String data, String key) throws Exception {
@@ -75,8 +98,24 @@ public class MomoPaymentImpl implements IMomoPaymentService {
         return hexString.toString();
     }
 
+    private void preCheck(CreateMomoPaymentRequest request) {
+        String totalOfOrderKey = RedisKey.TOTAL_OF_ORDER + request.getOrderId().toString();
+
+        if (!redisService.existsKey(totalOfOrderKey)) {
+            throw new AppException(ErrorCode.ORDER_HAS_EXPIRED);
+        }
+
+        int totalOfOrder = (int) redisService.get(totalOfOrderKey);
+
+        if (request.getAmount() != totalOfOrder) {
+            throw new AppException(ErrorCode.TOTAL_DO_NOT_MATCH);
+        }
+    }
+
     @Override
     public CreateMomoPaymentResponse createMomoQR(CreateMomoPaymentRequest request) {
+        preCheck(request);
+
         String orderInfo = "Thanh toán vé phim có mã: " + request.getOrderId().toString();
         String requestId = UUID.randomUUID().toString();
         String extraData = "";
@@ -118,7 +157,6 @@ public class MomoPaymentImpl implements IMomoPaymentService {
                     .requestType(momoProperties.getRequestType())
                     .signature(prettySignature)
                     .build();
-
             CreateMomoPaymentResponse response = momoClient.createMomoQR(momoPayload);
 
             if (response == null || response.getResultCode() != 0) {
@@ -127,9 +165,33 @@ public class MomoPaymentImpl implements IMomoPaymentService {
 
             return response;
         } catch (Exception e) {
-            log.info(e.getMessage());
-
             throw new AppException(ErrorCode.MOMO_REQUEST_FAILED);
+        }
+    }
+
+    @Transactional
+    @Override
+    public void handlePayment(CreatePaymentRequest request, PaymentStatus paymentStatus, PaymentMethod paymentMethod) {
+        paymentRepository.save(Payment.builder()
+                .amount(String.valueOf(request.getAmount()))
+                .status(paymentStatus)
+                .method(paymentMethod)
+                .transactionId(request.getTransactionId())
+                .errorMessage(request.getErrorMessage())
+                .order(orderRepository
+                        .findById(request.getOrderId())
+                        .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND)))
+                .build());
+
+        try {
+            Id orderId = Id.builder().id(request.getOrderId().toString()).build();
+
+            outboxRepository.save(Outbox.builder()
+                    .eventType(paymentStatus == PaymentStatus.SUCCESS ? Others.PAYMENT_SUCCESS : Others.PAYMENT_FAILED)
+                    .payload(objectMapper.writeValueAsString(orderId))
+                    .build());
+        } catch (JsonProcessingException e) {
+            throw new AppException(ErrorCode.JSON_PARSE_ERROR);
         }
     }
 }

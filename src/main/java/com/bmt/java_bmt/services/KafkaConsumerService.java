@@ -3,6 +3,8 @@ package com.bmt.java_bmt.services;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+import jakarta.transaction.Transactional;
+
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
@@ -11,10 +13,14 @@ import com.bmt.java_bmt.dto.others.IFilmElasticsearchProjection;
 import com.bmt.java_bmt.dto.others.Id;
 import com.bmt.java_bmt.dto.others.SimplePersonInformation;
 import com.bmt.java_bmt.dto.responses.showtime.GetShowtimeSeatResponse;
+import com.bmt.java_bmt.entities.Order;
+import com.bmt.java_bmt.entities.enums.OrderStatus;
+import com.bmt.java_bmt.entities.enums.SeatStatus;
 import com.bmt.java_bmt.exceptions.ErrorCode;
 import com.bmt.java_bmt.helpers.constants.Others;
 import com.bmt.java_bmt.helpers.constants.RedisKey;
 import com.bmt.java_bmt.repositories.IFilmRepository;
+import com.bmt.java_bmt.repositories.IOrderRepository;
 import com.bmt.java_bmt.repositories.IShowtimeSeatRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -32,9 +38,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class KafkaConsumerService {
     ObjectMapper objectMapper;
+
     IFilmRepository filmRepository;
     ISearchService searchService;
     IShowtimeSeatRepository showtimeSeatRepository;
+    IOrderRepository orderRepository;
     IRedisService redisService;
 
     int NUMBER_OF_SEATS = 80;
@@ -151,6 +159,53 @@ public class KafkaConsumerService {
         }
     }
 
+    @Transactional
+    private void handlePaymentSuccess(JsonNode afterNode) {
+        JsonNode aggregatePayloadNode = afterNode.get("os_payload");
+
+        if (aggregatePayloadNode == null || aggregatePayloadNode.isNull()) {
+            log.error("❌ Trong trường 'after' không chứa 'os_payload', bỏ qua");
+            return;
+        }
+
+        try {
+            String aggregatePayloadString = aggregatePayloadNode.asText();
+            JsonNode finalPayload = objectMapper.readTree(aggregatePayloadString);
+            Id orderId = objectMapper.treeToValue(finalPayload, Id.class);
+            UUID orderIdUuid = UUID.fromString(orderId.getId());
+            Optional<Order> optionalOrder = orderRepository.findById(orderIdUuid);
+
+            if (optionalOrder.isEmpty()) {
+                log.error("❌ Không tìm thấy Order với id = {}", orderIdUuid.toString());
+
+                // TODO: có thể đẩy vào DLQ / notification service ở đây
+                return;
+            }
+
+            Order order = optionalOrder.get();
+
+            order.setStatus(OrderStatus.SUCCESS);
+
+            orderRepository.save(order);
+
+            int affectedRows = showtimeSeatRepository.updateStatusOfSeatsByUserIdAndShowtimeId(
+                    SeatStatus.BOOKED.name(),
+                    order.getOrderedBy().getId(),
+                    order.getShowtime().getId());
+
+            if (affectedRows == 0) {
+                log.info("❌ Cập nhập trạng thái của ghế thất bại");
+
+                // TODO: có thể đẩy vào DLQ / notification service ở đây
+                return;
+            }
+
+            log.info("✅ Order {} đã cập nhật trạng thái PAID", orderIdUuid);
+        } catch (JsonProcessingException e) {
+            log.error("❌ Lỗi khi parse 'os_payload' thành orderId: {}", e.getMessage());
+        }
+    }
+
     @KafkaListener(topics = Others.OUTBOX, groupId = "java-bmt-group")
     public void listen(String message) {
         if (message == null) {
@@ -193,6 +248,12 @@ public class KafkaConsumerService {
                 case Others.SHOWTIME_RELEASED:
                     handleShowtimeReleased(afterNode);
 
+                    return;
+                case Others.PAYMENT_SUCCESS:
+                    handlePaymentSuccess(afterNode);
+
+                    return;
+                case Others.PAYMENT_FAILED:
                     return;
                 default:
                     log.error("❌ Sự kiện không hợp lệ, bỏ qua");
