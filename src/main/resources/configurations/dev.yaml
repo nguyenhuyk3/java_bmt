@@ -4,6 +4,7 @@ email:
   username: "AKIA52GSWC5JL54QJ76Q"
   password: "BMYBb5qkHXzeRg9aKBp8yWFHcPYkqBmqJ3hjqH0j/GVX"
   from-email: "cafevietnam2018@gmail.com"
+
 jwt:
   access:
     secret: "143cf976-5f19-4403-8df4-94d863e050eb"
@@ -11,18 +12,31 @@ jwt:
   refresh:
     secret: "30d4a667-4d44-439e-9fd1-db45a01606c3"
     expiration: 604800 # 7 days
+
 manager:
   email: "huykimcuong4@gmail.com"
   password: "anhiuemlove33"
+
 customer:
   email: "huykimcuong5@gmail.com"
   password: "anhiuemlove33"
+
 cloudinary:
   cloud-name: "danvvtgtl"
   api-key: "274831794215725"
   api-secret: "7Mts03GCsNkW4N9jN1XOLq6Cnxs"
+
 elasticsearch:
   indexes:
     index-of-films: "index-of-films"
   host: localhost
   port: 9200
+
+momo:
+  end-point: https://test-payment.momo.vn/v2/gateway/api
+  partner-code: MOMO
+  access-key: F8BBA842ECF85
+  secret-key: K951B6PE1waDMi640xX08PD3vg6EkVlz
+  redirect-url: http://localhost:3000/
+  ipn-url: http://localhost:8080/api/momo/ipn-handler
+  request-type: captureWallet

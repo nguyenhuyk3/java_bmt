@@ -7,6 +7,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import com.bmt.java_bmt.services.IRedisService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Implementation của IRedis interface sử dụng RedisTemplate
@@ -15,6 +16,9 @@ import com.bmt.java_bmt.services.IRedisService;
 public class RedisImpl implements IRedisService<String, Object> {
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Override
     public Boolean existsKey(String key) {
@@ -93,4 +97,36 @@ public class RedisImpl implements IRedisService<String, Object> {
             return -2L; // Key không tồn tại
         }
     }
+
+    //    @Override
+    //    public <T> T get(String key, Class<T> clazz) {
+    //        try {
+    //            Object value = redisTemplate.opsForValue().get(key);
+    //
+    //            if (value == null) {
+    //                return null;
+    //            }
+    //
+    //            return objectMapper.convertValue(value, clazz);
+    //        } catch (Exception e) {
+    //            e.printStackTrace();
+    //            return null;
+    //        }
+    //    }
+
+    //    @Override
+    //    public <T> T get(String key, com.fasterxml.jackson.core.type.TypeReference<T> typeReference) {
+    //        try {
+    //            Object value = redisTemplate.opsForValue().get(key);
+    //
+    //            if (value == null) {
+    //                return null;
+    //            }
+    //            // Dùng ObjectMapper với TypeReference để giữ lại thông tin generic
+    //            return objectMapper.convertValue(value, typeReference);
+    //        } catch (Exception e) {
+    //            e.printStackTrace();
+    //            return null;
+    //        }
+    //    }
 }

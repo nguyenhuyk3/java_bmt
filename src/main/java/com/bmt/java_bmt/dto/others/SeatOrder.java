@@ -4,13 +4,13 @@ import java.util.UUID;
 
 import jakarta.validation.constraints.NotNull;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Builder
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SeatOrder {
     @NotNull(message = "Không được để trống id của ghế")

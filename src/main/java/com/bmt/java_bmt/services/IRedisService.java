@@ -79,4 +79,7 @@ public interface IRedisService<K, V> {
      *         -2 nếu key không tồn tại
      */
     Long getTTL(K key, TimeUnit timeUnit);
+
+    //    <T> T get(String key, Class<T> clazz);
+    //    <T> T get(String key, com.fasterxml.jackson.core.type.TypeReference<T> typeReference);
 }

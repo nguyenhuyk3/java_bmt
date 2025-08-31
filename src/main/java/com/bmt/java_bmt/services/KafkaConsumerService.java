@@ -137,7 +137,7 @@ public class KafkaConsumerService {
             List<GetShowtimeSeatResponse> showtimeSeats =
                     showtimeSeatRepository.getShowtimeSeatsByShowtimeId(showtimeUuid);
             List<Id> showtimeSeatIds = new ArrayList<>();
-            String showtimeSeatsKey = RedisKey.SHOWTIME_SEATS + showtimeId;
+            String showtimeSeatsKey = RedisKey.SHOWTIME_SEATS + showtimeId.getId();
 
             for (GetShowtimeSeatResponse showtimeSeat : showtimeSeats) {
                 Id seatId = Id.builder().id(showtimeSeat.getSeatId().toString()).build();

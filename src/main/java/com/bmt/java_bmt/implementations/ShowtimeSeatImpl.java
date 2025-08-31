@@ -29,6 +29,10 @@ public class ShowtimeSeatImpl implements IShowtimeSeatService {
         var showtime =
                 showtimeRepository.findById(id).orElseThrow(() -> new AppException((ErrorCode.SHOWTIME_NOT_FOUND)));
 
+        if (!showtime.getIsReleased()) {
+            throw new AppException(ErrorCode.SHOWTIME_IS_NOT_RELEASED);
+        }
+
         if (showtime.getShowDate().isBefore(LocalDate.now())) {
             throw new AppException(ErrorCode.SHOWTIME_IS_IN_PAST);
         }

@@ -5,16 +5,19 @@ import java.util.UUID;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Builder
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FABOrder {
     @NotNull(message = "Không được để trống id của đồ ăn")
+    @JsonProperty("fABId")
     UUID fABId;
 
     @Positive(message = "Số lượng phải lớn hơn 0")

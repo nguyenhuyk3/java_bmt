@@ -93,8 +93,7 @@ public class LoginServiceTest {
         userRepository.deleteAll();
 
         PersonalInformation personalInformation = PersonalInformation.builder()
-                .firstName("Huy")
-                .lastName("Nguyen")
+                .fullName("Nguyen Quoc Huy")
                 .dateOfBirth(LocalDate.of(1998, 5, 15))
                 .sex(Sex.MALE)
                 .avatarUrl("https://example.com/avatar.png")
