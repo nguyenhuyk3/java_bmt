@@ -46,15 +46,18 @@ public class CompletedPaymentEmailSender {
         StringBuilder html = new StringBuilder();
 
         html.append("<div style=\"margin: 30px 0;\">\n")
-                .append("    <h3 style=\"color: #00bc69; margin-bottom: 20px; text-align: center; font-size: 1.4em; font-weight: bold;\">🍿 ĐỒ ĂN & THỨC UỐNG</h3>\n")
-                .append("    <div style=\"background: #f8f9fa; border-radius: 12px; padding: 20px; border-left: 4px solid #00bc69; box-shadow: 0 2px 8px rgba(0,0,0,0.1);\">\n")
+                .append(
+                        "    <h3 style=\"color: #00bc69; margin-bottom: 20px; text-align: center; font-size: 1.4em; font-weight: bold;\">🍿 ĐỒ ĂN & THỨC UỐNG</h3>\n")
+                .append(
+                        "    <div style=\"background: #f8f9fa; border-radius: 12px; padding: 20px; border-left: 4px solid #00bc69; box-shadow: 0 2px 8px rgba(0,0,0,0.1);\">\n")
                 .append("        <table style=\"width: 100%; border-collapse: collapse;\">\n");
 
         for (int i = 0; i < FABItems.size(); i++) {
             FABItem item = FABItems.get(i);
 
             html.append("            <tr>\n")
-                    .append("                <td style=\"padding: 12px 15px; background: white; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); margin-bottom: 10px; width: 70%; vertical-align: middle;")
+                    .append(
+                            "                <td style=\"padding: 12px 15px; background: white; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); margin-bottom: 10px; width: 70%; vertical-align: middle;")
                     .append(i < FABItems.size() - 1 ? " border-bottom: 10px solid transparent;" : "")
                     .append("\">\n")
                     .append("                    <span style=\"font-weight: 600; color: #333; font-size: 1.05em;\">")
@@ -62,10 +65,12 @@ public class CompletedPaymentEmailSender {
                     .append(item.getName())
                     .append("</span>\n")
                     .append("                </td>\n")
-                    .append("                <td style=\"padding: 12px 15px; background: white; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); text-align: right; width: 30%; vertical-align: middle;")
+                    .append(
+                            "                <td style=\"padding: 12px 15px; background: white; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); text-align: right; width: 30%; vertical-align: middle;")
                     .append(i < FABItems.size() - 1 ? " border-bottom: 10px solid transparent;" : "")
                     .append("\">\n")
-                    .append("                    <span style=\"background: #00bc69; color: white; padding: 6px 14px; border-radius: 20px; font-weight: bold; font-size: 0.9em; min-width: 35px; display: inline-block; text-align: center;\">x")
+                    .append(
+                            "                    <span style=\"background: #00bc69; color: white; padding: 6px 14px; border-radius: 20px; font-weight: bold; font-size: 0.9em; min-width: 35px; display: inline-block; text-align: center;\">x")
                     .append(item.getQuantity())
                     .append("</span>\n")
                     .append("                </td>\n")
@@ -76,9 +81,7 @@ public class CompletedPaymentEmailSender {
             }
         }
 
-        html.append("        </table>\n")
-                .append("    </div>\n")
-                .append("</div>\n");
+        html.append("        </table>\n").append("    </div>\n").append("</div>\n");
 
         return html.toString();
     }

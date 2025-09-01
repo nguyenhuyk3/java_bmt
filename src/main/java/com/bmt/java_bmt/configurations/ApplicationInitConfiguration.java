@@ -320,11 +320,10 @@ public class ApplicationInitConfiguration {
                 .toList());
 
         film.setFilmProfessionals(filmProfessionals);
-        film.setOtherFilmInformation(OtherFilmInformation
-                .builder()
-                        .film(film)
-                        .trailerUrl("NONE")
-                        .posterUrl("NONE")
+        film.setOtherFilmInformation(OtherFilmInformation.builder()
+                .film(film)
+                .trailerUrl("NONE")
+                .posterUrl("NONE")
                 .build());
 
         return filmRepo.save(film);
