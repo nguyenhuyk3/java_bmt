@@ -21,6 +21,7 @@ public final class Others {
     public static final String SHOWTIME_RELEASED = "SHOWTIME_RELEASED";
     public static final String PAYMENT_SUCCESS = "PAYMENT_SUCCESS";
     public static final String PAYMENT_FAILED = "PAYMENT_FAILED";
+    public static final String SEND_MAIL_WHEN_PAYMENT_SUCCESS = "SEND_MAIL_WHEN_PAYMENT_SUCCESS";
 
     // Kafka topic
     public static final String OUTBOX = "outbox_events.bmt_database.outboxes";

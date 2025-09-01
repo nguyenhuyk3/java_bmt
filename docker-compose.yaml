@@ -79,6 +79,7 @@ services:
       CONFIG_STORAGE_TOPIC: connect-configs   # connect-configs: Save the configuration of the connectors
       OFFSET_STORAGE_TOPIC: connect-offsets   # connect-offsets: Save the offset position that the connector has read to in the DB
       STATUS_STORAGE_TOPIC: connect-statuses  # connect-statuses: Save the current state of the connector (running, failed, ...)
+    restart: unless-stopped
 
   kafka-ui:
     image: provectuslabs/kafka-ui:latest

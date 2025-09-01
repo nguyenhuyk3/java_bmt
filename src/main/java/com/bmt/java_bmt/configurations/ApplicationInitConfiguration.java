@@ -74,7 +74,7 @@ public class ApplicationInitConfiguration {
     @FieldDefaults(level = AccessLevel.PRIVATE)
     public static class CreateFoodAndBeverageRequest {
         String name;
-        FabType type;
+        FABType type;
         String imageUrl;
         int price;
         boolean isDeleted;
@@ -118,7 +118,7 @@ public class ApplicationInitConfiguration {
         return List.of(
                 CreateFoodAndBeverageRequest.builder()
                         .name("Coca-Cola")
-                        .type(FabType.BEVERAGE)
+                        .type(FABType.BEVERAGE)
                         .imageUrl(
                                 "https://images.unsplash.com/photo-1567103472667-6898f3a79cf2?q=80&w=300&auto=format&fit=crop")
                         .price(20000)
@@ -126,7 +126,7 @@ public class ApplicationInitConfiguration {
                         .build(),
                 CreateFoodAndBeverageRequest.builder()
                         .name("Bắp rang bơ")
-                        .type(FabType.FOOD)
+                        .type(FABType.FOOD)
                         .imageUrl(
                                 "https://images.unsplash.com/photo-1578849278619-e73505e9610f?q=80&w=300&auto=format&fit=crop")
                         .price(30000)
@@ -134,7 +134,7 @@ public class ApplicationInitConfiguration {
                         .build(),
                 CreateFoodAndBeverageRequest.builder()
                         .name("Nacho phô mai")
-                        .type(FabType.FOOD)
+                        .type(FABType.FOOD)
                         .imageUrl(
                                 "https://images.unsplash.com/photo-1513456852971-30c0b8199d4d?q=80&w=300&auto=format&fit=crop")
                         .price(40000)
@@ -142,7 +142,7 @@ public class ApplicationInitConfiguration {
                         .build(),
                 CreateFoodAndBeverageRequest.builder()
                         .name("Snack")
-                        .type(FabType.FOOD)
+                        .type(FABType.FOOD)
                         .imageUrl(
                                 "https://images.unsplash.com/photo-1741520149946-d2e652514b5a?q=80&w=300&auto=format&fit=crop")
                         .price(25000)
@@ -150,7 +150,7 @@ public class ApplicationInitConfiguration {
                         .build(),
                 CreateFoodAndBeverageRequest.builder()
                         .name("Trà sữa")
-                        .type(FabType.BEVERAGE)
+                        .type(FABType.BEVERAGE)
                         .imageUrl(
                                 "https://images.unsplash.com/photo-1572490122747-3968b75cc699?q=80&w=300&auto=format&fit=crop")
                         .price(35000)
@@ -158,7 +158,7 @@ public class ApplicationInitConfiguration {
                         .build(),
                 CreateFoodAndBeverageRequest.builder()
                         .name("Nước khoáng")
-                        .type(FabType.BEVERAGE)
+                        .type(FABType.BEVERAGE)
                         .imageUrl(
                                 "https://images.unsplash.com/photo-1638688569176-5b6db19f9d2a?q=80&w=300&auto=format&fit=crop")
                         .price(15000)
@@ -166,7 +166,7 @@ public class ApplicationInitConfiguration {
                         .build(),
                 CreateFoodAndBeverageRequest.builder()
                         .name("Cà phê")
-                        .type(FabType.BEVERAGE)
+                        .type(FABType.BEVERAGE)
                         .imageUrl(
                                 "https://images.unsplash.com/photo-1627261581533-f2357c73c4d0?q=80&w=300&auto=format&fit=crop")
                         .price(30000)
@@ -174,7 +174,7 @@ public class ApplicationInitConfiguration {
                         .build(),
                 CreateFoodAndBeverageRequest.builder()
                         .name("Kẹo dẻo")
-                        .type(FabType.FOOD)
+                        .type(FABType.FOOD)
                         .imageUrl(
                                 "https://images.unsplash.com/photo-1582058091505-f87a2e55a40f?q=80&w=300&auto=format&fit=crop")
                         .price(20000)
@@ -182,7 +182,7 @@ public class ApplicationInitConfiguration {
                         .build(),
                 CreateFoodAndBeverageRequest.builder()
                         .name("Bánh quy")
-                        .type(FabType.FOOD)
+                        .type(FABType.FOOD)
                         .imageUrl(
                                 "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?q=80&w=300&auto=format&fit=crop")
                         .price(22000)
@@ -190,7 +190,7 @@ public class ApplicationInitConfiguration {
                         .build(),
                 CreateFoodAndBeverageRequest.builder()
                         .name("Sô cô la")
-                        .type(FabType.FOOD)
+                        .type(FABType.FOOD)
                         .imageUrl(
                                 "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?q=80&w=300&auto=format&fit=crop")
                         .price(28000)
@@ -320,6 +320,12 @@ public class ApplicationInitConfiguration {
                 .toList());
 
         film.setFilmProfessionals(filmProfessionals);
+        film.setOtherFilmInformation(OtherFilmInformation
+                .builder()
+                        .film(film)
+                        .trailerUrl("NONE")
+                        .posterUrl("NONE")
+                .build());
 
         return filmRepo.save(film);
     }

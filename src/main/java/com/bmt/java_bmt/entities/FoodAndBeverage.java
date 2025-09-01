@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.bmt.java_bmt.entities.enums.FabType;
+import com.bmt.java_bmt.entities.enums.FABType;
 
 import lombok.*;
 
@@ -30,7 +30,7 @@ public class FoodAndBeverage {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "fab_type", nullable = false)
-    private FabType type;
+    private FABType type;
 
     @Column(name = "fab_image_url", columnDefinition = "TEXT", nullable = false)
     private String imageUrl;

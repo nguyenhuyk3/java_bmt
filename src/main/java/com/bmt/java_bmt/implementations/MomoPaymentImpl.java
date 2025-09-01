@@ -172,16 +172,21 @@ public class MomoPaymentImpl implements IMomoPaymentService, IPaymentService {
     @Transactional
     @Override
     public void handlePayment(CreatePaymentRequest request, PaymentStatus paymentStatus, PaymentMethod paymentMethod) {
-        paymentRepository.save(Payment.builder()
+        var order = orderRepository
+                .findById(request.getOrderId())
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        var savedPayment = paymentRepository.save(Payment.builder()
                 .amount(String.valueOf(request.getAmount()))
                 .status(paymentStatus)
                 .method(paymentMethod)
                 .transactionId(request.getTransactionId())
                 .errorMessage(request.getErrorMessage())
-                .order(orderRepository
-                        .findById(request.getOrderId())
-                        .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND)))
+                .order(order)
                 .build());
+
+        order.setPayment(savedPayment);
+
+        orderRepository.save(order);
 
         try {
             Id orderId = Id.builder().id(request.getOrderId().toString()).build();

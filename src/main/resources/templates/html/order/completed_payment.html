@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Xác Nhận Vé Xem Phim - POKER</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            color: #333;
+            background-color: #f5f5f5;
+            font-size: 16px;
+        }
+
+        .container {
+            margin: 20px auto;
+            width: 100%;
+            max-width: 650px;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            line-height: 1.6;
+        }
+
+        .header {
+            border-bottom: 2px solid #00bc69;
+            text-align: center;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .header a {
+            font-size: 2em;
+            color: #00bc69;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .ticket-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ticket-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .movie-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .movie-poster {
+            width: 120px;
+            height: 180px;
+            border-radius: 10px;
+            margin: 0 auto 20px;
+            display: block;
+            border: 3px solid rgba(255,255,255,0.2);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        /* Table layout cho ticket info với spacing tốt hơn */
+        .ticket-info-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 10px;
+        }
+
+        .info-item {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            vertical-align: top;
+            width: 50%;
+            box-sizing: border-box;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .info-label {
+            font-size: 0.85em;
+            opacity: 0.9;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+
+        .info-value {
+            font-size: 1.1em;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .seats-info {
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .seats-label {
+            font-size: 1em;
+            opacity: 0.9;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 500;
+        }
+
+        .seats-value {
+            font-size: 1.4em;
+            font-weight: bold;
+            letter-spacing: 3px;
+        }
+
+        /* Food items sử dụng inline styles để tương thích với email clients */
+
+        .footer {
+            color: #777;
+            font-size: 1em;
+            line-height: 1.5;
+            font-weight: 300;
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .email-info {
+            color: #666666;
+            font-weight: 400;
+            font-size: 0.9em;
+            line-height: 18px;
+            padding: 5px 0;
+            text-align: center;
+        }
+
+        .email-info a {
+            text-decoration: none;
+            color: #00bc69;
+        }
+
+        .warning-text {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 18px;
+            border-radius: 10px;
+            margin: 25px 0;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .warning-text strong {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 20px;
+            }
+
+            .ticket-info-table {
+                border-spacing: 5px;
+            }
+
+            .info-item {
+                width: 100%;
+                display: block;
+            }
+
+            .ticket-info-table tr {
+                display: block;
+                margin-bottom: 10px;
+            }
+
+            .ticket-info-table td {
+                display: block;
+                width: 100% !important;
+                margin-bottom: 10px;
+            }
+
+            .movie-poster {
+                width: 100px;
+                height: 150px;
+            }
+
+            .food-item {
+                text-align: center;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <div class="header">
+        <a>🎬 POKER CINEMA</a>
+    </div>
+
+    <p>
+        Cảm ơn bạn đã đặt vé xem phim tại POKER Cinema. Dưới đây là thông tin chi tiết về vé của bạn:
+    </p>
+
+    <div class="ticket-container">
+        <div class="ticket-header">
+            <img src="{{.poster_url}}" alt="Movie Poster" class="movie-poster" onerror="this.style.display='none'">
+            <div class="movie-title">{{.film_title}}</div>
+            <div style="opacity: 0.9; font-size: 1.1em;">{{.genres}} • {{.duration}}</div>
+        </div>
+
+        <!-- Table layout với spacing tốt hơn -->
+        <table class="ticket-info-table">
+            <tr>
+                <td class="info-item">
+                    <div class="info-label">🎭 Rạp Chiếu</div>
+                    <div class="info-value">{{.cinema_name}}</div>
+                </td>
+                <td class="info-item">
+                    <div class="info-label">🏙️ Thành Phố</div>
+                    <div class="info-value">{{.city}}</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="info-item">
+                    <div class="info-label">📍 Địa Chỉ</div>
+                    <div class="info-value">{{.address}}</div>
+                </td>
+                <td class="info-item">
+                    <div class="info-label">🎬 Phòng Chiếu</div>
+                    <div class="info-value">{{.auditorium}}</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="info-item">
+                    <div class="info-label">📅 Ngày Chiếu</div>
+                    <div class="info-value">{{.show_date}}</div>
+                </td>
+                <td class="info-item">
+                    <div class="info-label">⏰ Giờ Chiếu</div>
+                    <div class="info-value">{{.show_time}}</div>
+                </td>
+            </tr>
+        </table>
+
+        <div class="seats-info">
+            <div class="seats-label">🪑 GHẾ NGỒI</div>
+            <div class="seats-value">{{.seats}}</div>
+        </div>
+    </div>
+
+    {{.fab_items}}
+
+    <div class="warning-text">
+        <strong>⚠️ Lưu ý quan trọng:</strong>
+        • Vui lòng có mặt tại rạp trước giờ chiếu 15 phút<br>
+        • Mang theo email xác nhận này<br>
+        • Không được hoàn tiền sau khi đã xác nhận đặt vé
+    </div>
+
+    <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;" />
+
+    <div class="footer">
+        <p>Email này không thể nhận được phản hồi.</p>
+        <p>
+            Để biết thêm thông tin về POKER Cinema và tài khoản của bạn, hãy truy cập
+            <strong>POKER Cinema App</strong>
+        </p>
+        <p style="margin-top: 15px; font-size: 0.9em;">
+            Chúc bạn có những phút giây thư giãn tuyệt vời! 🍿
+        </p>
+    </div>
+</div>
+
+<div style="text-align: center; padding: 20px 0; background-color: #f8f9fa;">
+    <div class="email-info">
+        <span>
+            Email được gửi từ
+            <a href="mailto:{{.from_email}}">{{.from_email}}</a>
+        </span>
+    </div>
+    <div class="email-info">
+        <a href="/">POKER Cinema</a> | 123 Đường Nguyễn Huệ
+        | Quận 1 - Thành phố Hồ Chí Minh, Việt Nam
+    </div>
+    <div class="email-info">
+        📞 Hotline: 1900 xxxx | 🌐 www.pokercinema.vn
+    </div>
+    <div class="email-info">
+        &copy; 2024 POKER Cinema. Mọi quyền được bảo lưu.
+    </div>
+</div>
+
+</body>
+</html>

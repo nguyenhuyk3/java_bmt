@@ -78,10 +78,10 @@ public interface IShowtimeSeatRepository extends JpaRepository<ShowtimeSeat, UUI
             value =
                     """
 			UPDATE showtime_seats
-			SET 
-                ss_status = :status, 
-                u_booked_by = :userId, 
-                ss_booked_at = NOW()
+			SET
+				ss_status = :status,
+				u_booked_by = :userId,
+				ss_booked_at = NOW()
 			WHERE sh_id = :showtimeId AND se_id = :seatId
 			""",
             nativeQuery = true)

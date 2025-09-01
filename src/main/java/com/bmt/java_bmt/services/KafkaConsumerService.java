@@ -1,27 +1,30 @@
 package com.bmt.java_bmt.services;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import javax.mail.MessagingException;
 
 import jakarta.transaction.Transactional;
 
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
-import com.bmt.java_bmt.dto.others.FilmDocument;
-import com.bmt.java_bmt.dto.others.IFilmElasticsearchProjection;
-import com.bmt.java_bmt.dto.others.Id;
-import com.bmt.java_bmt.dto.others.SimplePersonInformation;
+import com.bmt.java_bmt.dto.others.*;
 import com.bmt.java_bmt.dto.responses.showtime.GetShowtimeSeatResponse;
+import com.bmt.java_bmt.entities.Film;
 import com.bmt.java_bmt.entities.Order;
-import com.bmt.java_bmt.entities.enums.OrderStatus;
-import com.bmt.java_bmt.entities.enums.SeatStatus;
+import com.bmt.java_bmt.entities.Outbox;
+import com.bmt.java_bmt.entities.Showtime;
+import com.bmt.java_bmt.entities.enums.*;
+import com.bmt.java_bmt.exceptions.AppException;
 import com.bmt.java_bmt.exceptions.ErrorCode;
 import com.bmt.java_bmt.helpers.constants.Others;
 import com.bmt.java_bmt.helpers.constants.RedisKey;
-import com.bmt.java_bmt.repositories.IFilmRepository;
-import com.bmt.java_bmt.repositories.IOrderRepository;
-import com.bmt.java_bmt.repositories.IShowtimeSeatRepository;
+import com.bmt.java_bmt.repositories.*;
+import com.bmt.java_bmt.utils.Formatter;
+import com.bmt.java_bmt.utils.senders.CompletedPaymentEmailSender;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -37,13 +40,16 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class KafkaConsumerService {
-    ObjectMapper objectMapper;
-
     IFilmRepository filmRepository;
     ISearchService searchService;
     IShowtimeSeatRepository showtimeSeatRepository;
     IOrderRepository orderRepository;
     IRedisService redisService;
+    IOutboxRepository outboxRepository;
+    IShowtimeRepository showtimeRepository;
+
+    ObjectMapper objectMapper;
+    CompletedPaymentEmailSender completedPaymentEmailSender;
 
     int NUMBER_OF_SEATS = 80;
     long TWO_DAY = 60 * 24 * 2;
@@ -62,14 +68,6 @@ public class KafkaConsumerService {
                         ? objectMapper.readValue(
                                 projection.getDirectors(), new TypeReference<List<SimplePersonInformation>>() {})
                         : Collections.emptyList();
-        //        LocalDate releaseDate = (projection.getReleaseDate() != null
-        //                && !projection.getReleaseDate().isBlank())
-        //                ? LocalDate.parse(projection.getReleaseDate())
-        //                : null;
-        //        LocalTime duration =
-        //                (projection.getDuration() != null && !projection.getDuration().isBlank())
-        //                        ? LocalTime.parse(projection.getDuration())
-        //                        : null;
 
         return FilmDocument.builder()
                 .id(projection.getId())
@@ -103,7 +101,7 @@ public class KafkaConsumerService {
                     filmRepository.findFilmDetailsForElasticsearch(filmUuid);
 
             if (projectionOpt.isEmpty()) {
-                log.warn("⚠️ Không tìm thấy thông tin phim với ID {} trong CSDL. Có thể đã bị xóa.", filmId);
+                log.error("⚠️ Không tìm thấy thông tin phim với ID {} trong CSDL. Có thể đã bị xóa.", filmId);
                 // Có thể gửi một lệnh xóa tới Elasticsearch ở đây nếu cần
                 return;
             }
@@ -137,9 +135,7 @@ public class KafkaConsumerService {
             UUID showtimeUuid = UUID.fromString(showtimeId.getId());
 
             if (showtimeSeatRepository.createShowtimeSeats(showtimeUuid) != NUMBER_OF_SEATS) {
-                ErrorCode errorCode = ErrorCode.NOT_ENOUGH_SHOWTIME_SEATS;
-
-                log.error("❌ Lỗi khi tạo showtime seats: {}", errorCode.getMessage());
+                log.error("❌ Lỗi khi tạo showtime seats: {}", ErrorCode.NOT_ENOUGH_SHOWTIME_SEATS.getMessage());
             }
 
             List<GetShowtimeSeatResponse> showtimeSeats =
@@ -200,7 +196,80 @@ public class KafkaConsumerService {
                 return;
             }
 
-            log.info("✅ Order {} đã cập nhật trạng thái PAID", orderIdUuid);
+            try {
+                outboxRepository.save(Outbox.builder()
+                        .eventType(Others.SEND_MAIL_WHEN_PAYMENT_SUCCESS)
+                        .payload(objectMapper.writeValueAsString(orderId))
+                        .build());
+            } catch (JsonProcessingException e) {
+                throw new AppException(ErrorCode.JSON_PARSE_ERROR);
+            }
+
+            log.info("✅ Order {} đã cập nhật trạng thái SUCCESS", orderIdUuid);
+        } catch (JsonProcessingException e) {
+            log.error("❌ Lỗi khi parse 'os_payload' thành orderId: {}", e.getMessage());
+        }
+    }
+
+    private void sendMailWhenPaymentSuccess(JsonNode afterNode) {
+        JsonNode aggregatePayloadNode = afterNode.get("os_payload");
+
+        if (aggregatePayloadNode == null || aggregatePayloadNode.isNull()) {
+            log.error("❌ Trong trường 'after' không chứa 'os_payload', bỏ qua");
+            return;
+        }
+
+        try {
+            String aggregatePayloadString = aggregatePayloadNode.asText();
+            JsonNode finalPayload = objectMapper.readTree(aggregatePayloadString);
+            Id orderId = objectMapper.treeToValue(finalPayload, Id.class);
+            UUID orderIdUuid = UUID.fromString(orderId.getId());
+            Optional<Order> optionalOrder = orderRepository.findOrderDetailsById(orderIdUuid);
+            Showtime showtime = optionalOrder.get().getShowtime();
+            Film film = showtime.getFilm();
+            TicketInformation ticketInformation = TicketInformation.builder()
+                    .filmTitle(film.getTitle())
+                    .genres(film.getGenres().stream()
+                            .map(Genre::getVietnameseName)
+                            .collect(Collectors.joining(", ")))
+                    .duration(Formatter.formatDuration(film.getDuration()))
+                    .posterUrl(film.getOtherFilmInformation().getPosterUrl())
+                    .cinemaName(
+                            showtime.getAuditorium().getCinema().getName())
+                    .city(City.toVietnamese(
+                            showtime.getAuditorium().getCinema().getCity()))
+                    .address(showtime.getAuditorium().getCinema().getLocation())
+                    .auditorium(showtime.getAuditorium().getName())
+                    .showDate(Formatter.formatLocalDate(showtime.getShowDate()))
+                    .showTime(
+                            Formatter.formatReadableTime(showtime.getStartTime()))
+                    .seats(optionalOrder.get().getOrderSeats().stream()
+                            .map(orderSeat -> orderSeat.getSeat().getSeatNumber())
+                            .sorted()
+                            .collect(Collectors.joining(" • ")))
+                    .FABItems(optionalOrder.get().getOrderFabs().stream()
+                            .map(orderFab -> FABItem.builder()
+                                    .name(orderFab.getFoodAndBeverage().getName())
+                                    .emoji(FABType.toEmoji(
+                                            orderFab.getFoodAndBeverage().getType()))
+                                    .quantity(orderFab.getQuantity())
+                                    .build())
+                            .collect(Collectors.toList()))
+                    .build();
+
+            try {
+                completedPaymentEmailSender.sendTicketConfirmation(
+                        optionalOrder.get().getOrderedBy().getEmail(),
+                        "Hoàn thành quá trình đặt vé",
+                        ticketInformation,
+                        "src/main/resources/templates/html/order/completed_payment.html");
+            } catch (IOException e) {
+                log.error("❌ Lỗi khi đọc template email");
+            } catch (MessagingException e) {
+                log.error("❌ Lỗi khi gửi email");
+            }
+
+            log.info("✅ Đã gửi mail để thông báo quá trình đặt vé đã thành công");
         } catch (JsonProcessingException e) {
             log.error("❌ Lỗi khi parse 'os_payload' thành orderId: {}", e.getMessage());
         }
@@ -254,6 +323,10 @@ public class KafkaConsumerService {
 
                     return;
                 case Others.PAYMENT_FAILED:
+                    return;
+                case Others.SEND_MAIL_WHEN_PAYMENT_SUCCESS:
+                    sendMailWhenPaymentSuccess(afterNode);
+
                     return;
                 default:
                     log.error("❌ Sự kiện không hợp lệ, bỏ qua");
