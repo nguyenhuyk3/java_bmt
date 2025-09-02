@@ -1,4 +1,4 @@
-package com.bmt.java_bmt.services.handlers;
+package com.bmt.java_bmt.services.handlers.kafka;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class ShowtimeEventHandler {
+public class KafkaShowtimeEventHandler {
     IShowtimeSeatRepository showtimeSeatRepository;
     IRedisService redisService;
     ObjectMapper objectMapper;

@@ -1,4 +1,4 @@
-package com.bmt.java_bmt.services.handlers;
+package com.bmt.java_bmt.services.handlers.kafka;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class PaymentEventHandler {
+public class KafkaPaymentEventHandler {
     IOrderRepository orderRepository;
     IShowtimeSeatRepository showtimeSeatRepository;
     IOutboxRepository outboxRepository;

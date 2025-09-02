@@ -1,4 +1,4 @@
-package com.bmt.java_bmt.services.handlers;
+package com.bmt.java_bmt.services.handlers.kafka;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -33,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class EmailEventHandler {
+public class KafkaEmailEventHandler {
     IOrderRepository orderRepository;
     CompletedPaymentEmailSender completedPaymentEmailSender;
     ObjectMapper objectMapper;

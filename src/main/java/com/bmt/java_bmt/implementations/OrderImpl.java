@@ -136,7 +136,7 @@ public class OrderImpl implements IOrderService {
         // 8. Lưu các thông tin cần thiết vào redis để phục vụ cho việc thanh toán
         String totalOfOrderKey = RedisKey.TOTAL_OF_ORDER + order.getId().toString();
 
-        redisService.save(totalOfOrderKey, totalOfOrder, FIFTEEN_MINUTES, TimeUnit.MINUTES);
+        redisService.save(totalOfOrderKey, totalOfOrder, FIFTEEN_MINUTES, TimeUnit.SECONDS);
 
         return String.format("Order của bạn được tạo thành công với id %s", order.getId());
     }

@@ -1,18 +1,13 @@
 package com.bmt.java_bmt.services;
 
-import java.util.*;
-
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
-import com.bmt.java_bmt.dto.others.*;
-import com.bmt.java_bmt.entities.enums.*;
 import com.bmt.java_bmt.helpers.constants.Others;
-import com.bmt.java_bmt.repositories.*;
-import com.bmt.java_bmt.services.handlers.EmailEventHandler;
-import com.bmt.java_bmt.services.handlers.FilmEventHandler;
-import com.bmt.java_bmt.services.handlers.PaymentEventHandler;
-import com.bmt.java_bmt.services.handlers.ShowtimeEventHandler;
+import com.bmt.java_bmt.services.handlers.kafka.KafkaEmailEventHandler;
+import com.bmt.java_bmt.services.handlers.kafka.KafkaFilmEventHandler;
+import com.bmt.java_bmt.services.handlers.kafka.KafkaPaymentEventHandler;
+import com.bmt.java_bmt.services.handlers.kafka.KafkaShowtimeEventHandler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,10 +22,10 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class KafkaConsumerService {
-    FilmEventHandler filmEventHandler;
-    ShowtimeEventHandler showtimeEventHandler;
-    PaymentEventHandler paymentEventHandler;
-    EmailEventHandler emailEventHandler;
+    KafkaFilmEventHandler filmEventHandler;
+    KafkaShowtimeEventHandler showtimeEventHandler;
+    KafkaPaymentEventHandler paymentEventHandler;
+    KafkaEmailEventHandler emailEventHandler;
 
     ObjectMapper objectMapper;
 

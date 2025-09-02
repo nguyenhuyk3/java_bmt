@@ -1,4 +1,4 @@
-package com.bmt.java_bmt.services.handlers;
+package com.bmt.java_bmt.services.handlers.kafka;
 
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class FilmEventHandler {
+public class KafkaFilmEventHandler {
     IFilmRepository filmRepository;
     ISearchService searchService;
     ObjectMapper objectMapper;
