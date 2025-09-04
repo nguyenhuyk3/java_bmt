@@ -12,7 +12,7 @@ import com.bmt.java_bmt.dto.others.FilmDocument;
 import com.bmt.java_bmt.dto.requests.search.SearchRequest;
 import com.bmt.java_bmt.exceptions.AppException;
 import com.bmt.java_bmt.exceptions.ErrorCode;
-import com.bmt.java_bmt.services.ISearchService;
+import com.bmt.java_bmt.services.IElasticsearchService;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.FieldValue;
@@ -33,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
-public class SearchImpl implements ISearchService {
+public class SearchImpl implements IElasticsearchService {
     @Value("${elastic-search.indexes.index-of-films}")
     @NonFinal
     String INDEX_OF_FILMS;
@@ -120,7 +120,6 @@ public class SearchImpl implements ISearchService {
                     FilmDocument.class // Class để map kết quả trả về
                     );
         } catch (IOException e) {
-            log.info(e.getMessage());
             throw new AppException(ErrorCode.ELASTICSEARCH_SEARCH_IO_EXCEPTION);
         } catch (Exception e) {
             throw new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION);

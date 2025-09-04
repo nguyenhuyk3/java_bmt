@@ -12,7 +12,7 @@ import com.bmt.java_bmt.dto.others.IFilmElasticsearchProjection;
 import com.bmt.java_bmt.dto.others.Id;
 import com.bmt.java_bmt.dto.others.SimplePersonInformation;
 import com.bmt.java_bmt.repositories.IFilmRepository;
-import com.bmt.java_bmt.services.ISearchService;
+import com.bmt.java_bmt.services.IElasticsearchService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class KafkaFilmEventHandler {
     IFilmRepository filmRepository;
-    ISearchService searchService;
+    IElasticsearchService searchService;
     ObjectMapper objectMapper;
 
     private FilmDocument toFilmDocument(IFilmElasticsearchProjection projection) throws JsonProcessingException {

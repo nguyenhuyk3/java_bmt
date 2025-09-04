@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bmt.java_bmt.dto.APIResponse;
 import com.bmt.java_bmt.dto.others.FilmDocument;
 import com.bmt.java_bmt.dto.requests.search.SearchRequest;
-import com.bmt.java_bmt.services.ISearchService;
+import com.bmt.java_bmt.services.IElasticsearchService;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ import lombok.experimental.FieldDefaults;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class SearchController {
-    ISearchService searchService;
+    IElasticsearchService searchService;
 
     @PostMapping()
     public APIResponse<List<FilmDocument>> searchFilms(@RequestBody SearchRequest request) {
