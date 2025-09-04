@@ -18,4 +18,5 @@ public final class RedisKey {
 
     // Others
     public static final String TOTAL_OF_ORDER = "total_of_order::";
+    public static final String FAVORITE_FILMS = "FAVORITE_FILMS::";
 }

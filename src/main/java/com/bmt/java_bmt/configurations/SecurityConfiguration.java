@@ -64,8 +64,8 @@ public class SecurityConfiguration {
         "/auth/register/**", "/auth/login/**", "/auth/forgot-password/**", "/search/**", "/payment/momo/**"
     };
     String[] PUT_PUBLIC_ENDPOINTS = {"/auth/forgot-password/**"};
-    String[] POST_CUSTOMER_PUBLIC_ENDPOINTS = {"/order/**"};
-    String[] GET_PRIVATE_ENDPOINTS = {"/user/**"};
+    String[] POST_CUSTOMER_PRIVATE_ENDPOINTS = {"/order/**", "/favorite-film/**"};
+    String[] GET_CUSTOMER_PRIVATE_ENDPOINTS = {"/user/**", "/favorite-film/**"};
     String[] POST_MANAGER_PRIVATE_ENDPOINTS = {"/film/**", "/showtime/**"};
 
     @Bean
@@ -85,11 +85,11 @@ public class SecurityConfiguration {
                 .permitAll()
                 .requestMatchers(HttpMethod.PUT, PUT_PUBLIC_ENDPOINTS)
                 .permitAll()
-                .requestMatchers(HttpMethod.POST, POST_CUSTOMER_PUBLIC_ENDPOINTS)
+                .requestMatchers(HttpMethod.POST, POST_CUSTOMER_PRIVATE_ENDPOINTS)
                 .hasRole(Others.CUSTOMER)
                 .requestMatchers(HttpMethod.POST, POST_MANAGER_PRIVATE_ENDPOINTS)
                 .hasRole(Others.MANAGER)
-                .requestMatchers(HttpMethod.GET, GET_PRIVATE_ENDPOINTS)
+                .requestMatchers(HttpMethod.GET, GET_CUSTOMER_PRIVATE_ENDPOINTS)
                 .hasAnyRole(Others.CUSTOMER, Others.MANAGER)
                 .anyRequest()
                 .authenticated());
