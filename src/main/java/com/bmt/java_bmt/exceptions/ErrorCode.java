@@ -40,7 +40,8 @@ public enum ErrorCode {
     REFRESH_TOKEN_INVALID(21018, "Refresh token không hợp lệ", HttpStatus.UNAUTHORIZED),
     REFRESH_TOKEN_UNSUPPORTED(21019, "Refresh token không được hỗ trợ", HttpStatus.BAD_REQUEST),
     REFRESH_TOKEN_EMPTY(21020, "Refresh token rỗng", HttpStatus.BAD_REQUEST),
-    CANNOT_EXTRACT_USER_ID(21021, "Không thể extract user ID từ token", HttpStatus.BAD_REQUEST),
+    CANNOT_EXTRACT_USER_ID(21021, "Không thể trích xuất ID của người dùng từ token", HttpStatus.BAD_REQUEST),
+    CANNOT_EXTRACT_TOKEN_EXPIRATION(21022, "Không thể trích xuất thời gian hết hạn từ token", HttpStatus.BAD_REQUEST),
 
     // User
     USER_ID_DOESNT_EXIST(22001, "User không tồn tại", HttpStatus.NOT_FOUND),

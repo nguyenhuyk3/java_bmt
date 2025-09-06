@@ -27,21 +27,21 @@ public class RegistrationController {
 
     @PostMapping("/send-otp")
     APIResponse<String> sendOTP(@RequestBody @Valid SendRegistrationOTPRequest request) {
-        String message = registrationService.sendOTP(request);
+        var result = registrationService.sendOTP(request);
 
-        return APIResponse.<String>builder().result(message).build();
+        return APIResponse.<String>builder().result(result).build();
     }
 
     @PostMapping("/verify-registration-otp")
     APIResponse<String> verifyOTP(@RequestBody @Valid VerifyRegistrationOTPRequest request) {
-        String message = registrationService.verifyOTP(request);
+        var result = registrationService.verifyOTP(request);
 
-        return APIResponse.<String>builder().result(message).build();
+        return APIResponse.<String>builder().result(result).build();
     }
 
     @PostMapping("/complete-registration")
     APIResponse<RegistrationResponse> verifyOTP(@RequestBody @Valid CompleteRegistrationRequest request) {
-        RegistrationResponse result = registrationService.completeRegistration(request);
+        var result = registrationService.completeRegistration(request);
 
         return APIResponse.<RegistrationResponse>builder().result(result).build();
     }

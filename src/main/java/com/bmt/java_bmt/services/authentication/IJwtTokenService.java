@@ -1,5 +1,6 @@
 package com.bmt.java_bmt.services.authentication;
 
+import java.util.Date;
 import java.util.UUID;
 
 import com.bmt.java_bmt.dto.others.TokenPair;
@@ -68,11 +69,13 @@ public interface IJwtTokenService {
      */
     UUID extractUserId(String token);
 
+    Date extractRefreshTokenExpiration(String token);
+
     /**
      * Kiểm tra token có hết hạn hay không
      *
      * @param token JWT token
      * @return true nếu hết hạn
      */
-    boolean isTokenExpired(String token);
+    boolean isAccessTokenExpired(String token);
 }

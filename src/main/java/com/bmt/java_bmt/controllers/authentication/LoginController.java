@@ -26,15 +26,15 @@ public class LoginController {
 
     @PostMapping
     APIResponse<TokenPair> login(@RequestBody @Valid LoginRequest request) {
-        TokenPair tokenPair = loginService.login(request);
+        var result = loginService.login(request);
 
-        return APIResponse.<TokenPair>builder().result(tokenPair).build();
+        return APIResponse.<TokenPair>builder().result(result).build();
     }
 
     @PostMapping("/refresh-access-token")
     APIResponse<String> refreshAccessToken(@RequestBody @Valid RefreshAccessTokenRequest request) {
-        String accessToken = loginService.refreshAccessToken(request);
+        var result = loginService.refreshAccessToken(request);
 
-        return APIResponse.<String>builder().result(accessToken).build();
+        return APIResponse.<String>builder().result(result).build();
     }
 }

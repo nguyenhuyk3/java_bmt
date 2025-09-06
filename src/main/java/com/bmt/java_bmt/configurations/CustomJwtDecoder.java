@@ -34,7 +34,7 @@ public class CustomJwtDecoder implements JwtDecoder {
 
     @Override
     public Jwt decode(String token) throws JwtException {
-        boolean isTokenExpired = jwtTokenService.isTokenExpired(token);
+        boolean isTokenExpired = jwtTokenService.isAccessTokenExpired(token);
 
         if (isTokenExpired) {
             throw new AppException(ErrorCode.ACCESS_TOKEN_EXPIRED);

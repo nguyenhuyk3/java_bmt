@@ -19,10 +19,10 @@ public class UserController {
 
     @GetMapping()
     APIResponse<GetPersonalInformationResponse> getPersonalInformation() {
-        GetPersonalInformationResponse personalInformationResponse = userService.getUserInformation();
+        var result = userService.getUserInformation();
 
         return APIResponse.<GetPersonalInformationResponse>builder()
-                .result(personalInformationResponse)
+                .result(result)
                 .build();
     }
 }

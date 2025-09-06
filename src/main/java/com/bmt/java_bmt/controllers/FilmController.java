@@ -25,20 +25,16 @@ public class FilmController {
     @PostMapping
     @PreAuthorize("hasRole('MANAGER')")
     public APIResponse<CreateFilmResponse> createFilm(@ModelAttribute @Valid CreateFilmRequest request) {
-        CreateFilmResponse createFilmResponse = filmService.createFilm(request);
+        var result = filmService.createFilm(request);
 
-        return APIResponse.<CreateFilmResponse>builder()
-                .result(createFilmResponse)
-                .build();
+        return APIResponse.<CreateFilmResponse>builder().result(result).build();
     }
 
     @PutMapping
     @PreAuthorize("hasRole('MANAGER')")
     public APIResponse<CreateFilmResponse> updateFilm(@ModelAttribute @Valid UpdateFilmRequest request) {
-        CreateFilmResponse createFilmResponse = filmService.updateFilm(request);
+        var result = filmService.updateFilm(request);
 
-        return APIResponse.<CreateFilmResponse>builder()
-                .result(createFilmResponse)
-                .build();
+        return APIResponse.<CreateFilmResponse>builder().result(result).build();
     }
 }

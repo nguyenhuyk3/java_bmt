@@ -24,16 +24,16 @@ public class ForgotPasswordController {
 
     @PostMapping("/send-otp")
     APIResponse<String> sendOTP(@RequestBody @Valid SendForgotPasswordOTPRequest request) {
-        String message = forgotPasswordService.sendForgotPasswordOTP(request);
+        var result = forgotPasswordService.sendForgotPasswordOTP(request);
 
-        return APIResponse.<String>builder().result(message).build();
+        return APIResponse.<String>builder().result(result).build();
     }
 
     @PostMapping("/verify-otp")
     APIResponse<String> verifyOTP(@RequestBody @Valid VerifyForgotPasswordOTPRequest request) {
-        String message = forgotPasswordService.verifyForgotPasswordOTP(request);
+        var result = forgotPasswordService.verifyForgotPasswordOTP(request);
 
-        return APIResponse.<String>builder().result(message).build();
+        return APIResponse.<String>builder().result(result).build();
     }
 
     @PutMapping("/complete-forgot-password")

@@ -202,7 +202,18 @@ public class JwtTokemImpl implements IJwtTokenService {
     }
 
     @Override
-    public boolean isTokenExpired(String token) {
+    public Date extractRefreshTokenExpiration(String token) {
+        try {
+            Claims claims = verifyRefreshToken(token);
+
+            return claims.getExpiration();
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.CANNOT_EXTRACT_TOKEN_EXPIRATION);
+        }
+    }
+
+    @Override
+    public boolean isAccessTokenExpired(String token) {
         try {
             Claims claims = verifyAccessToken(token);
 
