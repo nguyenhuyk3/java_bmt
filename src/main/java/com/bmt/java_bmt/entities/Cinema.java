@@ -30,6 +30,11 @@ public class Cinema {
     private String name;
 
     @Enumerated(EnumType.STRING)
+    /*
+        @Enumerated(EnumType.STRING)
+            - Dùng để map một enum trong Java sang cột trong database.
+            - EnumType.STRING → Hibernate sẽ lưu tên của enum (string) vào DB.
+     */
     @Column(name = "c_city", nullable = false)
     private City city;
 

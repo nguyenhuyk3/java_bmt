@@ -44,6 +44,10 @@ public class FilmProfessional {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pi_id", referencedColumnName = "pi_id", nullable = false)
+    /*
+        @JoinColumn(...)
+        - referencedColumnName = "pi_id" → cột trong bảng personal_information mà pi_id tham chiếu tới.
+     */
     private PersonalInformation personalInformation;
 
     @ManyToMany(mappedBy = "filmProfessionals", fetch = FetchType.LAZY)

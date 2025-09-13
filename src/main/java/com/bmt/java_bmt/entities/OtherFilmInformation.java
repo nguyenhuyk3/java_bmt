@@ -34,7 +34,7 @@ public class OtherFilmInformation {
     */
     @MapsId
     @JoinColumn(name = "f_id")
-    @ToString.Exclude // QUAN TRỌNG: Loại trừ khỏi toString()
-    @EqualsAndHashCode.Exclude // QUAN TRỌNG: Loại trừ khỏi equals() và hashCode()
+//    @ToString.Exclude // QUAN TRỌNG: Loại trừ khỏi toString()
+//    @EqualsAndHashCode.Exclude // QUAN TRỌNG: Loại trừ khỏi equals() và hashCode()
     private Film film;
 }

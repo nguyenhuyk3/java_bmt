@@ -81,7 +81,7 @@ public class ForgotPasswordImpl implements IForgotPasswordService {
                 throw new AppException(ErrorCode.EMAIL_IS_IN_FORGOT_PASSWORD_COMPLETION);
             }
 
-            throw new AppException(ErrorCode.EMAIL_IS_NOT_REGISTRATION_PROCESS);
+            throw new AppException(ErrorCode.EMAIL_IS_NOT_IN_FORGOT_PASSWORD_PROCESS);
         }
 
         String otp = (String) redisService.get(forgotPasswordOTPKey);

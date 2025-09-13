@@ -18,7 +18,7 @@ import com.bmt.java_bmt.entities.OtherFilmInformation;
 public interface IFilmMapper {
     Film toFilm(CreateFilmRequest request);
 
-    OtherFilmInformation toOtherFilmInformation(com.bmt.java_bmt.dto.others.OtherFilmInformation requeset);
+    OtherFilmInformation toOtherFilmInformation(com.bmt.java_bmt.dto.others.OtherFilmInformation request);
 
     @Mapping(source = "changedBy.id", target = "changedBy")
     @Mapping(

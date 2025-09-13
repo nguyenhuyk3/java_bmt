@@ -38,22 +38,31 @@ public class Auditorium {
     private Boolean isReleased;
 
     @CreationTimestamp
+    /*
+        Annotation của Hibernate.
+        Khi một entity mới được insert vào database, Hibernate sẽ tự động set thời gian hiện tại cho trường này.
+        Nó chỉ được gán lúc tạo mới (insert), không update lại khi entity thay đổi.
+     */
     @Column(name = "a_created_at")
     private Instant createdAt;
 
     @UpdateTimestamp
+    /*
+        Annotation của Hibernate.
+        Nó tự động set giá trị thời gian hiện tại mỗi khi entity được update (merge/flush).
+        Khác với @CreationTimestamp chỉ set lúc insert,
+     thì @UpdateTimestamp sẽ cập nhật lại mỗi lần entity thay đổi và được lưu lại.
+     */
     @Column(name = "a_updated_at")
     private Instant updatedAt;
 
-    /*
-    - LAZY
-    	+ Khi load entity cha (Auditorium), JPA không load Seat ngay lập tức.
-    	+ Chỉ khi bạn truy cập getter (Auditorium thì Hibernate mới truy vấn DB để lấy dữ liệu Seat
-    	(kỹ thuật này gọi là lazy loading hoặc proxy).
-    	+ Dễ bị lỗi LazyInitializationException sau khi session/transaction đã đóng.
-     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "c_id", nullable = false)
+    /*
+        @JoinColumn là gì?
+            - Nó dùng để chỉ định cột khóa ngoại (foreign key) trong bảng hiện tại,
+            giúp JPA/Hibernate biết cách liên kết hai entity với nhau.
+     */
     private Cinema cinema;
 
     @OneToMany(mappedBy = "auditorium")
