@@ -55,19 +55,19 @@ public class Film {
 
     // Mapping cho bảng film_genres
     /*
-        @ElementCollection(targetClass = Genre.class, fetch = FetchType.EAGER)
-            - Dùng để map collection các "giá trị đơn giản" (basic types) hoặc enum vào một bảng phụ.
-            - Khác với @OneToMany hay @ManyToMany (liên quan đến entity độc lập),
-            @ElementCollection không cần entity riêng, chỉ là giá trị phụ thuộc vào entity cha.
-            - Ở đây genres là một Set<Genre>, nên Hibernate sẽ tạo một bảng phụ để lưu danh sách này.
-            - targetClass = Genre.class → kiểu dữ liệu của phần tử là enum Genre.
+    @ElementCollection(targetClass = Genre.class, fetch = FetchType.EAGER)
+    	- Dùng để map collection các "giá trị đơn giản" (basic types) hoặc enum vào một bảng phụ.
+    	- Khác với @OneToMany hay @ManyToMany (liên quan đến entity độc lập),
+    	@ElementCollection không cần entity riêng, chỉ là giá trị phụ thuộc vào entity cha.
+    	- Ở đây genres là một Set<Genre>, nên Hibernate sẽ tạo một bảng phụ để lưu danh sách này.
+    	- targetClass = Genre.class → kiểu dữ liệu của phần tử là enum Genre.
 
-        @CollectionTable(...)
-            - Xác định bảng phụ để lưu collection này.
-            - name = "film_genres" → bảng tên film_genres.
-            - joinColumns = @JoinColumn(name = "f_id") → cột khóa ngoại trong bảng film_genres
-            trỏ tới bảng films (entity cha), cột f_id chính là foreign key.
-     */
+    @CollectionTable(...)
+    	- Xác định bảng phụ để lưu collection này.
+    	- name = "film_genres" → bảng tên film_genres.
+    	- joinColumns = @JoinColumn(name = "f_id") → cột khóa ngoại trong bảng film_genres
+    	trỏ tới bảng films (entity cha), cột f_id chính là foreign key.
+    */
     @ElementCollection(targetClass = Genre.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "film_genres", joinColumns = @JoinColumn(name = "f_id"))
     @Enumerated(EnumType.STRING)

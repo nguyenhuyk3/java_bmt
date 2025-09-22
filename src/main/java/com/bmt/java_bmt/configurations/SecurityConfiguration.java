@@ -59,7 +59,9 @@ nhưng bạn không thể cấu hình chi tiết được.
 */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class SecurityConfiguration {
-    String[] GET_PUBLIC_ENDPOINTS = {"/showtime-seat/**", "/food-and-beverage/**", "/payment/momo/**"};
+    String[] GET_PUBLIC_ENDPOINTS = {
+        "/showtime-seat/**", "/food-and-beverage/**", "/payment/momo/**", "/film-professionals/**"
+    };
     String[] POST_PUBLIC_ENDPOINTS = {
         "/auth/register/**",
         "/auth/login/**",
@@ -71,7 +73,10 @@ public class SecurityConfiguration {
     String[] PUT_PUBLIC_ENDPOINTS = {"/auth/forgot-password/**"};
     String[] POST_CUSTOMER_PRIVATE_ENDPOINTS = {"/order/**", "/favorite-film/**"};
     String[] GET_CUSTOMER_PRIVATE_ENDPOINTS = {"/user/**", "/favorite-film/**"};
-    String[] POST_MANAGER_PRIVATE_ENDPOINTS = {"/film/**", "/showtime/**"};
+    String[] POST_MANAGER_PRIVATE_ENDPOINTS = {
+        "/film/**", "/showtime/**",
+    };
+    String[] GET_MANAGE_PRIVATE_ENDPOINTS = {"/film/**"};
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -96,6 +101,8 @@ public class SecurityConfiguration {
                 .hasRole(Others.MANAGER)
                 .requestMatchers(HttpMethod.GET, GET_CUSTOMER_PRIVATE_ENDPOINTS)
                 .hasAnyRole(Others.CUSTOMER, Others.MANAGER)
+                .requestMatchers(HttpMethod.GET, GET_MANAGE_PRIVATE_ENDPOINTS)
+                .hasRole(Others.MANAGER)
                 .anyRequest()
                 .authenticated());
         httpSecurity.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer

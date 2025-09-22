@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 
 import jakarta.transaction.Transactional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,6 +18,8 @@ import com.bmt.java_bmt.dto.others.Id;
 import com.bmt.java_bmt.dto.requests.film.CreateFilmRequest;
 import com.bmt.java_bmt.dto.requests.film.UpdateFilmRequest;
 import com.bmt.java_bmt.dto.responses.film.CreateFilmResponse;
+import com.bmt.java_bmt.dto.responses.film.GetFilmResponse;
+import com.bmt.java_bmt.dto.responses.filmProfessional.GetFilmProfessionalResponse;
 import com.bmt.java_bmt.entities.*;
 import com.bmt.java_bmt.exceptions.AppException;
 import com.bmt.java_bmt.exceptions.ErrorCode;
@@ -177,5 +181,40 @@ public class FilmImpl implements IFilmService {
         }
 
         return filmMapper.toCreateFilmResponse(film);
+    }
+
+    public GetFilmResponse toGetFilmResponse(Film film) {
+        OtherFilmInformation ofi = film.getOtherFilmInformation();
+
+        return GetFilmResponse.builder()
+                .id(film.getId())
+                .title(film.getTitle())
+                .description(film.getDescription())
+                .releaseDate(film.getReleaseDate())
+                .duration(film.getDuration())
+                .filmProfessionals(film.getFilmProfessionals().stream()
+                        .map(filmProfessional -> GetFilmProfessionalResponse.builder()
+                                .id(filmProfessional.getId())
+                                .job(filmProfessional.getJob().name())
+                                .name(filmProfessional.getPersonalInformation().getFullName())
+                                .avatarUrl(filmProfessional
+                                        .getPersonalInformation()
+                                        .getAvatarUrl())
+                                .build())
+                        .collect(Collectors.toSet()))
+                .genres(film.getGenres())
+                .posterUrl(ofi != null ? ofi.getPosterUrl() : null)
+                .trailerUrl(ofi != null ? ofi.getTrailerUrl() : null)
+                .build();
+    }
+
+    public Page<GetFilmResponse> getAllFilms(int page, int size) {
+        return filmRepository.findAll(PageRequest.of(page, size)).map(this::toGetFilmResponse);
+    }
+
+    @Override
+    public GetFilmResponse getFilmById(UUID id) {
+        return toGetFilmResponse(
+                filmRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.FILM_NOT_FOUND)));
     }
 }
