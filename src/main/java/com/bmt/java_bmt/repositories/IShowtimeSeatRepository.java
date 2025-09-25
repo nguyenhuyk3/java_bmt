@@ -103,4 +103,11 @@ public interface IShowtimeSeatRepository extends JpaRepository<ShowtimeSeat, UUI
             @Param("userId") UUID userId,
             @Param("seatId") UUID seatId,
             @Param("showtimeId") UUID showtimeId);
+
+    @Query(value = """
+			SELECT *
+			FROM showtime_seats ss
+			WHERE ss.sh_id = :showtimeId
+			""", nativeQuery = true)
+    List<ShowtimeSeat> findAllShowtimeSeatsByShowtimeId(@Param("showtimeId") UUID showtimeId);
 }

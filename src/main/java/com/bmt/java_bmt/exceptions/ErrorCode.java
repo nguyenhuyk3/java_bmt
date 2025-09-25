@@ -58,6 +58,8 @@ public enum ErrorCode {
     FILM_NOT_FOUND(24002, "Phim không tồn tại", HttpStatus.NOT_FOUND),
     CLOUDINARY_DELETE_FILE_FAILED(24003, "Xóa file ở Cloudinary thất bại", HttpStatus.INTERNAL_SERVER_ERROR),
     FAB_NOT_FOUND(24004, "Thức ăn hay đồ uống không tồn tại", HttpStatus.NOT_FOUND),
+    FILM_PROFESSIONAL_PARSE_FAILED(
+            24005, "Không thể parse dữ liệu film professionals", HttpStatus.INTERNAL_SERVER_ERROR),
 
     // Cinema
     AUDITORIUM_NOT_FOUND(25001, "Phòng chiếu không tồn tại", HttpStatus.NOT_FOUND),
@@ -75,6 +77,8 @@ public enum ErrorCode {
     SHOWTIME_IS_NOT_RELEASED(25011, "Suất chiếu chưa được công chiếu", HttpStatus.BAD_REQUEST),
     UPDATE_SEAT_FOR_SHOWTIME_FAILED(
             25012, "Cập nhập trạng thái ghế cho suất chiếu thất bại", HttpStatus.INTERNAL_SERVER_ERROR),
+    SHOWDATE_MUST_START_FROM_TOMORROW(25013, "Ngày chiếu phải bắt đầu từ ngày mai trở đi", HttpStatus.BAD_REQUEST),
+    SHOWTIME_NOT_FOUND_FOR_DATE(25014, "Không có suất chiếu nào cho ngày đã chọn", HttpStatus.NOT_FOUND),
 
     // Elasticsearch
     ELASTICSEARCH_INDEX_NOT_FOUND(25001, "Không tìm thấy index trong Elasticsearch", HttpStatus.NOT_FOUND),

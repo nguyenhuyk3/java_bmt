@@ -1,6 +1,7 @@
 package com.bmt.java_bmt.implementations;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -208,8 +209,13 @@ public class FilmImpl implements IFilmService {
                 .build();
     }
 
-    public Page<GetFilmResponse> getAllFilms(int page, int size) {
+    public Page<GetFilmResponse> getFilms(int page, int size) {
         return filmRepository.findAll(PageRequest.of(page, size)).map(this::toGetFilmResponse);
+    }
+
+    @Override
+    public List<GetFilmResponse> getAllFilms() {
+        return filmRepository.findAll().stream().map(this::toGetFilmResponse).toList();
     }
 
     @Override

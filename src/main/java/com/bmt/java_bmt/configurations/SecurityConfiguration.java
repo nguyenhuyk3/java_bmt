@@ -60,7 +60,7 @@ nhưng bạn không thể cấu hình chi tiết được.
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class SecurityConfiguration {
     String[] GET_PUBLIC_ENDPOINTS = {
-        "/showtime-seat/**", "/food-and-beverage/**", "/payment/momo/**", "/film-professionals/**"
+        "/showtime-seat/**", "/food-and-beverage/**", "/payment/momo/**", "/film-professionals/**",
     };
     String[] POST_PUBLIC_ENDPOINTS = {
         "/auth/register/**",
@@ -76,7 +76,14 @@ public class SecurityConfiguration {
     String[] POST_MANAGER_PRIVATE_ENDPOINTS = {
         "/film/**", "/showtime/**",
     };
-    String[] GET_MANAGE_PRIVATE_ENDPOINTS = {"/film/**"};
+    String[] GET_MANAGE_PRIVATE_ENDPOINTS = {
+        "/film/**",
+        "/cinemas/get-all",
+        "/auditoriums/get-all-by-cinema-id/**",
+        "/showtime/find-by-auditorium-id-and-by-showdate",
+        "/showtime/find-all-released-showtimes-from-today",
+        "/showtime/find-all-realesed-showtimes-by-auditorium-id"
+    };
 
     @Bean
     PasswordEncoder passwordEncoder() {

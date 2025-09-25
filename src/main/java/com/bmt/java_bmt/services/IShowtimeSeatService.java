@@ -6,5 +6,5 @@ import java.util.UUID;
 import com.bmt.java_bmt.dto.responses.showtime.GetShowtimeSeatResponse;
 
 public interface IShowtimeSeatService {
-    List<GetShowtimeSeatResponse> getShowtimeSeatsByShowtimeId(UUID id);
+    List<GetShowtimeSeatResponse> getShowtimeSeatsByShowtimeId(UUID showtimeId);
 }

@@ -25,9 +25,10 @@ public class ShowtimeSeatImpl implements IShowtimeSeatService {
     IShowtimeRepository showtimeRepository;
 
     @Override
-    public List<GetShowtimeSeatResponse> getShowtimeSeatsByShowtimeId(UUID id) {
-        var showtime =
-                showtimeRepository.findById(id).orElseThrow(() -> new AppException((ErrorCode.SHOWTIME_NOT_FOUND)));
+    public List<GetShowtimeSeatResponse> getShowtimeSeatsByShowtimeId(UUID showtimeId) {
+        var showtime = showtimeRepository
+                .findById(showtimeId)
+                .orElseThrow(() -> new AppException((ErrorCode.SHOWTIME_NOT_FOUND)));
 
         if (!showtime.getIsReleased()) {
             throw new AppException(ErrorCode.SHOWTIME_IS_NOT_RELEASED);
@@ -37,6 +38,6 @@ public class ShowtimeSeatImpl implements IShowtimeSeatService {
             throw new AppException(ErrorCode.SHOWTIME_IS_IN_PAST);
         }
 
-        return showtimeSeatRepository.getShowtimeSeatsByShowtimeId(id);
+        return showtimeSeatRepository.getShowtimeSeatsByShowtimeId(showtimeId);
     }
 }

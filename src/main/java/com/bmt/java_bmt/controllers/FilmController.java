@@ -1,5 +1,6 @@
 package com.bmt.java_bmt.controllers;
 
+import java.util.List;
 import java.util.UUID;
 
 import jakarta.validation.Valid;
@@ -46,9 +47,17 @@ public class FilmController {
     @PreAuthorize("hasRole('MANAGER')")
     public APIResponse<Page<GetFilmResponse>> getFilms(
             @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
-        var result = filmService.getAllFilms(page, size);
+        var result = filmService.getFilms(page, size);
 
         return APIResponse.<Page<GetFilmResponse>>builder().result(result).build();
+    }
+
+    @GetMapping("/get-all")
+    @PreAuthorize("hasRole('MANAGER')")
+    public APIResponse<List<GetFilmResponse>> getAllFilms() {
+        var result = filmService.getAllFilms();
+
+        return APIResponse.<List<GetFilmResponse>>builder().result(result).build();
     }
 
     @GetMapping("/{id}")

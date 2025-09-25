@@ -1,9 +1,12 @@
 package com.bmt.java_bmt.implementations;
 
+import static java.util.Arrays.stream;
+
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import jakarta.transaction.Transactional;
 
@@ -13,9 +16,12 @@ import org.springframework.stereotype.Service;
 import com.bmt.java_bmt.dto.others.Id;
 import com.bmt.java_bmt.dto.requests.showtime.AddShowtimeRequest;
 import com.bmt.java_bmt.dto.requests.showtime.ReleaseShowtimeRequest;
-import com.bmt.java_bmt.dto.responses.showtime.AddShowtimeResponse;
+import com.bmt.java_bmt.dto.responses.film.GetFilmResponse;
+import com.bmt.java_bmt.dto.responses.filmProfessional.GetFilmProfessionalResponse;
+import com.bmt.java_bmt.dto.responses.showtime.*;
 import com.bmt.java_bmt.entities.Outbox;
 import com.bmt.java_bmt.entities.Showtime;
+import com.bmt.java_bmt.entities.enums.Genre;
 import com.bmt.java_bmt.exceptions.AppException;
 import com.bmt.java_bmt.exceptions.ErrorCode;
 import com.bmt.java_bmt.helpers.constants.Others;
@@ -27,7 +33,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -130,5 +138,84 @@ public class ShowtimeImpl implements IShowtimeService {
         //        }
 
         return "Công bố xuất chiếu thành công";
+    }
+
+    @Override
+    public LocalDateTime getLastestShowtimeByAuditoriumIdAndByShowDate(UUID auditoriumId, LocalDate showDate) {
+        return showtimeRepository.getLastestShowtimeByAuditoriumIdAndByShowDate(auditoriumId, showDate);
+    }
+
+    private GetShowtimeByAuditoriumIdAndShowDateResponse mapToGetShowtimeByAuditoriumIdAndShowDateResponse(
+            GetShowtimeByAuditoriumIdAndShowDateProjection p) {
+        // parse genres
+        Set<Genre> genres = stream(p.getGenres().split(",")).map(Genre::valueOf).collect(Collectors.toSet());
+        // parse film professionals JSON
+        Set<GetFilmProfessionalResponse> professionals = new HashSet<>();
+
+        if (p.getFilmProfessionals() != null) {
+            try {
+                ObjectMapper mapper = new ObjectMapper();
+
+                professionals = Set.copyOf(
+                        Arrays.asList(mapper.readValue(p.getFilmProfessionals(), GetFilmProfessionalResponse[].class)));
+            } catch (Exception e) {
+                throw new AppException(ErrorCode.FILM_PROFESSIONAL_PARSE_FAILED);
+            }
+        }
+
+        GetFilmResponse film = GetFilmResponse.builder()
+                .id(UUID.fromString(p.getFilmId()))
+                .title(p.getFilmTitle())
+                .description(p.getFilmDescription())
+                .releaseDate(p.getFilmReleaseDate())
+                .duration(p.getFilmDuration())
+                .posterUrl(p.getPosterUrl())
+                .trailerUrl(p.getTrailerUrl())
+                .genres(genres)
+                .filmProfessionals(professionals)
+                .build();
+
+        return GetShowtimeByAuditoriumIdAndShowDateResponse.builder()
+                .showtimeId(UUID.fromString(p.getShowtimeId()))
+                .showDate(p.getShowDate())
+                .startTime(p.getStartTime())
+                .endTime(p.getEndTime())
+                .coefficient(p.getCoefficient())
+                .film(film)
+                .build();
+    }
+
+    @Override
+    public List<GetShowtimeByAuditoriumIdAndShowDateResponse> findShowtimesByAuditoriumIdAndShowDate(
+            UUID auditoriumId, LocalDate showDate) {
+        if (!auditoriumRepository.existsById(auditoriumId)) {
+            throw new AppException(ErrorCode.AUDITORIUM_NOT_FOUND);
+        }
+
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
+
+        if (showDate.isBefore(tomorrow)) {
+            throw new AppException(ErrorCode.SHOWDATE_MUST_START_FROM_TOMORROW);
+        }
+
+        var rawResult = showtimeRepository.findShowtimesByAuditoriumIdAndShowDate(auditoriumId, showDate);
+
+        if (rawResult.isEmpty()) {
+            throw new AppException(ErrorCode.SHOWTIME_NOT_FOUND_FOR_DATE);
+        }
+
+        return rawResult.stream()
+                .map(this::mapToGetShowtimeByAuditoriumIdAndShowDateResponse)
+                .toList();
+    }
+
+    @Override
+    public List<ReleasedShowtimeProjection> findAllReleasedShowtimesFromToday() {
+        return showtimeRepository.findAllReleasedShowtimesFromToday();
+    }
+
+    @Override
+    public List<GetShowtimeByAuditoriumIdProjection> findAllReleasedShowtimesByAuditoriumId(UUID auditoriumId) {
+        return showtimeRepository.findAllReleasedShowtimesByAuditoriumId(auditoriumId);
     }
 }

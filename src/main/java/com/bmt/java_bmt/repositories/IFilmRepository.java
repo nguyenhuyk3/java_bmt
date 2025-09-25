@@ -55,43 +55,38 @@ public interface IFilmRepository extends JpaRepository<Film, UUID> {
     @Query(
             value =
                     """
-						SELECT
-							LOWER(CONCAT(
-								SUBSTR(HEX(f.f_id), 1, 8), '-',
-								SUBSTR(HEX(f.f_id), 9, 4), '-',
-								SUBSTR(HEX(f.f_id), 13, 4), '-',
-								SUBSTR(HEX(f.f_id), 17, 4), '-',
-								SUBSTR(HEX(f.f_id), 21)
-								)) as id,
-							f.f_title as title,
-							f.f_description as description,
-							CAST(f.f_release_date AS CHAR) as releaseDate,
-							CAST(f.f_duration AS CHAR) as duration,
-							ofi.ofi_poster_url as posterUrl,
-							ofi.ofi_trailer_url as trailerUrl,
-							-- genres
-							(SELECT JSON_ARRAYAGG(fg.fg_genre) FROM film_genres fg WHERE fg.f_id = f.f_id) as genres,
-							-- actors: chỉ lấy fullname
-							(
-								SELECT JSON_ARRAYAGG(pi.pi_full_name)
-								FROM film_people fpp
-								JOIN film_professionals fpf ON fpp.fpf_id = fpf.fpf_id
-								JOIN personal_information pi ON fpf.pi_id = pi.pi_id
-								WHERE fpp.f_id = f.f_id AND fpf.fpf_job = 'actor') as actors,
-								-- directors: chỉ lấy fullname
-								(
-									SELECT JSON_ARRAYAGG(pi.pi_full_name)
-									FROM film_people fpp
-									JOIN film_professionals fpf ON fpp.fpf_id = fpf.fpf_id
-									JOIN personal_information pi ON fpf.pi_id = pi.pi_id
-									WHERE fpp.f_id = f.f_id AND fpf.fpf_job = 'director'
-								) as directors
-									FROM films f
-									LEFT JOIN
-										other_film_informations ofi ON f.f_id = ofi.f_id
-									WHERE
-										f.f_id = :filmId
-						""",
+		SELECT
+			BIN_TO_UUID(f.f_id) AS id,
+			f.f_title AS title,
+			f.f_description AS description,
+			CAST(f.f_release_date AS CHAR) AS releaseDate,
+			CAST(f.f_duration AS CHAR) AS duration,
+			ofi.ofi_poster_url AS posterUrl,
+			ofi.ofi_trailer_url AS trailerUrl,
+
+			-- genres
+			(SELECT JSON_ARRAYAGG(fg.fg_genre)
+			FROM film_genres fg
+			WHERE fg.f_id = f.f_id) AS genres,
+
+			-- actors: chỉ lấy fullname
+			(SELECT JSON_ARRAYAGG(pi.pi_full_name)
+			FROM film_people fpp
+			JOIN film_professionals fpf ON fpp.fpf_id = fpf.fpf_id
+			JOIN personal_information pi ON fpf.pi_id = pi.pi_id
+			WHERE fpp.f_id = f.f_id AND fpf.fpf_job = 'actor') AS actors,
+
+			-- directors: chỉ lấy fullname
+			(SELECT JSON_ARRAYAGG(pi.pi_full_name)
+			FROM film_people fpp
+			JOIN film_professionals fpf ON fpp.fpf_id = fpf.fpf_id
+			JOIN personal_information pi ON fpf.pi_id = pi.pi_id
+			WHERE fpp.f_id = f.f_id AND fpf.fpf_job = 'director') AS directors
+
+		FROM films f
+		LEFT JOIN other_film_informations ofi ON f.f_id = ofi.f_id
+		WHERE f.f_id = :filmId
+		""",
             nativeQuery = true)
     Optional<IFilmElasticsearchProjection> findFilmDetailsForElasticsearch(@Param("filmId") UUID filmId);
 

@@ -1,5 +1,6 @@
 package com.bmt.java_bmt.services;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -14,7 +15,9 @@ public interface IFilmService {
 
     CreateFilmResponse updateFilm(UpdateFilmRequest request);
 
-    Page<GetFilmResponse> getAllFilms(int page, int size);
+    Page<GetFilmResponse> getFilms(int page, int size);
+
+    List<GetFilmResponse> getAllFilms();
 
     GetFilmResponse getFilmById(UUID id);
 }
